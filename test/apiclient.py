@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import time
-from fortiosclient import FortiosApiClient as FortiosApiClient
+from client import FortiosApiClient as FortiosApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.98", 443, True)]

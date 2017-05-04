@@ -25,12 +25,8 @@
 # Login
 LOGIN = """
 {
-    "path": "/logincheck",
-    "method": "POST",
-    "body": {
-        "username": "{{ username }}",
-        "secretkey": "{{ secretkey }}"
-    }
+    "path": "/api/v1/?format=json",
+    "method": "GET"
 }
 """
 
