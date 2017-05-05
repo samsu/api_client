@@ -19,7 +19,7 @@ import sys
 from oslo_config import cfg
 from oslo_log import log as logging
 
-from networking_fortinet._i18n import _, _LE
+from api_client._i18n import _, _LE
 
 
 LOG = logging.getLogger(__name__)
