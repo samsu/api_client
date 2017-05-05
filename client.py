@@ -20,12 +20,12 @@ from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
 from _i18n import _LE, _LW
-from api_client import base
-from api_client import constants as const
-from api_client import eventlet_client
-from api_client import eventlet_request
-from api_client import exception
-from api_client import templates
+mport base
+import constants as const
+import eventlet_client
+import eventlet_request
+import exception
+import templates
 from common import singleton
 
 LOG = logging.getLogger(__name__)
