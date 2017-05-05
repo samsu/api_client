@@ -4,7 +4,7 @@ import time
 import os
 import inspect
 
-import client
+import api_client.client as client
 
 
 FortiosApiClient=client.FortiosApiClient
