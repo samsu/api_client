@@ -31,6 +31,7 @@ import six
 import six.moves.urllib.parse as urlparse
 
 from _i18n import _, _LI, _LW
+import common.utils as utils
 import constants as const
 import templates
 
@@ -301,5 +302,5 @@ class ApiRequest(object):
 
     def _request_str(self, conn, url):
         '''Return string representation of connection.'''
-        return "%s %s%s" % (self._method, api_client.ctrl_conn_to_str(conn),
+        return "%s %s%s" % (self._method, utils.ctrl_conn_to_str(conn),
                             url)

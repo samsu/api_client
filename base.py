@@ -27,7 +27,9 @@ from oslo_log import log as logging
 import six
 
 from _i18n import _LE, _LI, _LW
+import common.utils as utils
 import constants as const
+
 
 LOG = logging.getLogger(__name__)
 GENERATION_ID_TIMEOUT = const.GENERATION_ID_TIMEOUT
@@ -141,7 +143,7 @@ class ApiClientBase(object):
             LOG.info(_LI("[%(rid)d] Connection %(conn)s idle for "
                          "%(sec)0.2f seconds; reconnecting."),
                      {'rid': rid,
-                      'conn': api_client.ctrl_conn_to_str(conn),
+                      'conn': utils.ctrl_conn_to_str(conn),
                       'sec': now - conn.last_used})
             conn = self._create_connection(*self._conn_params(conn))
             self.set_auth_cookie(conn, None)
@@ -150,7 +152,7 @@ class ApiClientBase(object):
         qsize = self._conn_pool.qsize()
         LOG.debug("[%(rid)d] Acquired connection %(conn)s. %(qsize)d "
                   "connection(s) available.",
-                  {'rid': rid, 'conn': api_client.ctrl_conn_to_str(conn),
+                  {'rid': rid, 'conn': utils.ctrl_conn_to_str(conn),
                    'qsize': qsize})
         if auto_login and self.auth_cookie(conn) is None:
             self._wait_for_login(conn, headers)
@@ -172,7 +174,7 @@ class ApiClientBase(object):
             LOG.debug("[%(rid)d] Released connection %(conn)s is not an "
                       "API provider for the cluster",
                       {'rid': rid,
-                       'conn': api_client.ctrl_conn_to_str(http_conn)})
+                       'conn': utils.ctrl_conn_to_str(http_conn)})
             return
         elif hasattr(http_conn, "no_release"):
             return
@@ -182,7 +184,7 @@ class ApiClientBase(object):
             LOG.warning(_LW("[%(rid)d] Connection returned in bad state, "
                             "reconnecting to %(conn)s"),
                         {'rid': rid,
-                         'conn': api_client.ctrl_conn_to_str(http_conn)})
+                         'conn': utils.ctrl_conn_to_str(http_conn)})
             http_conn.close()
             http_conn = self._create_connection(*self._conn_params(http_conn))
             conns = []
@@ -217,7 +219,7 @@ class ApiClientBase(object):
         self._conn_pool.put((priority, http_conn))
         LOG.debug("[%(rid)d] Released connection %(conn)s. %(qsize)d "
                   "connection(s) available.",
-                  {'rid': rid, 'conn': api_client.ctrl_conn_to_str(http_conn),
+                  {'rid': rid, 'conn': utils.ctrl_conn_to_str(http_conn),
                    'qsize': self._conn_pool.qsize()})
 
     def _wait_for_login(self, conn, headers=None):
@@ -225,7 +227,7 @@ class ApiClientBase(object):
         data = self._get_provider_data(conn)
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
-                      api_client.ctrl_conn_to_str(conn))
+                      utils.ctrl_conn_to_str(conn))
             return
         provider_sem = data[0]
         if provider_sem.acquire(blocking=False):
