@@ -31,9 +31,8 @@ import six
 import six.moves.urllib.parse as urlparse
 
 from _i18n import _, _LI, _LW
-import api_client
-from api_client import constants as const
-from api_client import templates
+import constants as const
+import templates
 
 LOG = logging.getLogger(__name__)
 

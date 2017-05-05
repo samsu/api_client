@@ -4,11 +4,10 @@ import time
 import os
 import inspect
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-os.sys.path.insert(0,parentdir)
+import client
 
-from client import FortiosApiClient as FortiosApiClient
+
+FortiosApiClient=client.FortiosApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.98", 443, True)]

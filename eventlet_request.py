@@ -24,9 +24,9 @@ from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
 from _i18n import _, _LI, _LW
-from api_client import constants as const
-from api_client import request
-from api_client import templates
+import constants as const
+import request
+import templates
 
 LOG = logging.getLogger(__name__)
 USER_AGENT = "Neutron eventlet client/2.0"
