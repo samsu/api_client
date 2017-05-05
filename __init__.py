@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-from networking_fortinet._i18n import _
+from _i18n import _
 
 try:
     import httplib

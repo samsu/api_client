@@ -30,10 +30,10 @@ from oslo_utils import excutils
 import six
 import six.moves.urllib.parse as urlparse
 
-from networking_fortinet._i18n import _, _LI, _LW
+from _i18n import _, _LI, _LW
 from networking_fortinet import api_client
-from networking_fortinet.api_client import constants as const
-from networking_fortinet.api_client import templates
+from api_client import constants as const
+from api_client import templates
 
 LOG = logging.getLogger(__name__)
 

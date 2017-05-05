@@ -19,14 +19,14 @@ import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from networking_fortinet._i18n import _LE, _LW
-from networking_fortinet.api_client import base
-from networking_fortinet.api_client import constants as const
-from networking_fortinet.api_client import eventlet_client
-from networking_fortinet.api_client import eventlet_request
-from networking_fortinet.api_client import exception
-from networking_fortinet.api_client import templates
-from networking_fortinet.common import singleton
+from _i18n import _LE, _LW
+from api_client import base
+from api_client import constants as const
+from api_client import eventlet_client
+from api_client import eventlet_request
+from api_client import exception
+from api_client import templates
+from common import singleton
 
 LOG = logging.getLogger(__name__)
 

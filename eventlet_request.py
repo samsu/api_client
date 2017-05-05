@@ -23,10 +23,10 @@ import eventlet
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from networking_fortinet._i18n import _, _LI, _LW
-from networking_fortinet.api_client import constants as const
-from networking_fortinet.api_client import request
-from networking_fortinet.api_client import templates
+from _i18n import _, _LI, _LW
+from api_client import constants as const
+from api_client import request
+from api_client import templates
 
 LOG = logging.getLogger(__name__)
 USER_AGENT = "Neutron eventlet client/2.0"

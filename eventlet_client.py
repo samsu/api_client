@@ -21,9 +21,9 @@ import eventlet
 eventlet.monkey_patch()
 from oslo_log import log as logging
 
-from networking_fortinet._i18n import _LE
-from networking_fortinet.api_client import base
-from networking_fortinet.api_client import eventlet_request
+from _i18n import _LE
+from api_client import base
+from api_client import eventlet_request
 
 LOG = logging.getLogger(__name__)
 

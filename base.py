@@ -26,9 +26,9 @@ import time
 from oslo_log import log as logging
 import six
 
-from networking_fortinet._i18n import _LE, _LI, _LW
+from _i18n import _LE, _LI, _LW
 from networking_fortinet import api_client
-from networking_fortinet.api_client import constants as const
+from api_client import constants as const
 
 LOG = logging.getLogger(__name__)
 GENERATION_ID_TIMEOUT = const.GENERATION_ID_TIMEOUT
