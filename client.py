@@ -20,7 +20,7 @@ from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
 from _i18n import _LE, _LW
-mport base
+import base
 import constants as const
 import eventlet_client
 import eventlet_request
