@@ -25,3 +25,11 @@ DEFAULT_REDIRECTS = 2
 DEFAULT_API_REQUEST_POOL_SIZE = 1
 DEFAULT_MAXIMUM_REQUEST_ID = 4294967295
 DOWNLOAD_TIMEOUT = 180
+
+HTTP_HEADERS = {
+    'User-Agent': 'FortiAuthenticator Python API Client',
+    'Content-Type': 'text/html; charset=\"UTF-8\"'
+}
+
+
+AUTHENTICATION = 'Basic'

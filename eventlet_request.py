@@ -14,12 +14,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import base64
+import eventlet
 try:
     import httplib
 except ImportError:
     import http.client as httplib
 
-import eventlet
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
@@ -29,7 +30,7 @@ import request
 import templates
 
 LOG = logging.getLogger(__name__)
-USER_AGENT = "Neutron eventlet client/2.0"
+USER_AGENT = const.HTTP_HEADERS['User-Agent']
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES if request.DEFAULT_RETRIES < 2 else 2
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
@@ -168,11 +169,13 @@ class LoginRequestEventlet(EventletApiRequest):
                  headers=None):
         if headers is None:
             headers = {}
-        headers.update({"Content-Type": "application/x-www-form-urlencoded"})
-        message = client_obj._render(templates.LOGIN,
-                                     username=user,
-                                     secretkey=password)
-        body = message['body']
+        headers.update({'Content-Type': const.HTTP_HEADERS['Content-Type']})
+        message = client_obj._render(templates.LOGIN)
+        body = message.get('body', None)
+        # base64 encode the username and password for http basic
+        auth = base64.encodestring('%s:%s' % (user, password)).\
+            replace('\n', '')
+        headers.update({'Authorization': "Basic %s" % auth})
         super(LoginRequestEventlet, self).__init__(
             client_obj, message['path'], message['method'], body, headers,
             auto_login=True, client_conn=client_conn)
