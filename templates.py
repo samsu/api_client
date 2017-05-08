@@ -131,21 +131,9 @@ DELETE_VLAN_INTERFACE = """
 """
 
 # Get VLAN interface info
-GET_VLAN_INTERFACE = """
+GET_USERGROUPS = """
 {
-    {% if name is defined %}
-        {% if vdom is defined %}
-        "path":"/api/v2/cmdb/system/interface/{{ name }}/?vdom={{ vdom }}",
-        {% else %}
-        "path":"/api/v2/cmdb/system/interface/{{ name }}/",
-        {% endif %}
-    {% else %}
-        {% if vdom is defined %}
-            "path":"/api/v2/cmdb/system/interface/?vdom={{ vdom }}",
-        {% else %}
-            "path":"/api/v2/cmdb/system/interface/",
-        {% endif %}
-    {% endif %}
+    "path":"/api/v1/usergroups/",
     "method": "GET"
 }
 """
