@@ -14,6 +14,7 @@ if __name__ == "__main__":
     user = "admin"
     password = "lRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
     cli = FortiosApiClient(api, user, password)
+    cli.request('GET_USERGROUPS')
     print "----------"
     message = {
         "name": "ext_4093",
