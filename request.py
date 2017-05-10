@@ -118,7 +118,7 @@ class ApiRequest(object):
                     conn.connect()
                     self._api_client._wait_for_login(conn, headers)
                     url = self._url
-                import pdb; pdb.set_trace()
+                import ipdb; ipdb.set_trace()
                 cookie = self._api_client.auth_cookie(conn)
 
                 if (self._url != jsonutils.loads(templates.LOGIN)['path'] and

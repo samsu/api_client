@@ -130,7 +130,7 @@ class EventletApiRequest(request.ApiRequest):
         while response is None and attempt <= self._retries:
             eventlet.greenthread.sleep(timeout)
             attempt += 1
-            import pdb;pdb.set_trace()
+            import ipdb;ipdb.set_trace()
             req = self._issue_request()
             # automatically raises any exceptions returned.
             if isinstance(req, httplib.HTTPResponse):
