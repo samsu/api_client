@@ -114,7 +114,7 @@ class FortiosApiClient(eventlet_client.EventletApiClient):
 
         status = response.status
         if status == 401:
-            import ipdb;ipdb.set_trace()
+            import pdb;pdb.set_trace()
             raise exception.UnAuthorizedRequest()
         # Fail-fast: Check for exception conditions and raise the
         # appropriate exceptions for known error codes.

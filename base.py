@@ -225,7 +225,7 @@ class ApiClientBase(object):
     def _wait_for_login(self, conn, headers=None):
         '''Block until a login has occurred for the current API provider.'''
         data = self._get_provider_data(conn)
-        import ipdb;ipdb.set_trace()
+        import pdb;pdb.set_trace()
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
                       utils.ctrl_conn_to_str(conn))
