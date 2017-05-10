@@ -231,7 +231,7 @@ class GenericRequestEventlet(EventletApiRequest):
                  http_timeout=request.DEFAULT_HTTP_TIMEOUT,
                  retries=request.DEFAULT_RETRIES,
                  redirects=request.DEFAULT_REDIRECTS):
-        headers = {"Content-Type": content_type}
+        headers = {'Content-Type': content_type}
         super(GenericRequestEventlet, self).__init__(
             client_obj, url, method, body, headers,
             retries=retries,
