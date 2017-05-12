@@ -15,6 +15,7 @@
 # under the License.
 
 import abc
+import base64
 try:
     import Cookie
     import httplib
@@ -101,6 +102,19 @@ class ApiClientBase(object):
             cookie = data[1]
         return cookie
 
+    def auth_basic(self, conn):
+        auth = None
+        data = self._get_provider_data(conn)
+        if data:
+            auth = data[1]
+        return auth
+
+    def authentication(self, conn):
+        if self._auth_scheme in [const.HTTP_BASIC_AUTH_SCH]:
+            return self.auth_basic(conn)
+        else:
+            return self.auth_cookie(conn)
+
     @staticmethod
     def format_cookie(cookie):
         if not cookie:
@@ -154,7 +168,7 @@ class ApiClientBase(object):
                   "connection(s) available.",
                   {'rid': rid, 'conn': utils.ctrl_conn_to_str(conn),
                    'qsize': qsize})
-        if auto_login and self.auth_cookie(conn) is None:
+        if auto_login and self.authentication(conn) is None:
             self._wait_for_login(conn, headers)
         return conn
 

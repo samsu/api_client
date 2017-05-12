@@ -33,20 +33,22 @@ LOG = logging.getLogger(__name__)
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
+DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 
 
 @singleton.singleton
-class FortiosApiClient(eventlet_client.EventletApiClient):
+class FortiAuthApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
     def __init__(self, api_providers, user, password,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
-                 use_https=False,
+                 use_https=True,
                  connect_timeout=base.DEFAULT_CONNECT_TIMEOUT,
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
-                 redirects=DEFAULT_REDIRECTS):
+                 redirects=DEFAULT_REDIRECTS,
+                 auth_scheme=DEFAULT_HTTP_AUTH_SCH):
         '''Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -56,7 +58,7 @@ class FortiosApiClient(eventlet_client.EventletApiClient):
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
         '''
-        super(FortiosApiClient, self).__init__(
+        super(FortiAuthApiClient, self).__init__(
             api_providers, user, password,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
@@ -70,6 +72,7 @@ class FortiosApiClient(eventlet_client.EventletApiClient):
         self.message = {}
         self._user = user
         self._password = password
+        self._auth_scheme = auth_scheme
 
     @staticmethod
     def _render(template, **message):

@@ -113,18 +113,18 @@ class ApiRequest(object):
                     conn.sock.settimeout(self._http_timeout)
 
                 headers = copy.copy(self._headers)
-                if templates.RELOGIN in url:
-                    url = jsonutils.loads(templates.LOGIN)['path']
-                    conn.connect()
-                    self._api_client._wait_for_login(conn, headers)
-                    url = self._url
+                #if templates.RELOGIN in url:
+                #    url = jsonutils.loads(templates.LOGIN)['path']
+                #    conn.connect()
+                #    self._api_client._wait_for_login(conn, headers)
+                #    url = self._url
                 import pdb; pdb.set_trace()
-                cookie = self._api_client.auth_cookie(conn)
+                #cookie = self._api_client.auth_cookie(conn)
 
-                if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
-                    cookie):
-                    headers['Cookie'] = cookie['Cookie']
-                    headers['X-CSRFTOKEN'] = cookie['X-CSRFTOKEN']
+                #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
+                #    cookie):
+                #    headers['Cookie'] = cookie['Cookie']
+                #    headers['X-CSRFTOKEN'] = cookie['X-CSRFTOKEN']
 
                 try:
                     if self._body:
@@ -164,6 +164,7 @@ class ApiRequest(object):
                            'response.body': response.body})
 
                 if response.status in (401, 302):
+
                     if (cookie is None and
                        self._url != jsonutils.loads(templates.LOGIN)['path']):
                         # The connection still has no valid cookie despite
@@ -172,6 +173,7 @@ class ApiRequest(object):
                         # a request to authenticate, we should abort the
                         # request since there is no point in retrying.
                         self._abort = True
+
                     # If request is unauthorized, clear the session cookie
                     # for the current provider so that subsequent requests
                     # to the same provider triggers re-authentication.

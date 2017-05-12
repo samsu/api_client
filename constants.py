@@ -34,4 +34,5 @@ HTTP_HEADERS = {
 }
 
 
-AUTHENTICATION = 'Basic'
+# HTTP authentication scheme (abbr. HTTP_AUTH_SCH)
+HTTP_BASIC_AUTH_SCH = 'http basic authentication scheme'
