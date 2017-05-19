@@ -166,7 +166,7 @@ class ApiRequest(object):
                            'response.body': response.body})
 
                 if response.status in (401, 302):
-                    if response.headers:
+                    # if response.headers:
                     if (cookie is None and
                        self._url != jsonutils.loads(templates.LOGIN)['path']):
                         # The connection still has no valid cookie despite
