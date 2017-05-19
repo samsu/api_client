@@ -107,6 +107,7 @@ class ApiRequest(object):
                 # Update connection with user specified request timeout,
                 # the connect timeout is usually smaller so we only set
                 # the request timeout after a connection is established
+                import pdb;pdb.set_trace()
                 if conn.sock is None:
                     conn.connect()
                     conn.sock.settimeout(self._http_timeout)
