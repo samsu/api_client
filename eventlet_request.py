@@ -75,7 +75,6 @@ class EventletApiRequest(request.ApiRequest):
         self._http_timeout = http_timeout
         self._client_conn = client_conn
         self._abort = False
-
         self._request_error = None
 
         if "User-Agent" not in self._headers:
@@ -170,7 +169,7 @@ class LoginRequestEventlet(EventletApiRequest):
                  headers=None):
         if headers is None:
             headers = {}
-        headers.update({'Content-Type': const.HTTP_HEADERS['Content-Type']})
+        # headers.update({'Content-Type': const.HTTP_HEADERS['Content-Type']})
         message = client_obj._render(templates.LOGIN)
         body = message.get('body', None)
         # base64 encode the username and password for http basic

@@ -64,6 +64,7 @@ class ApiRequest(object):
         401,
         403,
         404,
+        407,
         409,
         500,
         503
@@ -118,7 +119,7 @@ class ApiRequest(object):
                 #    conn.connect()
                 #    self._api_client._wait_for_login(conn, headers)
                 #    url = self._url
-                import pdb; pdb.set_trace()
+                #import pdb; pdb.set_trace()
                 #cookie = self._api_client.auth_cookie(conn)
 
                 #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
@@ -128,11 +129,12 @@ class ApiRequest(object):
 
                 try:
                     if self._body:
-                        if (self._url ==
-                                jsonutils.loads(templates.LOGIN)['path']):
-                            body = urlparse.urlencode(self._body)
-                        else:
-                            body = jsonutils.dumps(self._body)
+                    #    if (self._url ==
+                    #            jsonutils.loads(templates.LOGIN)['path']):
+                    #        body = urlparse.urlencode(self._body)
+                    #    else:
+                    #        body = jsonutils.dumps(self._body)
+                        body = jsonutils.dumps(self._body)
                     else:
                         body = None
                     LOG.debug("Issuing request: self._method = [%(method)s], "
@@ -164,7 +166,7 @@ class ApiRequest(object):
                            'response.body': response.body})
 
                 if response.status in (401, 302):
-
+                    if response.headers:
                     if (cookie is None and
                        self._url != jsonutils.loads(templates.LOGIN)['path']):
                         # The connection still has no valid cookie despite
@@ -285,7 +287,8 @@ class ApiRequest(object):
         if allow_release_conn:
             self._api_client.release_connection(conn)
         conn_params = (result.hostname, result.port, result.scheme == "https")
-        conn = self._api_client.acquire_redirect_connection(conn_params, True,
+        #conn = self._api_client.acquire_redirect_connection(conn_params, True,
+        conn=self._api_client.acquire_redirect_connection(conn_params, False,
                                                             self._headers)
         if result.query:
             url = "%s?%s" % (result.path, result.query)
