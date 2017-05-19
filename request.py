@@ -80,7 +80,7 @@ class ApiRequest(object):
 
     def get_conn(self):
         conn = self._client_conn or \
-               self._api_client.acquire_connection(True,
+               self._api_client.acquire_connection(self._auto_login,
                                                    copy.copy(self._headers),
                                                    rid=self._rid())
         return conn
