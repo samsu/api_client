@@ -153,6 +153,7 @@ class ApiClientBase(object):
             LOG.debug("[%d] Waiting to acquire API client connection.", rid)
         priority, conn = self._conn_pool.get()
         now = time.time()
+        import pdb;pdb.set_trace()
         if getattr(conn, 'last_used', now) < now - self.CONN_IDLE_TIMEOUT:
             LOG.info(_LI("[%(rid)d] Connection %(conn)s idle for "
                          "%(sec)0.2f seconds; reconnecting."),
