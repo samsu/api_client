@@ -48,7 +48,8 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
-                 auto_login=False):
+                 auto_login=True,
+                 auth_sch=DEFAULT_HTTP_AUTH_SCH):
         '''Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -73,6 +74,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         self._user = user
         self._password = password
         self._auto_login = auto_login
+        self._auth_sch = auth_sch
 
     @staticmethod
     def _render(template, **message):

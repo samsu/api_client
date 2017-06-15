@@ -35,4 +35,10 @@ HTTP_HEADERS = {
 
 
 # HTTP authentication scheme (abbr. HTTP_AUTH_SCH)
-HTTP_BASIC_AUTH_SCH = 'http basic authentication scheme'
+HTTP_BASIC_AUTH_SCH = 'HTTP Basic Authentication Scheme'
+LOGIN_COOKIE = 'Login cookie session'
+AUTH_FUNC_MAPS = {
+    HTTP_BASIC_AUTH_SCH: 'set_auth_basic',
+    LOGIN_COOKIE: 'set_auth_cookie'
+
+}

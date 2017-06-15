@@ -51,7 +51,7 @@ class EventletApiClient(base.ApiClientBase):
         if not api_providers:
             api_providers = []
         self._api_providers = set([tuple(p) for p in api_providers])
-        self._api_provider_data = {}  # tuple(semaphore, session_cookie)
+        self._api_provider_data = {}  # tuple(semaphore, session_cookie|auth)
         for p in self._api_providers:
             self._set_provider_data(p, (eventlet.semaphore.Semaphore(1), None))
         self._user = user

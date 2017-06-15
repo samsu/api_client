@@ -95,25 +95,32 @@ class ApiClientBase(object):
                 self._config_gen_ts = time.time()
         self._config_gen = value
 
-    def auth_cookie(self, conn):
-        cookie = None
+    def auth_data(self, conn):
+        # auth_data could be cookie or other fields with authentication
+        # info in http headers.
+        auth_data = None
         data = self._get_provider_data(conn)
         if data:
-            cookie = data[1]
-        return cookie
+            auth_data = data[1]
+        return auth_data
 
-    def auth_basic(self, conn):
+    def set_auth_basic(self, conn):
         auth = None
         data = self._get_provider_data(conn)
-        if data:
-            auth = data[1]
-        return auth
+        if data and data[1] is None:
+            key = base64.encodestring(
+                '%s:%s' % (self._user, self._password)).replace('\n', '')
+            auth_basic = {'Authorization': "Basic %s" % key}
+            self._set_provider_data(conn, (data[0], auth_basic))
 
-    def authentication(self, conn):
-        if self._auth_scheme in [const.HTTP_BASIC_AUTH_SCH]:
-            return self.auth_basic(conn)
+    def set_auth_data(self, conn, *data):
+        if self._auth_sch in const.AUTH_FUNC_MAPS:
+            auth_func = getattr(self, const.AUTH_FUNC_MAPS[self._auth_sch])
+            return auth_func(conn, *data)
         else:
-            return self.auth_cookie(conn)
+            LOG.error(_LE("Invalid authentication scheme: %(sch)s"),
+                      {'sch': self._auth_sch})
+            raise ValueError
 
     @staticmethod
     def format_cookie(cookie):
@@ -133,7 +140,7 @@ class ApiClientBase(object):
             LOG.error(_LE("The cookie ccsrftoken cannot be formatted"))
             raise Cookie.CookieError
 
-    def set_auth_cookie(self, conn, cookie):
+    def set_auth_cookie(self, conn, cookie=None):
         data = self._get_provider_data(conn)
         if data:
             cookie = self.format_cookie(cookie)
@@ -161,7 +168,7 @@ class ApiClientBase(object):
                       'conn': utils.ctrl_conn_to_str(conn),
                       'sec': now - conn.last_used})
             conn = self._create_connection(*self._conn_params(conn))
-            self.set_auth_cookie(conn, None)
+            self.set_auth_data(conn)
         conn.last_used = now
         conn.priority = priority  # stash current priority for release
         qsize = self._conn_pool.qsize()
