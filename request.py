@@ -122,6 +122,7 @@ class ApiRequest(object):
                 #    url = self._url
                 import pdb; pdb.set_trace()
                 auth = self._api_client.auth_data(conn)
+                headers.update(auth)
 
                 #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
                 #    cookie):
