@@ -138,7 +138,7 @@ class EventletApiClient(base.ApiClientBase):
         '''Issue login request and update authentication cookie.'''
         print "## EventletApiClient _login ##"
         cookie = None
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         g = eventlet_request.LoginRequestEventlet(
             self, self._user, self._password, conn, headers)
         g.start()

@@ -107,7 +107,7 @@ class ApiRequest(object):
                 # Update connection with user specified request timeout,
                 # the connect timeout is usually smaller so we only set
                 # the request timeout after a connection is established
-                #import pdb;pdb.set_trace()
+                import pdb;pdb.set_trace()
                 if conn.sock is None:
                     conn.connect()
                     conn.sock.settimeout(self._http_timeout)
@@ -120,7 +120,7 @@ class ApiRequest(object):
                 #    conn.connect()
                 #    self._api_client._wait_for_login(conn, headers)
                 #    url = self._url
-                #import pdb; pdb.set_trace()
+                import pdb; pdb.set_trace()
                 auth = self._api_client.auth_cookie(conn)
 
                 #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
