@@ -15,7 +15,7 @@
 # under the License.
 
 import abc
-import base64
+
 try:
     import Cookie
     import httplib
@@ -104,13 +104,9 @@ class ApiClientBase(object):
             auth_data = data[1]
         return auth_data
 
-    def set_auth_basic(self, conn):
-        auth = None
+    def set_auth_basic(self, conn, auth_basic=None):
         data = self._get_provider_data(conn)
-        if data and data[1] is None:
-            key = base64.encodestring(
-                '%s:%s' % (self._user, self._password)).replace('\n', '')
-            auth_basic = {'Authorization': "Basic %s" % key}
+        if data:
             self._set_provider_data(conn, (data[0], auth_basic))
 
     def set_auth_data(self, conn, *data):

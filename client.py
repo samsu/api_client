@@ -15,6 +15,7 @@
 #    under the License.
 #
 
+import base64
 import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
@@ -88,6 +89,13 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
             message = {}
         msg = jinja2.Template(template).render(**message)
         return jsonutils.loads(msg)
+
+    def _login(self, conn=None, headers=None):
+        print "## FortiAuthApiClient _login ##"
+        key = base64.encodestring(
+            '%s:%s' % (self._user, self._password)).replace('\n', '')
+        auth_basic = {'Authorization': "Basic %s" % key}
+        return auth_basic
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
