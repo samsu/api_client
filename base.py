@@ -176,7 +176,7 @@ class ApiClientBase(object):
                   "connection(s) available.",
                   {'rid': rid, 'conn': utils.ctrl_conn_to_str(conn),
                    'qsize': qsize})
-        if auto_login and self.authentication(conn) is None:
+        if auto_login and self.auth_data(conn) is None:
             self._wait_for_login(conn, headers)
         return conn
 
