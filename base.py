@@ -160,7 +160,7 @@ class ApiClientBase(object):
             LOG.debug("[%d] Waiting to acquire API client connection.", rid)
         priority, conn = self._conn_pool.get()
         now = time.time()
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         if getattr(conn, 'last_used', now) < now - self.CONN_IDLE_TIMEOUT:
             LOG.info(_LI("[%(rid)d] Connection %(conn)s idle for "
                          "%(sec)0.2f seconds; reconnecting."),
@@ -247,7 +247,7 @@ class ApiClientBase(object):
     def _wait_for_login(self, conn, headers=None):
         '''Block until a login has occurred for the current API provider.'''
         data = self._get_provider_data(conn)
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
                       utils.ctrl_conn_to_str(conn))
