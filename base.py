@@ -252,7 +252,7 @@ class ApiClientBase(object):
         if provider_sem.acquire(blocking=False):
             try:
                 cookie = self._login(conn, headers)
-                self.set_auth_cookie(conn, cookie)
+                self.set_auth_data(conn, cookie)
             finally:
                 provider_sem.release()
         else:
