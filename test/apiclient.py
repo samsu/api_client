@@ -12,7 +12,7 @@ ApiClient=client.FortiAuthApiClient
 if __name__ == "__main__":
     api = [("10.160.37.98", 443, True)]
     user = "admin"
-    password = "lRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
+    password = "slRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
     cli = ApiClient(api, user, password)
     cli.request('GET_USERGROUPS')
     print "----------"
