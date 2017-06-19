@@ -105,7 +105,7 @@ class ApiClientBase(object):
             auth_data = data[1]
         return auth_data
 
-    def format_auth_basic():
+    def format_auth_basic(self):
         auth = '{}:{}'.format(self._user, self._password)
         return "Basic {}".format(base64.encodestring(auth).replace('\n', ''))
 
