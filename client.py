@@ -92,8 +92,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
     def _login(self, conn=None, headers=None):
         print "## FortiAuthApiClient _login ##"
         import pdb;pdb.set_trace()
-        key = self.format_auth_basic('%s:%s' % (self._user, self._password))
-        auth_basic = {'Authorization': "Basic %s" % key}
+        auth_basic = {'Authorization': self.format_auth_basic()}
         return auth_basic
 
     def request(self, opt, content_type="application/json", **message):

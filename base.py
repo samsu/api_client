@@ -105,13 +105,9 @@ class ApiClientBase(object):
             auth_data = data[1]
         return auth_data
 
-    @staticmethod
-    def format_auth_basic(auth=None):
-        if not auth:
-            LOG.warning("No auth data was input into format_auth_basic")
-            return ''
-        else:
-            return base64.encodestring(auth).replace('\n', '')
+    def format_auth_basic():
+        auth = '{}:{}'.format(self._user, self._password)
+        return "Basic {}".format(base64.encodestring(auth).replace('\n', ''))
 
     def set_auth_basic(self, conn, auth_basic=None):
         data = self._get_provider_data(conn)
