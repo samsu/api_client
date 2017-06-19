@@ -15,6 +15,7 @@
 # under the License.
 
 import abc
+import base64
 
 try:
     import Cookie
@@ -103,6 +104,14 @@ class ApiClientBase(object):
         if data:
             auth_data = data[1]
         return auth_data
+
+    @staticmethod
+    def format_auth_basic(auth=None):
+        if not auth:
+            LOG.warning("No auth data was input into format_auth_basic")
+            return ''
+        else:
+            return base64.encodestring(auth).replace('\n', '')
 
     def set_auth_basic(self, conn, auth_basic=None):
         data = self._get_provider_data(conn)

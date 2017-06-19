@@ -15,7 +15,6 @@
 #    under the License.
 #
 
-import base64
 import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
@@ -93,8 +92,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
     def _login(self, conn=None, headers=None):
         print "## FortiAuthApiClient _login ##"
         import pdb;pdb.set_trace()
-        key = base64.encodestring(
-            '%s:%s' % (self._user, self._password)).replace('\n', '')
+        key = self.format_auth_basic('%s:%s' % (self._user, self._password))
         auth_basic = {'Authorization': "Basic %s" % key}
         return auth_basic
 
