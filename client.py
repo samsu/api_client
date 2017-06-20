@@ -94,6 +94,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
+        import pdb;pdb.set_trace()
         self.message = self._render(getattr(templates, opt), **message)
         method = self.message['method']
         url = self.message['path']
