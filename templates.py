@@ -118,26 +118,31 @@ SET_VLAN_INTERFACE = """
 }
 """
 
-# Delete VLAN (vlan id)
-DELETE_VLAN_INTERFACE = """
-{
-    {% if vdom is defined %}
-        "path":"/api/v2/cmdb/system/interface/{{ name }}/?vdom={{ vdom }}",
-    {% else %}
-        "path":"/api/v2/cmdb/system/interface/{{ name }}",
-    {% endif %}
-    "method": "DELETE"
-}
-"""
-
-# Get VLAN interface info
+## usergroups
+# query usergroups
 GET_USERGROUPS = """
 {
-    "path":"/api/v1/usergroups/",
+    {% if id is defined %}
+        "path":"/api/v1/usergroups/{{ id }}/",
+    {% else %}
+        {% if name is defined %}
+            "path":"/api/v1/usergroups/?name={{ name }}",
+        {% else %}
+            "path":"/api/v1/usergroups/",
     "method": "GET"
 }
 """
 
+# create an usergroup
+CRT_USERGROUPS = """
+{
+    "path":"/api/v1/usergroups/",
+    "method": "POST",
+    "body": {
+        "name": "{{ name }}"
+    }
+}
+"""
 
 ADD_DHCP_SERVER = """
 {
