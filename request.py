@@ -170,7 +170,7 @@ class ApiRequest(object):
 
                 if response.status in (401, 302):
                     # if response.headers:
-                    if (cookie is None and
+                    if (auth is None and
                        self._url != jsonutils.loads(templates.LOGIN)['path']):
                         # The connection still has no valid cookie despite
                         # attempts to authenticate and the request has failed
@@ -182,7 +182,7 @@ class ApiRequest(object):
                     # If request is unauthorized, clear the session cookie
                     # for the current provider so that subsequent requests
                     # to the same provider triggers re-authentication.
-                    self._api_client.set_auth_cookie(conn, None)
+                    self._api_client.set_auth_data(conn, None)
 
                 elif 503 == response.status:
                     is_conn_service_unavail = True
