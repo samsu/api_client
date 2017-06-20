@@ -17,13 +17,9 @@ if __name__ == "__main__":
     cli.request('GET_USERGROUPS')
     print "----------"
     message = {
-        "name": "ext_4093",
-        "vlanid": 4093,
-        "vdom": "root",
-        "interface": "port1",
-        "ip": "192.168.30.254 255.255.255.0"
+        "name": "test123"
     }
-    #cli.request("ADD_VLAN_INTERFACE", message)
+    print cli.request("CRT_USERGROUPS", message)
     message = {
         "name": "port5",
         "vdom": "root",
