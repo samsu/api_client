@@ -107,7 +107,7 @@ class ApiRequest(object):
                 # Update connection with user specified request timeout,
                 # the connect timeout is usually smaller so we only set
                 # the request timeout after a connection is established
-                import pdb;pdb.set_trace()
+                #import pdb;pdb.set_trace()
                 if conn.sock is None:
                     conn.connect()
                     conn.sock.settimeout(self._http_timeout)
@@ -120,7 +120,7 @@ class ApiRequest(object):
                 #    conn.connect()
                 #    self._api_client._wait_for_login(conn, headers)
                 #    url = self._url
-                import pdb; pdb.set_trace()
+                #import pdb; pdb.set_trace()
                 auth = self._api_client.auth_data(conn)
                 print "auth=%s, headers=%s " % (auth, headers)
                 headers.update(auth)
@@ -156,7 +156,8 @@ class ApiRequest(object):
                 response.body = response.read()
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
-                LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
+                print("@@@@@@ [ _issue_request ] [%(rid)d] "
+                #LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
                           "%(status)s (%(elapsed)s seconds), "
                           "response.headers %(response.headers)s, "

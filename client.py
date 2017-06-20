@@ -90,10 +90,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         return jsonutils.loads(msg)
 
     def _login(self, conn=None, headers=None):
-        print "## FortiAuthApiClient _login ##"
-        import pdb;pdb.set_trace()
-        auth_basic = {'Authorization': self.format_auth_basic()}
-        return auth_basic
+        return {'Authorization': self.format_auth_basic()}
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
