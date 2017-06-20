@@ -129,6 +129,8 @@ GET_USERGROUPS = """
             "path":"/api/v1/usergroups/?name={{ name }}",
         {% else %}
             "path":"/api/v1/usergroups/",
+        {% endif %}
+    {% endif %}
     "method": "GET"
 }
 """
