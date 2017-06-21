@@ -19,17 +19,5 @@ if __name__ == "__main__":
     message = {
         "name": "test123"
     }
-    print cli.request("CRT_USERGROUPS", message)
-    message = {
-        "name": "port5",
-        "vdom": "root",
-        "ip": "192.168.40.254 255.255.255.0"
-        #"secondaryips": ["192.168.20.200 255.255.255.0", ]
-        #"secondaryips": []
-    }
-    #print cli.request("SET_VLAN_INTERFACE", message)
-    message = {
-        "name": "ext_4093"
-    }
+    print cli.request("CRT_USERGROUPS", **message)
 
-    #print cli.request("GET_VLAN_INTERFACE", message)
