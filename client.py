@@ -147,7 +147,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         if response.body:
             try:
                 result = jsonutils.loads(response.body)
-                print result
+                print "##### ", result, " #####"
                 import pdb;pdb.set_trace()
                 return result['objects']
             except UnicodeDecodeError:
