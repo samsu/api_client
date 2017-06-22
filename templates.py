@@ -44,12 +44,12 @@ LOGOUT = """
 GET_USERGROUPS = """
 {
     {% if id is defined %}
-        "path":"/api/v1/usergroups/{{ id }}/",
+        "path": "/api/v1/usergroups/{{ id }}/",
     {% else %}
         {% if name is defined %}
-            "path":"/api/v1/usergroups/?name={{ name }}",
+            "path": "/api/v1/usergroups/?name={{ name }}",
         {% else %}
-            "path":"/api/v1/usergroups/",
+            "path": "/api/v1/usergroups/",
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -59,7 +59,7 @@ GET_USERGROUPS = """
 # create an usergroup
 CREATE_USERGROUPS = """
 {
-    "path":"/api/v1/usergroups/",
+    "path": "/api/v1/usergroups/",
     "method": "POST",
     "body": {
         "name": "{{ name }}"
@@ -70,7 +70,7 @@ CREATE_USERGROUPS = """
 # delete an usergroup
 DELETE_USERGROUPS = """
 {
-    "path":"/api/v1/usergroups/",
+    "path": "/api/v1/usergroups/",
     "method": "DELETE",
     "body": {
         "name": "{{ name }}"

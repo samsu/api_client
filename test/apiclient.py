@@ -14,7 +14,7 @@ if __name__ == "__main__":
     user = "admin"
     password = "slRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
     cli = ApiClient(api, user, password)
-    cli.request('GET_USERGROUPS')
+    print cli.request('GET_USERGROUPS')
     print "----------"
     message = {
         "name": "test123"

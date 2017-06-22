@@ -145,17 +145,14 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
                        'status': response.status, 'body': response.body})
             return None
 
-        if url == jsonutils.loads(templates.LOGOUT)['path']:
-            return response.body
-        else:
-            try:
-                return jsonutils.loads(response.body)
-            except UnicodeDecodeError:
-                LOG.debug("The following strings cannot be decoded with "
-                          "'utf-8, trying 'ISO-8859-1' instead. %(body)s",
-                          {'body': response.body})
-                return jsonutils.loads(response.body, encoding='ISO-8859-1')
-            except Exception as e:
-                LOG.error(_LE("Decode error, the response.body %(body)s"),
-                          {'body': response.body})
-                raise e
+        try:
+            return jsonutils.loads(response.body)
+        except UnicodeDecodeError:
+            LOG.debug("The following strings cannot be decoded with "
+                      "'utf-8, trying 'ISO-8859-1' instead. %(body)s",
+                      {'body': response.body})
+            return jsonutils.loads(response.body, encoding='ISO-8859-1')
+        except Exception as e:
+            LOG.error(_LE("Decode error, the response.body %(body)s"),
+                      {'body': response.body})
+            raise e
