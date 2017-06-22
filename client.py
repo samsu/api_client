@@ -147,7 +147,8 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
 
         if response.body:
             try:
-                return jsonutils.loads(response.body)
+                result = jsonutils.loads(response.body)
+                return result['objects']
             except UnicodeDecodeError:
                 LOG.debug("The following strings cannot be decoded with "
                           "'utf-8, trying 'ISO-8859-1' instead. %(body)s",
