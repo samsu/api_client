@@ -24,7 +24,7 @@ import base
 import constants as const
 import eventlet_client
 import eventlet_request
-import exception
+import exceptions
 import templates
 from common import singleton
 
@@ -119,23 +119,23 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
             # Timeout.
             LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
                       {'method': method, 'url': url})
-            raise exception.RequestTimeout()
+            raise exceptions.RequestTimeout()
 
         status = response.status
         if status == 401:
             #import pdb;pdb.set_trace()
-            raise exception.UnAuthorizedRequest()
+            raise exceptions.UnAuthorizedRequest()
         # Fail-fast: Check for exception conditions and raise the
         # appropriate exceptions for known error codes.
         if status in [404]:
             LOG.warning(_LW("Resource not found. Response status: %(status)s, "
                             "response body: %(response.body)s"),
                         {'status': status, 'response.body': response.body})
-            exception.ERROR_MAPPINGS[status](response)
-        elif status in exception.ERROR_MAPPINGS:
+            exceptions.ERROR_MAPPINGS[status](response)
+        elif status in exceptions.ERROR_MAPPINGS:
             LOG.error(_LE("Received error code: %s"), status)
             LOG.error(_LE("Server Error Message: %s"), response.body)
-            exception.ERROR_MAPPINGS[status](response)
+            exceptions.ERROR_MAPPINGS[status](response)
 
         # Continue processing for non-error condition.
         if status != 200 and status != 201 and status != 204:
