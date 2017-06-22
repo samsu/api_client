@@ -19,5 +19,7 @@ if __name__ == "__main__":
     message = {
         "name": "test123"
     }
-    print cli.request("CRT_USERGROUPS", **message)
+    print cli.request("CREATE_USERGROUPS", **message)
+    print cli.request('GET_USERGROUPS')
+    print cli.request("DELETE_USERGROUPS", **message)
 

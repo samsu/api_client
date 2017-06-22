@@ -39,85 +39,6 @@ LOGOUT = """
 }
 """
 
-# Create VLAN
-ADD_VLAN_INTERFACE = """
-{
-    "path": "/api/v2/cmdb/system/interface/",
-    "method": "POST",
-    "body": {
-        "name": "interface",
-        "json": {
-            {% if name is defined %}
-                "name": "{{ name }}",
-            {% else %}
-                "name": "os_vid_{{ vlanid }}",
-            {% endif %}
-            {% if vlanid is defined %}
-                "vlanid": "{{ vlanid }}",
-            {% endif %}
-            "interface": "{{ interface }}",
-            "vdom": "{{ vdom }}",
-            "type": "vlan",
-            {% if ip is defined %}
-                "ip": "{{ ip }}",
-                "mode": "static",
-                "allowaccess": "ping",
-            {% endif %}
-            "secondary-IP":"enable",
-            {% if alias is defined %}
-                "alias": "{{ alias  }}",
-            {% endif %}
-            "ipv6": {
-                "ip6-extra-addr": []
-            }
-        }
-    }
-}
-"""
-
-SET_VLAN_INTERFACE = """
-{
-    "path": "/api/v2/cmdb/system/interface/{{ name }}",
-    "method": "PUT",
-    "body": {
-        "json": {
-            {% if ip is defined and ip != None %}
-                "ip": "{{ ip }}",
-                "mode": "static",
-                "allowaccess": "ping",
-            {% endif %}
-            {% if secondaryips is defined %}
-                {% if secondaryips %}
-                    "secondary-IP": "enable",
-                    "secondaryip": [
-                    {% for secondaryip in secondaryips[:-1] %}
-                        {
-                            "ip": "{{ secondaryip }}",
-                            "allowaccess": "ping"
-                        },
-                    {% endfor %}
-                        {
-                            "ip": "{{ secondaryips[-1] }}",
-                            "allowaccess": "ping"
-                        }
-                    ],
-                {% else %}
-                    "secondary-IP": "disable",
-                {% endif %}
-            {% endif %}
-            {% if vlanid is defined %}
-                "vlanid": "{{ vlanid }}",
-            {% endif %}
-            {% if vdom is defined %}
-                "vdom": "{{ vdom }}"
-            {% else %}
-                "vdom": "root"
-            {% endif %}
-        }
-    }
-}
-"""
-
 ## usergroups
 # query usergroups
 GET_USERGROUPS = """
@@ -136,7 +57,7 @@ GET_USERGROUPS = """
 """
 
 # create an usergroup
-CRT_USERGROUPS = """
+CREATE_USERGROUPS = """
 {
     "path":"/api/v1/usergroups/",
     "method": "POST",
@@ -145,6 +66,18 @@ CRT_USERGROUPS = """
     }
 }
 """
+
+# delete an usergroup
+DELETE_USERGROUPS = """
+{
+    "path":"/api/v1/usergroups/",
+    "method": "DELETE",
+    "body": {
+        "name": "{{ name }}"
+    }
+}
+"""
+
 
 ADD_DHCP_SERVER = """
 {
