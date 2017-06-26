@@ -136,7 +136,6 @@ class EventletApiClient(base.ApiClientBase):
 
     def _login(self, conn=None, headers=None):
         '''Issue login request and update authentication cookie.'''
-        print "## EventletApiClient _login ##"
         cookie = None
         g = eventlet_request.LoginRequestEventlet(
             self, self._user, self._password, conn, headers)

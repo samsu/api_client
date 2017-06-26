@@ -156,8 +156,8 @@ class ApiRequest(object):
                 response.body = response.read()
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
-                print("@@@@@@ [ _issue_request ] [%(rid)d] "
-                #LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
+                #print("@@@@@@ [ _issue_request ] [%(rid)d] "
+                LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
                           "%(status)s (%(elapsed)s seconds), "
                           "response.headers %(response.headers)s, "
