@@ -90,6 +90,12 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         return jsonutils.loads(msg)
 
     def _login(self, conn=None, headers=None):
+        """ FortiAuthenticator use http basic auth, doesn't need to login,
+           here reuse the name login to unify the API client process.
+        :param conn: Not use here
+        :param headers: Not use here
+        :return: return authenticated Header
+        """
         return {'Authorization': self.format_auth_basic()}
 
     def request(self, opt, content_type="application/json", **message):
