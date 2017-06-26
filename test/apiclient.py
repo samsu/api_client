@@ -22,4 +22,5 @@ if __name__ == "__main__":
     print cli.request("CREATE_USERGROUPS", **message)
     print cli.request('GET_USERGROUPS', **message)
     print cli.request("DELETE_USERGROUPS", **message)
+    print cli.request("GET_USERS")
 
