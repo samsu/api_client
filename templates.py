@@ -66,7 +66,7 @@ DELETE_USERGROUPS = """
 # query users
 GET_USERS = """
 {
-    {% set options = {
+    {% set _options = {
             "username": username,
             "token_auth": token_auth,
             "ftk_only": ftk_only,
@@ -90,7 +90,7 @@ GET_USERS = """
             "active": active
     } %}
     {% set _query = "" %}
-    {% for k, v in options.iteritems() if v is defined and v %}
+    {% for k, v in _options.iteritems() if v is defined and v %}
         {%" _query="&{{ k }}={{ v }}" %}
     {% endfor %}
     {% if id is defined %}
@@ -113,7 +113,7 @@ CREATE_USERS = """
     "method": "POST",
     "body": {
         {%
-            set options = {
+            set _options = {
                 "token_auth": token_auth,
                 "ftk_only": ftk_only,
                 "ftm_act_method": ftm_act_method,
@@ -136,7 +136,7 @@ CREATE_USERS = """
                 "active": active
             }
         %}
-        {% for k, v in options.iteritems() if v is defined and v %}
+        {% for k, v in _options.iteritems() if v is defined and v %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "username": "{{ username }}"
