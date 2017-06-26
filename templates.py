@@ -90,7 +90,7 @@ GET_USERS = """
             "active": active
     } %}
 
-    {% set _query = "" %}
+    {{ set _query = "" }}
 
     {% for k, v in _options.iteritems() if v is defined and v %}
         {%" _query="&{{ k }}={{ v }}" %}
