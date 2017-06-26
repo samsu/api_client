@@ -114,7 +114,6 @@ CREATE_USERS = """
     "path": "/api/v1/localusers/",
     "method": "POST",
     "body": {
-        "username": "{{ username }}",
         {%
             set options = {
                 "token_auth": token_auth,
@@ -142,6 +141,7 @@ CREATE_USERS = """
         {% for k, v in options.iteritems() if v is defined and v %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
+        "username": "{{ username }}"
     }
 }
 """
