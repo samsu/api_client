@@ -236,7 +236,6 @@ class GenericRequestEventlet(EventletApiRequest):
             retries=retries,
             auto_login=auto_login, redirects=redirects,
             http_timeout=http_timeout)
-        print headers
 
     def session_cookie(self):
         if self.successful():
