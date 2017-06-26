@@ -128,7 +128,6 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
 
         status = response.status
         if status == 401:
-            #import pdb;pdb.set_trace()
             raise exceptions.UnAuthorizedRequest()
         # Fail-fast: Check for exception conditions and raise the
         # appropriate exceptions for known error codes.
@@ -154,7 +153,6 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
             try:
                 result = jsonutils.loads(response.body)
                 print "##### ", result, " #####"
-                import pdb;pdb.set_trace()
                 return result['objects'] if 'objects' in result else result
             except UnicodeDecodeError:
                 LOG.debug("The following strings cannot be decoded with "
