@@ -89,15 +89,15 @@ GET_USERS = """
             "custom3": custom3,
             "active": active
     } %}
-    {% set query = '' %}
+    {% set _query = "" %}
     {% for k, v in options.iteritems() if v is defined and v %}
-        {%" query="&{{ k }}={{ v }}" %}
+        {%" _query="&{{ k }}={{ v }}" %}
     {% endfor %}
     {% if id is defined %}
         "path": "/api/v1/localusers/{{ id }}/",
     {% else %}
         {% if query %}
-            "path": "/api/v1/localusers/?{{ query }}",
+            "path": "/api/v1/localusers/?{{ _query }}",
         {% else %}
             "path": "/api/v1/localusers/",
         {% endif %}
