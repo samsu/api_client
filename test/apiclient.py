@@ -14,7 +14,7 @@ if __name__ == "__main__":
     user = "admin"
     password = "slRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
     cli = ApiClient(api, user, password)
-    print "----------"
+    print "----TESTING USER_GROUPS------"
     message = {
         "name": "test123"
     }
@@ -22,5 +22,10 @@ if __name__ == "__main__":
     print cli.request("CREATE_USERGROUPS", **message)
     print cli.request('GET_USERGROUPS', **message)
     print cli.request("DELETE_USERGROUPS", **message)
-    print cli.request("GET_USERS")
+
+    print "----TESTING USERS------"
+    message = {
+        "username": "test_abc"
+    }
+    print cli.request("GET_USERS", username='test1')
 
