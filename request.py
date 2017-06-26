@@ -122,9 +122,9 @@ class ApiRequest(object):
                 #    url = self._url
                 #import pdb; pdb.set_trace()
                 auth = self._api_client.auth_data(conn)
-                print "auth=%s, headers=%s " % (auth, headers)
+                #print "auth=%s, headers=%s " % (auth, headers)
                 headers.update(auth)
-                print "auth=%s, headers=%s " % (auth, headers)
+                #print "auth=%s, headers=%s " % (auth, headers)
                 #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
                 #    cookie):
                 #    headers['Cookie'] = cookie['Cookie']
