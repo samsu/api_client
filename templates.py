@@ -66,8 +66,7 @@ DELETE_USERGROUPS = """
 # query users
 GET_USERS = """
 {
-    {%
-        set options = {
+    {% set options = {
             "username": username,
             "token_auth": token_auth,
             "ftk_only": ftk_only,
@@ -89,8 +88,7 @@ GET_USERS = """
             "custom2": custom2,
             "custom3": custom3,
             "active": active
-        }
-    %}
+    } %}
     {% set query = '' %}
     {% for k, v in options.iteritems() if v is defined and v %}
         {%" query="&{{ k }}={{ v }}" %}
