@@ -27,5 +27,6 @@ if __name__ == "__main__":
     message = {
         "username": "test_abc"
     }
+    import pdb;pdb.set_trace()
     print cli.request("GET_USERS", username='test1')
 
