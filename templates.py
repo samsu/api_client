@@ -66,7 +66,10 @@ DELETE_USERGROUPS = """
 # query users
 GET_USERS = """
 {
-    {% set _options = {
+    {% if id is defined %}
+        "path": "/api/v1/localusers/{{ id }}/",
+    {% else %}
+        {% set _options = {
             'username': username,
             'token_auth': token_auth,
             'ftk_only': ftk_only,
@@ -88,14 +91,11 @@ GET_USERS = """
             'custom2': custom2,
             'custom3': custom3,
             'active': active
-    } %}
-    {% set _query = '' %}
-    {% for k, v in _options.iteritems() if v is defined and v %}
-        {%" _query="&{{ k }}={{ v }}" %}
-    {% endfor %}
-    {% if id is defined %}
-        "path": "/api/v1/localusers/{{ id }}/",
-    {% else %}
+        } %}
+        {% set _query = '' %}
+        {% for k, v in _options.iteritems() if v is defined and v %}
+            {% _query="&{{ k }}={{ v }}" %}
+        {% endfor %}
         {% if query %}
             "path": "/api/v1/localusers/?{{ _query }}",
         {% else %}
