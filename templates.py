@@ -94,8 +94,9 @@ GET_USERS = """
         } %}
         {% set _query = '' %}
         {% for k, v in _options.iteritems() if v is defined and v %}
-            {% set _query="&{{ k }}={{ v }}" %}
+            {% set _query='&'+"{{ k }}={{ v }}" %}
         {% endfor %}
+        {{ _query }}
         {% if _query %}
             "path": "/api/v1/localusers/?{{ _query }}",
         {% else %}
