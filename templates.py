@@ -209,8 +209,10 @@ GET_FORTITOKENS = """
     {% if _query %}
         {% set _query = ''.join(_query) %}
         {% set _query[0] = '?' %}
+        "path": "/api/v1/fortitokens/{{ _query }}",
+    {% else %}
+        "path": "/api/v1/fortitokens/",
     {% endif %}
-    "path": "/api/v1/fortitokens/{{ _query }}"
     "method": "GET"
 }
 """
