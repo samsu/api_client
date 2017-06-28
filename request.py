@@ -107,7 +107,6 @@ class ApiRequest(object):
                 # Update connection with user specified request timeout,
                 # the connect timeout is usually smaller so we only set
                 # the request timeout after a connection is established
-                #import pdb;pdb.set_trace()
                 if conn.sock is None:
                     conn.connect()
                     conn.sock.settimeout(self._http_timeout)
@@ -115,28 +114,10 @@ class ApiRequest(object):
                     conn.sock.settimeout(self._http_timeout)
 
                 headers = copy.copy(self._headers)
-                #if templates.RELOGIN in url:
-                #    url = jsonutils.loads(templates.LOGIN)['path']
-                #    conn.connect()
-                #    self._api_client._wait_for_login(conn, headers)
-                #    url = self._url
-                #import pdb; pdb.set_trace()
                 auth = self._api_client.auth_data(conn)
-                #print "auth=%s, headers=%s " % (auth, headers)
                 headers.update(auth)
-                #print "auth=%s, headers=%s " % (auth, headers)
-                #if (self._url != jsonutils.loads(templates.LOGIN)['path'] and
-                #    cookie):
-                #    headers['Cookie'] = cookie['Cookie']
-                #    headers['X-CSRFTOKEN'] = cookie['X-CSRFTOKEN']
-
                 try:
                     if self._body:
-                    #    if (self._url ==
-                    #            jsonutils.loads(templates.LOGIN)['path']):
-                    #        body = urlparse.urlencode(self._body)
-                    #    else:
-                    #        body = jsonutils.dumps(self._body)
                         body = jsonutils.dumps(self._body)
                     else:
                         body = None
@@ -294,8 +275,7 @@ class ApiRequest(object):
         if allow_release_conn:
             self._api_client.release_connection(conn)
         conn_params = (result.hostname, result.port, result.scheme == "https")
-        #conn = self._api_client.acquire_redirect_connection(conn_params, True,
-        conn=self._api_client.acquire_redirect_connection(conn_params, False,
+        conn = self._api_client.acquire_redirect_connection(conn_params, True,
                                                             self._headers)
         if result.query:
             url = "%s?%s" % (result.path, result.query)

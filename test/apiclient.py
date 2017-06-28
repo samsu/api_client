@@ -18,17 +18,17 @@ if __name__ == "__main__":
     message = {
         "name": "test123"
     }
-    #print cli.request('GET_USERGROUPS')
-    #print cli.request("CREATE_USERGROUP", **message)
-    #print cli.request('GET_USERGROUP', **message)
-    #print cli.request("DELETE_USERGROUP", **message)
+    cli.request('GET_USERGROUPS')
+    cli.request("CREATE_USERGROUP", **message)
+    cli.request('GET_USERGROUP', **message)
+    cli.request("DELETE_USERGROUP", **message)
 
     print "----TESTING USERS------"
     message = {
         "username": "test_1"
     }
-    import pdb;pdb.set_trace()
-    print cli.request("GET_USERS", **message)
+    #import pdb;pdb.set_trace()
+    cli.request("GET_USERS", **message)
     add_message = {
         "username": "test_1",
         "token_auth": "true",
@@ -39,16 +39,15 @@ if __name__ == "__main__":
         "mobile_number": "+1-4085026006",
         "active": "true"
     }
-    print cli.request("CREATE_USER", **add_message)
+    cli.request("CREATE_USER", **add_message)
     res = cli.request("GET_USERS", **message)
-    print res
     id = str(res[0]['id'])
-    print cli.request("MODIFY_USER", id=id, first='changed')
-    print cli.request("GET_USERS",  **message)
-    print cli.request("DELETE_USER", id=id)
+    cli.request("MODIFY_USER", id=id, first='changed')
+    cli.request("GET_USERS",  **message)
+    cli.request("DELETE_USER", id=id)
 
     message = {
         "status": "available"
     }
-    print cli.request("GET_FORTITOKENS", **message)
-    print cli.request("GET_FORTITOKENS")
+    cli.request("GET_FORTITOKENS", **message)
+    cli.request("GET_FORTITOKENS")
