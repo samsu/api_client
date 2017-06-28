@@ -152,7 +152,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
                       {'method': method, 'url': url,
                        'status': response.status, 'body': response.body})
             return None
-
+        print "response.status = ", status
         if response.body:
             try:
                 result = jsonutils.loads(response.body)
@@ -169,4 +169,5 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
                           {'body': response.body})
                 raise e
         else:
+            print ""
             return None
