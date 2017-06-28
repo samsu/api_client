@@ -18,7 +18,9 @@ if __name__ == "__main__":
     message = {
         "name": "test123"
     }
+    print "----TESTING USERGROUPS------"
     cli.request('GET_USERGROUPS')
+    import pdb;pdb.set_trace()
     cli.request("CREATE_USERGROUP", **message)
     cli.request('GET_USERGROUPS', **message)
     cli.request("DELETE_USERGROUP", **message)
@@ -27,7 +29,7 @@ if __name__ == "__main__":
     message = {
         "username": "test_1"
     }
-    #import pdb;pdb.set_trace()
+
     cli.request("GET_USERS", **message)
     add_message = {
         "username": "test_1",
@@ -49,5 +51,6 @@ if __name__ == "__main__":
     message = {
         "status": "available"
     }
+    print "----TESTING FORTITOKENS------"
     cli.request("GET_FORTITOKENS", **message)
     cli.request("GET_FORTITOKENS")
