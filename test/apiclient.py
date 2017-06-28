@@ -29,8 +29,18 @@ if __name__ == "__main__":
     }
     import pdb;pdb.set_trace()
     print cli.request("GET_USERS", **message)
+    add_message = {
+        "username": "test_1",
+        "token_auth": "true",
+        "ftk_only": "false",
+        "ftm_act_method": "email",
+        "token_type": "sms",
+        "email": "sansu@fortinet.com",
+        "mobile_number": "+1-4085026006",
+        "active": "true"
+    }
     print cli.request("CREATE_USER", **message)
-    res = cli.request("GET_USERS", **message)
+    res = cli.request("GET_USERS", **add_message)
     print res
     id = str(res[0]['id'])
     print cli.request("MODIFY_USER", id=id, first='changed')
