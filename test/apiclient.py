@@ -47,3 +47,7 @@ if __name__ == "__main__":
     print cli.request("GET_USERS",  **message)
     print cli.request("DELETE_USER", id=id)
 
+    message = {
+        "status": "available"
+    }
+    print cli.request("GET_FORTITOKENS", **message)

@@ -192,3 +192,26 @@ DELETE_USER = """
 }
 """
 
+## FortiToken
+# query FortiToken
+GET_FORTITOKENS = """
+{
+    {% set _options = {
+        "serial": serial,
+        "status": status,
+        "type": type
+    } %}
+    {% set _query = [] %}
+    {% for k, v in _options.iteritems() if v is defined and v %}
+        {% if _query.append('&'+k+'='+v) %}
+        {% endif %}
+    {% endfor %}
+    {% if _query %}
+        {% set _query = ''.join(_query) %}
+        "path": "/api/v1/fortitokens/?{{ _query }}",
+    {% else %}
+        "path": "/api/v1/fortitokens/",
+    {% endif %}
+    "method": "GET"
+}
+"""
