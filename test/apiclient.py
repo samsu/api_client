@@ -7,7 +7,7 @@ import inspect
 import api_client.client as client
 
 
-ApiClient=client.FortiAuthApiClient
+ApiClient=fac_client.FortiAuthApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.98", 443, True)]
