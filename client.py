@@ -105,9 +105,9 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
         print "##########"
-        print "url = %s" % url
-        print "method = %s" % method
-        print "body = %s" % body
+        print "request.url = %s" % url
+        print "request.method = %s" % method
+        print "request.body = %s" % body
         g = eventlet_request.GenericRequestEventlet(
             self, method, url, body, content_type, auto_login=self._auto_login,
             http_timeout=self._http_timeout,
@@ -156,7 +156,8 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         if response.body:
             try:
                 result = jsonutils.loads(response.body)
-                print "result = ", result
+                print "response.body = ", result
+                print ""
                 return result['objects'] if 'objects' in result else result
             except UnicodeDecodeError:
                 LOG.debug("The following strings cannot be decoded with "
