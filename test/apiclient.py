@@ -4,7 +4,7 @@ import time
 import os
 import inspect
 
-import api_client.fac_client as client
+import api_client.fortiauth_client as client
 
 
 ApiClient=client.FortiAuthApiClient
