@@ -31,7 +31,7 @@ if __name__ == "__main__":
     print cli.request("GET_USERS", username='test1')
     print cli.request("CREATE_USER", username='test1')
     print cli.request("GET_USER", username='test1')
-    print cli.request("MODIFY_USER", id=3, first='changed')
+    print cli.request("MODIFY_USER", id='3', first='changed')
     print cli.request("GET_USER", username='test1')
-    print cli.request("DELETE_USER", id=3)
+    print cli.request("DELETE_USER", id='3')
 
