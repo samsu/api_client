@@ -20,7 +20,7 @@ if __name__ == "__main__":
     }
     cli.request('GET_USERGROUPS')
     cli.request("CREATE_USERGROUP", **message)
-    cli.request('GET_USERGROUP', **message)
+    cli.request('GET_USERGROUPS', **message)
     cli.request("DELETE_USERGROUP", **message)
 
     print "----TESTING USERS------"
