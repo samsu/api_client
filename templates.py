@@ -208,6 +208,7 @@ GET_FORTITOKENS = """
     {% endfor %}
     {% if _query %}
         {% set _query = ''.join(_query) %}
+        {% set _query = _query[1:] %}
         "path": "/api/v1/fortitokens/?{{ _query }}",
     {% else %}
         "path": "/api/v1/fortitokens/",
