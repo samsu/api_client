@@ -25,13 +25,15 @@ if __name__ == "__main__":
 
     print "----TESTING USERS------"
     message = {
-        "username": "test_abc"
+        "username": "test_1"
     }
     import pdb;pdb.set_trace()
-    print cli.request("GET_USERS", username='test1')
-    #print cli.request("CREATE_USER", username='test1')
-    print cli.request("GET_USERS", username='test1')
-    print cli.request("MODIFY_USER", id='3', first='changed')
-    print cli.request("GET_USERS", username='test1')
-    print cli.request("DELETE_USER", id='3')
+    print cli.request("GET_USERS", **message)
+    print cli.request("CREATE_USER", **message)
+    res = cli.request("GET_USERS", **message)
+    print res
+    id = res[0]['id']
+    print cli.request("MODIFY_USER", id=id, first='changed')
+    print cli.request("GET_USERS",  **message)
+    print cli.request("DELETE_USER", id=id)
 
