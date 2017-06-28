@@ -4,10 +4,10 @@ import time
 import os
 import inspect
 
-import api_client.client as client
+import api_client.fac_client as client
 
 
-ApiClient=fac_client.FortiAuthApiClient
+ApiClient=client.FortiAuthApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.98", 443, True)]
