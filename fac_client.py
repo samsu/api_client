@@ -104,7 +104,6 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
-        print "##########"
         print "request.url = %s" % url
         print "request.method = %s" % method
         print "request.body = %s" % body
