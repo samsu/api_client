@@ -51,3 +51,4 @@ if __name__ == "__main__":
         "status": "available"
     }
     print cli.request("GET_FORTITOKENS", **message)
+    print cli.request("GET_FORTITOKENS")
