@@ -39,8 +39,8 @@ if __name__ == "__main__":
         "mobile_number": "+1-4085026006",
         "active": "true"
     }
-    print cli.request("CREATE_USER", **message)
-    res = cli.request("GET_USERS", **add_message)
+    print cli.request("CREATE_USER", **add_message)
+    res = cli.request("GET_USERS", **message)
     print res
     id = str(res[0]['id'])
     print cli.request("MODIFY_USER", id=id, first='changed')
