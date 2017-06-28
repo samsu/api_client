@@ -41,7 +41,7 @@ GET_USERGROUPS = """
 """
 
 # create an usergroup
-CREATE_USERGROUPS = """
+CREATE_USERGROUP = """
 {
     "path": "/api/v1/usergroups/",
     "method": "POST",
@@ -52,7 +52,7 @@ CREATE_USERGROUPS = """
 """
 
 # delete an usergroup
-DELETE_USERGROUPS = """
+DELETE_USERGROUP = """
 {
     "path": "/api/v1/usergroups/",
     "method": "DELETE",
@@ -108,8 +108,8 @@ GET_USERS = """
 }
 """
 
-# create an usergroup
-CREATE_USERS = """
+# create an user
+CREATE_USER = """
 {
     "path": "/api/v1/localusers/",
     "method": "POST",
@@ -146,13 +146,49 @@ CREATE_USERS = """
 }
 """
 
-# delete an usergroup
-DELETE_USERS = """
+# modify an user
+MODIFY_USER = """
 {
-    "path": "/api/v1/localusers/",
-    "method": "DELETE",
+    "path": "/api/v1/localusers/{{ id }}/",
+    "method": "PATCH",
     "body": {
-        "name": "{{ name }}"
+        {%
+            set _options = {
+                "token_auth": token_auth,
+                "ftk_only": ftk_only,
+                "ftm_act_method": ftm_act_method,
+                "token_type": token_type,
+                "token_serial": token_serial,
+                "first_name": first_name,
+                "last_name": last_name,
+                "user_groups": user_groups,
+                "address": address,
+                "city": city,
+                "state": state,
+                "country": country,
+                "email": email,
+                "mobile_number": mobile_number,
+                "phone_number": phone_number,
+                "expires_at": expires_at,
+                "custom1": custom1,
+                "custom2": custom2,
+                "custom3": custom3,
+                "active": active
+            }
+        %}
+        {% for k, v in _options.iteritems() if v is defined and v %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "id": {{ id }}
     }
 }
 """
+
+# delete an usergroup
+DELETE_USER = """
+{
+    "path": "/api/v1/localusers/{{ id }}/",
+    "method": "DELETE"
+}
+"""
+

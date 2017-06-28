@@ -19,9 +19,9 @@ if __name__ == "__main__":
         "name": "test123"
     }
     #print cli.request('GET_USERGROUPS')
-    #print cli.request("CREATE_USERGROUPS", **message)
-    #print cli.request('GET_USERGROUPS', **message)
-    #print cli.request("DELETE_USERGROUPS", **message)
+    #print cli.request("CREATE_USERGROUP", **message)
+    #print cli.request('GET_USERGROUP', **message)
+    #print cli.request("DELETE_USERGROUP", **message)
 
     print "----TESTING USERS------"
     message = {
@@ -29,5 +29,9 @@ if __name__ == "__main__":
     }
     import pdb;pdb.set_trace()
     print cli.request("GET_USERS", username='test1')
-
+    print cli.request("CREATE_USER", username='test1')
+    print cli.request("GET_USER", username='test1')
+    print cli.request("MODIFY_USER", id=3, first='changed')
+    print cli.request("GET_USER", username='test1')
+    print cli.request("DELETE_USER", id=3)
 
