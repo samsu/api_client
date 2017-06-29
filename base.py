@@ -168,7 +168,6 @@ class ApiClientBase(object):
                       'conn': utils.ctrl_conn_to_str(conn),
                       'sec': now - conn.last_used})
             conn = self._create_connection(*self._conn_params(conn))
-            #import pdb;pdb.set_trace()
             self.set_auth_data(conn)
         conn.last_used = now
         conn.priority = priority  # stash current priority for release
@@ -248,7 +247,6 @@ class ApiClientBase(object):
     def _wait_for_login(self, conn, headers=None):
         '''Block until a login has occurred for the current API provider.'''
         data = self._get_provider_data(conn)
-        #import pdb;pdb.set_trace()
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
                       utils.ctrl_conn_to_str(conn))

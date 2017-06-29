@@ -1,4 +1,4 @@
-# Copyright 2015 Fortinet, Inc.
+# Copyright 2017 Fortinet, Inc.
 #
 # All Rights Reserved
 #
@@ -37,7 +37,7 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 
 
 @singleton.singleton
-class FortiAuthApiClient(eventlet_client.EventletApiClient):
+class FortiCareApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
     def __init__(self, api_providers, user, password,
@@ -59,7 +59,7 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
         '''
-        super(FortiAuthApiClient, self).__init__(
+        super(FortiCareApiClient, self).__init__(
             api_providers, user, password,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
