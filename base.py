@@ -398,9 +398,8 @@ if __name__ == '__main__':
     cert_reqs = "/root/subca/cert201706291056.csr"
     ca_file = "/root/subca/chain.pem"
     server_hostname = "fortinet-ca2.fortinet.com"
-    headers = {"Content-type": "application/json", "Host": server_hostname}
 
-    import pdb; pdb.set_trace()
+    headers = {"Content-type": "application/json", "Host": server_hostname}
 
     conn = HTTPSClientAuthConnection(host, port, key_file=key_file,
                                      cert_file=cert_file, ca_file=ca_file,
@@ -414,6 +413,7 @@ if __name__ == '__main__':
     statuscode = response.status
     res = response.body
     header = response.headers
+    print "The testing starting:"
     print "API server: ", host
     print "server port: 443"
     print "Request.url: ", url
@@ -424,5 +424,5 @@ if __name__ == '__main__':
     print "Response.headers: ", header
     print "Response.body: ", res
     print "Response.reason: ", response.reason
-    print "####"
+    print "### The End ###"
     conn.close()
