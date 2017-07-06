@@ -327,7 +327,7 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
 
     def __init__(self, host, port, key_file, cert_file, ca_file,
                  ssl_sni=None, timeout=None):
-        super(HTTPSClientAuthConnection, self).__init__(self, host, port,
+        super(HTTPSClientAuthConnection, self).__init__(host, port,
                                                         key_file=key_file,
                                                         cert_file=cert_file)
         self.key_file = key_file
