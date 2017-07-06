@@ -50,6 +50,7 @@ class ApiClientBase(object):
     def _create_connection(self, host, port, is_ssl):
         if is_ssl:
             try:
+
                 context = ssl._create_unverified_context(
                     cert_reqs=ssl.CERT_NONE)
                 return httplib.HTTPSConnection(host, port,
@@ -326,9 +327,9 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
 
     def __init__(self, host, port, key_file, cert_file, ca_file,
                  ssl_sni=None, timeout=None):
-        httplib.HTTPSConnection.__init__(self, host, port,
-                                         key_file=key_file,
-                                         cert_file=cert_file)
+        super(HTTPSClientAuthConnection, self).__init__(self, host, port,
+                                                        key_file=key_file,
+                                                        cert_file=cert_file)
         self.key_file = key_file
         self.cert_file = cert_file
         self.ca_file = ca_file
@@ -358,7 +359,7 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
                                     server_hostname=self.ssl_sni)
         else:
             self.sock = wrap_socket(sock, self.key_file, self.cert_file,
-                                        cert_reqs=ssl.CERT_NONE)
+                                    cert_reqs=ssl.CERT_NONE)
 
 
 def wrap_socket(sock, keyfile=None, certfile=None,
@@ -366,7 +367,8 @@ def wrap_socket(sock, keyfile=None, certfile=None,
                 ssl_version=ssl.PROTOCOL_SSLv23, ca_certs=None,
                 do_handshake_on_connect=True,
                 suppress_ragged_eofs=True,
-                ciphers=None, server_hostname=None):
+                ciphers=None,
+                server_hostname=None):
     return ssl.SSLSocket(sock=sock, keyfile=keyfile, certfile=certfile,
                          server_side=server_side, cert_reqs=cert_reqs,
                          ssl_version=ssl_version, ca_certs=ca_certs,
