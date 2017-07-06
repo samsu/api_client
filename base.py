@@ -391,13 +391,14 @@ if __name__ == '__main__':
             'User_ID': '395939'
         }
     }
-    headers = {"Content-type": "application/json"}
 
     key_file = "/root/subca/cert201706291056.key"
     cert_file = "/root/subca/cert201706291056.crt"
     cert_reqs = "/root/subca/cert201706291056.csr"
     ca_file = "/root/subca/chain.pem"
     server_hostname = "fortinet-ca2.fortinet.com"
+    headers = {"Content-type": "application/json", "Host": server_hostname}
+
     import pdb; pdb.set_trace()
 
     conn = HTTPSClientAuthConnection(host, port, key_file=key_file,
