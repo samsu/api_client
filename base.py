@@ -382,6 +382,7 @@ if __name__ == '__main__':
     host = "172.30.38.89"
     port = "443"
     url = "/FortiGlobal/FortiCASB.asmx/Process"
+    method = "POST"
     message = {
         'd': {
             '__type': 'FortiGlobal.FortiCASBAccountInfoRequest',
@@ -405,7 +406,7 @@ if __name__ == '__main__':
                                      cert_file=cert_file, ca_file=ca_file,
                                      ssl_sni=server_hostname)
     body = jsonutils.dumps(message)
-    conn.request("POST", url, body, headers)
+    conn.request(method, url, body, headers)
 
     response = conn.getresponse()
     response.body = response.read()
@@ -416,6 +417,7 @@ if __name__ == '__main__':
     print "API server: ", host
     print "server port: 443"
     print "Request.url: ", url
+    print "Request.method: ", method
     print "Request.headers: ", headers
     print "Request.body: ", body
     print "Response.status: ", statuscode
