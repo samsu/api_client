@@ -325,13 +325,13 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
             577548-https-httplib-client-connection-with-certificate-v/
     """
 
-    def __init__(self, host, port, ca_file=None, keyfile=None, certfile=None,
-                 ssl_sni=None, timeout=None):
+    def __init__(self, host, port, ca_file=None, key_file=None,
+                 cert_file=None, ssl_sni=None, timeout=None):
         httplib.HTTPSConnection.__init__(self, host, port,
                                          key_file=key_file,
                                          cert_file=cert_file)
-        #self.key_file = key_file
-        #self.cert_file = cert_file
+        # self.key_file = key_file
+        # self.cert_file = cert_file
         self.ca_file = ca_file
         self.timeout = timeout
         # SSL server_name_indication
