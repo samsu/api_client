@@ -413,7 +413,7 @@ if __name__ == '__main__':
     statuscode = response.status
     res = response.body
     header = response.headers
-    print "The testing starting:"
+    print "###  Starting the testing  ###"
     print "API server: ", host
     print "server port: 443"
     print "Request.url: ", url
@@ -424,5 +424,5 @@ if __name__ == '__main__':
     print "Response.headers: ", header
     print "Response.body: ", res
     print "Response.reason: ", response.reason
-    print "### The End ###"
+    print "###  The End  ###"
     conn.close()
