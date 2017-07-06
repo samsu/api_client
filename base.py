@@ -27,6 +27,8 @@ import time
 
 from oslo_log import log as logging
 import six
+import socket
+import ssl
 
 from _i18n import _LE, _LI, _LW
 import common.utils as utils
@@ -48,7 +50,6 @@ class ApiClientBase(object):
     def _create_connection(self, host, port, is_ssl):
         if is_ssl:
             try:
-                import ssl
                 context = ssl._create_unverified_context(
                     cert_reqs=ssl.CERT_NONE)
                 return httplib.HTTPSConnection(host, port,
@@ -312,3 +313,113 @@ class ApiClientBase(object):
         if port is None:
             port = 443 if is_ssl else 80
         return (host, port, is_ssl)
+
+
+class HTTPSClientAuthConnection(httplib.HTTPSConnection):
+    """
+    Class to make a HTTPS connection, with support for
+    full client-based SSL Authentication
+
+    :see http://code.activestate.com/recipes/
+            577548-https-httplib-client-connection-with-certificate-v/
+    """
+
+    def __init__(self, host, port, key_file, cert_file, ca_file,
+                 ssl_sni=None, timeout=None):
+        httplib.HTTPSConnection.__init__(self, host, port,
+                                         key_file=key_file,
+                                         cert_file=cert_file)
+        self.key_file = key_file
+        self.cert_file = cert_file
+        self.ca_file = ca_file
+        self.timeout = timeout
+        # SSL server_name_indication
+        self.ssl_sni = ssl_sni
+
+    def connect(self):
+        """
+        Connect to a host on a given (SSL) port.
+        If ca_file is pointing somewhere, use it to check Server Certificate.
+
+        Redefined/copied and extended from httplib.py:1105 (Python 2.6.x).
+        This is needed to pass cert_reqs=ssl.CERT_REQUIRED as parameter to
+        ssl.wrap_socket(), which forces SSL to check server certificate against
+        our client certificate.
+        """
+        sock = socket.create_connection((self.host, self.port), self.timeout)
+        if self._tunnel_host:
+            self.sock = sock
+            self._tunnel()
+        # If there's no CA File, don't force Server Certificate Check
+        if self.ca_file:
+            self.sock = wrap_socket(sock, self.key_file, self.cert_file,
+                                    ca_certs=self.ca_file,
+                                    cert_reqs=ssl.CERT_REQUIRED,
+                                    server_hostname=self.ssl_sni)
+        else:
+            self.sock = wrap_socket(sock, self.key_file, self.cert_file,
+                                        cert_reqs=ssl.CERT_NONE)
+
+
+def wrap_socket(sock, keyfile=None, certfile=None,
+                server_side=False, cert_reqs=ssl.CERT_NONE,
+                ssl_version=ssl.PROTOCOL_SSLv23, ca_certs=None,
+                do_handshake_on_connect=True,
+                suppress_ragged_eofs=True,
+                ciphers=None, server_hostname=None):
+    return ssl.SSLSocket(sock=sock, keyfile=keyfile, certfile=certfile,
+                         server_side=server_side, cert_reqs=cert_reqs,
+                         ssl_version=ssl_version, ca_certs=ca_certs,
+                         do_handshake_on_connect=do_handshake_on_connect,
+                         suppress_ragged_eofs=suppress_ragged_eofs,
+                         ciphers=ciphers, server_hostname=server_hostname)
+
+
+if __name__ == '__main__':
+    # Little test-case of our class
+    from oslo_serialization import jsonutils
+
+    host = "172.30.38.89"
+    port = "443"
+    url = "/FortiGlobal/FortiCASB.asmx/Process"
+    message = {
+        'd': {
+            '__type': 'FortiGlobal.FortiCASBAccountInfoRequest',
+            '__version': '1',
+            '__SW_version': 'xxxx',
+            '__SW_build': 'yyyyy',
+            'User_ID': '395939'
+        }
+    }
+    headers = {"Content-type": "application/json"}
+
+    key_file = "/root/subca/cert201706291056.key"
+    cert_file = "/root/subca/cert201706291056.crt"
+    cert_reqs = "/root/subca/cert201706291056.csr"
+    ca_file = "/root/subca/chain.pem"
+    server_hostname = "fortinet-ca2.fortinet.com"
+    import pdb; pdb.set_trace()
+
+    conn = HTTPSClientAuthConnection(host, port, key_file=key_file,
+                                     cert_file=cert_file, ca_file=ca_file,
+                                     ssl_sni=server_hostname)
+    body = jsonutils.dumps(message)
+    conn.request("POST", url, body, headers)
+
+    response = conn.getresponse()
+    response.body = response.read()
+    response.headers = response.getheaders()
+    statuscode = response.status
+    res = response.body
+    header = response.headers
+    print "API server: ", host
+    print "server port: 443"
+    print "Request.url: ", url
+    print "Request.headers: ", headers
+    print "Request.body: ", body
+    print "Response.status: ", statuscode
+    print "Response.headers: ", header
+    print "Response.body: ", res
+    print "Response.reason: ", response.reason
+    print "####"
+    conn.close()

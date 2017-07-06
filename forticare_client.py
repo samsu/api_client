@@ -170,3 +170,7 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         else:
             print ""
             return None
+
+import ssl
+ssl.CERT_REQUIRED
+self.sock = ssl.wrap_socket(sock, self.key_file, self.cert_file, cert_reqs=ssl.CERT_NONE)
