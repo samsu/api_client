@@ -40,7 +40,8 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 class FortiCareApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
-    def __init__(self, api_providers, user, password,
+    def __init__(self, api_providers, user=None, password=None,
+                 key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -73,6 +74,11 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         self.message = {}
         self._user = user
         self._password = password
+        self.key_file = key_file
+        self.cert_file = cert_file
+        self.ca_file = ca_file
+        # SSL server_name_indication
+        self.ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._auth_sch = auth_sch
 
@@ -170,7 +176,3 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         else:
             print ""
             return None
-
-import ssl
-ssl.CERT_REQUIRED
-self.sock = ssl.wrap_socket(sock, self.key_file, self.cert_file, cert_reqs=ssl.CERT_NONE)

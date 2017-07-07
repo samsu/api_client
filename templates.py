@@ -23,7 +23,24 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
-## usergroups
+# testing message
+TEST = """
+{
+    "path": "/FortiGlobal/FortiCASB.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "User_ID": "395939",
+            "__SW_version": "xxxx",
+            "__SW_build": "yyyyy",
+            "__type": "FortiGlobal.FortiCASBAccountInfoRequest",
+            "__version": "1"
+        }
+    }
+}
+"""
+
+# usergroups
 # query usergroups
 GET_USERGROUPS = """
 {
