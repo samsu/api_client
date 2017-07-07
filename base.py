@@ -84,6 +84,10 @@ class ApiClientBase(object):
         return self._password
 
     @property
+    def ca_file(self):
+        return self.ca_file
+
+    @property
     def config_gen(self):
         # If NSX_gen_timeout is not -1 then:
         # Maintain a timestamp along with the generation ID.  Hold onto the
