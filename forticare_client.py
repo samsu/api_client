@@ -83,7 +83,7 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         self._auth_sch = auth_sch
 
     @staticmethod
-    def _render(template, **message):
+    def render(template, **message):
         '''Render API message from it's template
 
         :param template: defined API message with essential params.
@@ -107,7 +107,7 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
         import pdb;pdb.set_trace()
-        self.message = self._render(getattr(templates, opt), **message)
+        self.message = self.render(getattr(templates, opt), **message)
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None

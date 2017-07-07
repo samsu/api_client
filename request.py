@@ -156,14 +156,15 @@ class ApiRequest(object):
 
                 if response.status in (401, 302):
                     # if response.headers:
-                    if (auth is None and
-                       self._url != self._api_client.login_url()):
+                    login_msg = self._api_client.login_msg()
+                    if auth is None and login_msg:
                         # The connection still has no valid cookie despite
                         # attempts to authenticate and the request has failed
                         # with unauthorized status code. If this isn't a
                         # a request to authenticate, we should abort the
                         # request since there is no point in retrying.
-                        self._abort = True
+                        if self._url != jsonutils.loads(login_msg)['path']:
+                            self._abort = True
 
                     # If request is unauthorized, clear the session cookie
                     # for the current provider so that subsequent requests
@@ -206,7 +207,7 @@ class ApiRequest(object):
 
         except Exception as e:
             if isinstance(e, httpclient.BadStatusLine):
-                msg = ("Invalid server response")
+                msg = "Invalid server response"
             else:
                 msg = str(e)
             if response is None:

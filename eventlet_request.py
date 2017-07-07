@@ -172,7 +172,7 @@ class LoginRequestEventlet(EventletApiRequest):
         if headers is None:
             headers = {}
         # headers.update({'Content-Type': const.HTTP_HEADERS['Content-Type']})
-        message = client_obj._render(templates.LOGIN)
+        message = client_obj.render(client_obj.login_msg())
         body = message.get('body', None)
         # base64 encode the username and password for http basic
         auth = base64.encodestring('%s:%s' % (user, password)).\

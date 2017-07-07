@@ -105,18 +105,15 @@ class ApiClientBase(object):
         self._config_gen = value
 
     @staticmethod
-    def login_url(login_msg=None):
+    def login_msg():
         """
-        :param login_msg: if have, the parameter usually is templates.LOGIN
-        :return: the url of the login message, if no login message,
-                 return None
+        If have login message, the message usually is at templates.LOGIN
+        :return: default no login message, return None
+
         The method should be override if there is a login message in
         the api client
         """
-        if login_msg:
-            return jsonutils.loads(login_msg)['path']
-        else:
-            return None
+        return None
 
     def auth_data(self, conn):
         # auth_data could be cookie or other fields with authentication
