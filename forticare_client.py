@@ -61,7 +61,8 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         :param redirects: the number of concurrent connections.
         '''
         super(FortiCareApiClient, self).__init__(
-            api_providers, user, password,
+            api_providers, user, password, key_file=key_file,
+            cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout)
@@ -74,11 +75,11 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         self.message = {}
         self._user = user
         self._password = password
-        self._key_file = key_file
-        self._cert_file = cert_file
-        self.ca_file = ca_file
+        #self.key_file = key_file
+        #self.cert_file = cert_file
+        #self.ca_file = ca_file
         # SSL server_name_indication
-        self.ssl_sni = ssl_sni
+        #self.ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._auth_sch = auth_sch
 

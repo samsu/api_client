@@ -32,6 +32,7 @@ class EventletApiClient(base.ApiClientBase):
     """Eventlet-based implementation of FortiOS ApiClient ABC."""
 
     def __init__(self, api_providers, user, password,
+                 key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -56,6 +57,11 @@ class EventletApiClient(base.ApiClientBase):
             self._set_provider_data(p, (eventlet.semaphore.Semaphore(1), None))
         self._user = user
         self._password = password
+        self.key_file = key_file
+        self.cert_file = cert_file
+        self.ca_file = ca_file
+        # SSL server_name_indication
+        self.ssl_sni = ssl_sni
         self._concurrent_connections = concurrent_connections
         self._use_https = use_https
         self._connect_timeout = connect_timeout
