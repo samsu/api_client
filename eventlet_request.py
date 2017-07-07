@@ -226,12 +226,12 @@ class GetApiProvidersRequestEventlet(EventletApiRequest):
 class GenericRequestEventlet(EventletApiRequest):
     '''Handle a generic request.'''
 
-    def __init__(self, client_obj, method, url, body, content_type,
+    def __init__(self, client_obj, method, url, body, content_type, user_agent,
                  auto_login=False,
                  http_timeout=request.DEFAULT_HTTP_TIMEOUT,
                  retries=request.DEFAULT_RETRIES,
                  redirects=request.DEFAULT_REDIRECTS):
-        headers = {'Content-Type': content_type}
+        headers = {'Content-Type': content_type, 'User-Agent': user_agent}
         super(GenericRequestEventlet, self).__init__(
             client_obj, url, method, body, headers,
             retries=retries,

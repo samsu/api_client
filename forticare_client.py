@@ -40,6 +40,8 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 class FortiCareApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
+    user_agent = 'FortiCare Python API Client'
+
     def __init__(self, api_providers, user=None, password=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
@@ -118,7 +120,8 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         print "request.method = %s" % method
         print "request.body = %s" % body
         g = eventlet_request.GenericRequestEventlet(
-            self, method, url, body, content_type, auto_login=self._auto_login,
+            self, method, url, body, content_type, self.user_agent,
+            auto_login=self._auto_login,
             http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects)
         g.start()

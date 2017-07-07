@@ -28,7 +28,6 @@ DOWNLOAD_TIMEOUT = 180
 
 HTTP_HEADERS = {
     'User-Agent': 'Fortinet Python API Client',
-    #'Content-Type': 'text/html; charset=\"UTF-8\"',
     'Content-Type': 'application/json',
     'www-authenticate': 'Basic Realm='
 }
