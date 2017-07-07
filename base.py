@@ -89,11 +89,11 @@ class ApiClientBase(object):
 
     @property
     def key_file(self):
-        return self.key_file
+        return self._key_file
 
     @property
     def cert_file(self):
-        return self.cert_file
+        return self._cert_file
 
     @property
     def ssl_sni(self):
