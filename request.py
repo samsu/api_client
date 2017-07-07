@@ -127,6 +127,10 @@ class ApiRequest(object):
                               "headers=%(headers)s",
                               {'method': self._method, "url": url,
                                "body": body, "headers": headers})
+                    print "request.url = %s" % url
+                    print "request.method = %s" % self._method
+                    print "request.headers = %s" % self.headers
+                    print "request.body = %s" % body
                     conn.request(self._method, url, body, headers)
                 except Exception as e:
                     with excutils.save_and_reraise_exception():
