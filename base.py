@@ -85,19 +85,19 @@ class ApiClientBase(object):
 
     @property
     def ca_file(self):
-        return self.ca_file
+        return self._ca_file
 
     @property
     def key_file(self):
-        return self.key_file
+        return self._key_file
 
     @property
     def cert_file(self):
-        return self.cert_file
+        return self._cert_file
 
     @property
     def ssl_sni(self):
-        return self.ssl_sni
+        return self._ssl_sni
 
     @property
     def config_gen(self):

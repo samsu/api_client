@@ -57,11 +57,11 @@ class EventletApiClient(base.ApiClientBase):
             self._set_provider_data(p, (eventlet.semaphore.Semaphore(1), None))
         self._user = user
         self._password = password
-        self.key_file = key_file
-        self.cert_file = cert_file
-        self.ca_file = ca_file
+        self._key_file = key_file
+        self._cert_file = cert_file
+        self._ca_file = ca_file
         # SSL server_name_indication
-        self.ssl_sni = ssl_sni
+        self._ssl_sni = ssl_sni
         self._concurrent_connections = concurrent_connections
         self._use_https = use_https
         self._connect_timeout = connect_timeout
