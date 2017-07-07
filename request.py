@@ -35,7 +35,6 @@ import six.moves.urllib.parse as urlparse
 from _i18n import _, _LI, _LW
 import common.utils as utils
 import constants as const
-from templates import templates
 
 LOG = logging.getLogger(__name__)
 
@@ -158,7 +157,7 @@ class ApiRequest(object):
                 if response.status in (401, 302):
                     # if response.headers:
                     if (auth is None and
-                       self._url != jsonutils.loads(templates.LOGIN)['path']):
+                       self._url != self._api_client.login_url()):
                         # The connection still has no valid cookie despite
                         # attempts to authenticate and the request has failed
                         # with unauthorized status code. If this isn't a
