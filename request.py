@@ -17,7 +17,9 @@
 
 import abc
 import copy
+
 import eventlet
+
 try:
     import httplib as httpclient
 except ImportError:
@@ -33,7 +35,7 @@ import six.moves.urllib.parse as urlparse
 from _i18n import _, _LI, _LW
 import common.utils as utils
 import constants as const
-import templates
+from templates import templates
 
 LOG = logging.getLogger(__name__)
 

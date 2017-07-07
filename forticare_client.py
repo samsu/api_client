@@ -19,14 +19,14 @@ import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from _i18n import _LE, _LW
 import base
 import constants as const
 import eventlet_client
 import eventlet_request
 import exceptions
-import templates
+from _i18n import _LE, _LW
 from common import singleton
+from templates import forticare as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -106,6 +106,7 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
+        import pdb;pdb.set_trace()
         self.message = self._render(getattr(templates, opt), **message)
         method = self.message['method']
         url = self.message['path']

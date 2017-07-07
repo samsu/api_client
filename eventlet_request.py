@@ -15,7 +15,9 @@
 # under the License.
 
 import base64
+
 import eventlet
+
 try:
     import httplib
 except ImportError:
@@ -27,7 +29,7 @@ from oslo_serialization import jsonutils
 from _i18n import _, _LI, _LW
 import constants as const
 import request
-import templates
+from templates import templates
 
 LOG = logging.getLogger(__name__)
 USER_AGENT = const.HTTP_HEADERS['User-Agent']

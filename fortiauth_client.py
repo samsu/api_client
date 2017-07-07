@@ -19,14 +19,14 @@ import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from _i18n import _LE, _LW
 import base
 import constants as const
 import eventlet_client
 import eventlet_request
 import exceptions
-import templates
+from _i18n import _LE, _LW
 from common import singleton
+from templates import templates
 
 LOG = logging.getLogger(__name__)
 
