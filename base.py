@@ -50,7 +50,6 @@ class ApiClientBase(object):
     def _create_connection(self, host, port, is_ssl):
         if is_ssl:
             try:
-                import pdb;pdb.set_trace()
                 if hasattr(self, 'ca_file'):
                     return HTTPSClientAuthConnection(host, port,
                                                      ca_file=self.ca_file,

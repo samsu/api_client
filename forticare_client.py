@@ -103,7 +103,9 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         :param headers: Not use here
         :return: return authenticated Header
         """
-        return {'Authorization': self.format_auth_basic()}
+        if self._ssl_sni:
+            return {'Host': self._ssl_sni}
+        return {}
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
