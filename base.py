@@ -88,6 +88,18 @@ class ApiClientBase(object):
         return self.ca_file
 
     @property
+    def key_file(self):
+        return self.key_file
+
+    @property
+    def cert_file(self):
+        return self.cert_file
+
+    @property
+    def ssl_sni(self):
+        return self.ssl_sni
+
+    @property
     def config_gen(self):
         # If NSX_gen_timeout is not -1 then:
         # Maintain a timestamp along with the generation ID.  Hold onto the
