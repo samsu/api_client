@@ -50,12 +50,18 @@ class ApiClientBase(object):
     def _create_connection(self, host, port, is_ssl):
         if is_ssl:
             try:
-
-                context = ssl._create_unverified_context(
-                    cert_reqs=ssl.CERT_NONE)
-                return httplib.HTTPSConnection(host, port,
-                                               timeout=self._connect_timeout,
-                                               context=context)
+                if hasattr(self, 'ca_file'):
+                    return HTTPSClientAuthConnection(host, port,
+                                                     ca_file=self.ca_file,
+                                                     key_file=self.key_file,
+                                                     cert_file=self.cert_file,
+                                                     ssl_sni=self.ssl_sni)
+                else:
+                    context = ssl._create_unverified_context(
+                        cert_reqs=ssl.CERT_NONE)
+                    return httplib.HTTPSConnection(
+                        host, port,
+                        timeout=self._connect_timeout, context=context)
             except (ImportError, AttributeError):
                 return httplib.HTTPSConnection(host, port,
                                                timeout=self._connect_timeout)
@@ -66,7 +72,7 @@ class ApiClientBase(object):
     @staticmethod
     def _conn_params(http_conn):
         is_ssl = isinstance(http_conn, httplib.HTTPSConnection)
-        return (http_conn.host, http_conn.port, is_ssl)
+        return http_conn.host, http_conn.port, is_ssl
 
     @property
     def user(self):
