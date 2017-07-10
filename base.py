@@ -43,6 +43,7 @@ DEFAULT_CONCURRENT_CONNECTIONS = const.DEFAULT_CONCURRENT_CONNECTIONS
 DEFAULT_CONNECT_TIMEOUT = const.DEFAULT_CONNECT_TIMEOUT
 DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
+
 @six.add_metaclass(abc.ABCMeta)
 class ApiClientBase(object):
     """An abstract baseclass for all API client implementations."""
