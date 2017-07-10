@@ -16,16 +16,12 @@
 #
 
 from oslo_log import log as logging
-from oslo_serialization import jsonutils
 
 import base
 import constants as const
-import eventlet_client
-import eventlet_request
-import exceptions
-from _i18n import _LE, _LW
+import client
+
 from common import singleton
-from templates import forticare as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -36,7 +32,7 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 
 
 @singleton.singleton
-class FortiCareApiClient(eventlet_client.EventletApiClient):
+class FortiCareApiClient(client.ApiClient):
     """The FortiOS API Client."""
 
     user_agent = 'FortiCare Python API Client'
@@ -66,23 +62,9 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
-            connect_timeout=connect_timeout)
-
-        self._request_timeout = http_timeout * retries
-        self._http_timeout = http_timeout
-        self._retries = retries
-        self._redirects = redirects
-        self._version = None
-        self.message = {}
-        self._user = user
-        self._password = password
-        self._key_file = key_file
-        self._cert_file = cert_file
-        self._ca_file = ca_file
-        # SSL server_name_indication
-        self._ssl_sni = ssl_sni
-        self._auto_login = auto_login
-        self._auth_sch = auth_sch
+            connect_timeout=connect_timeout, http_timeout=http_timeout,
+            retries=retries, redirects=redirects, auto_login=auto_login,
+            auth_sch=auth_sch)
 
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,
@@ -94,74 +76,3 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         if self._ssl_sni:
             return {'Host': self._ssl_sni}
         return {}
-
-    def request(self, opt, content_type="application/json", **message):
-        '''Issues request to controller.'''
-        self.message = self.render(getattr(templates, opt), **message)
-        method = self.message['method']
-        url = self.message['path']
-        body = self.message['body'] if 'body' in self.message else None
-        g = eventlet_request.GenericRequestEventlet(
-            self, method, url, body, content_type, self.user_agent,
-            auto_login=self._auto_login,
-            http_timeout=self._http_timeout,
-            retries=self._retries, redirects=self._redirects)
-        g.start()
-        response = g.join()
-
-        # response is a modified HTTPResponse object or None.
-        # response.read() will not work on response as the underlying library
-        # request_eventlet.ApiRequestEventlet has already called this
-        # method in order to extract the body and headers for processing.
-        # ApiRequestEventlet derived classes call .read() and
-        # .getheaders() on the HTTPResponse objects and store the results in
-        # the response object's .body and .headers data members for future
-        # access.
-
-        if response is None:
-            # Timeout.
-            LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
-                      {'method': method, 'url': url})
-            raise exceptions.RequestTimeout()
-
-        status = response.status
-        if status == 401:
-            raise exceptions.UnAuthorizedRequest()
-        # Fail-fast: Check for exception conditions and raise the
-        # appropriate exceptions for known error codes.
-        if status in [404]:
-            LOG.warning(_LW("Resource not found. Response status: %(status)s, "
-                            "response body: %(response.body)s"),
-                        {'status': status, 'response.body': response.body})
-            exceptions.ERROR_MAPPINGS[status](response)
-        elif status in exceptions.ERROR_MAPPINGS:
-            LOG.error(_LE("Received error code: %s"), status)
-            LOG.error(_LE("Server Error Message: %s"), response.body)
-            exceptions.ERROR_MAPPINGS[status](response)
-
-        # Continue processing for non-error condition.
-        if status != 200 and status != 201 and status != 204:
-            LOG.error(_LE("%(method)s to %(url)s, unexpected response code: "
-                          "%(status)d (content = '%(body)s')"),
-                      {'method': method, 'url': url,
-                       'status': response.status, 'body': response.body})
-            return None
-        print "response.status = ", status
-        if response.body:
-            try:
-                result = jsonutils.loads(response.body)
-                print "response.body = ", result
-                print ""
-                return result['objects'] if 'objects' in result else result
-            except UnicodeDecodeError:
-                LOG.debug("The following strings cannot be decoded with "
-                          "'utf-8, trying 'ISO-8859-1' instead. %(body)s",
-                          {'body': response.body})
-                return jsonutils.loads(response.body, encoding='ISO-8859-1')
-            except Exception as e:
-                LOG.error(_LE("Decode error, the response.body %(body)s"),
-                          {'body': response.body})
-                raise e
-        else:
-            print ""
-            return None

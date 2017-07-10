@@ -1,4 +1,4 @@
-# Copyright 2015 Fortinet, Inc.
+# Copyright 2017 Fortinet, Inc.
 #
 # All Rights Reserved
 #
@@ -15,7 +15,6 @@
 #    under the License.
 #
 
-import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
@@ -26,7 +25,7 @@ import eventlet_request
 import exceptions
 from _i18n import _LE, _LW
 from common import singleton
-from templates import templates
+from templates import forticare as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -37,10 +36,13 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 
 
 @singleton.singleton
-class FortiAuthApiClient(eventlet_client.EventletApiClient):
+class ApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
-    def __init__(self, api_providers, user, password,
+    user_agent = 'Fortinet Python API Client'
+
+    def __init__(self, api_providers, user=None, password=None,
+                 key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -59,8 +61,9 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
         '''
-        super(FortiAuthApiClient, self).__init__(
-            api_providers, user, password,
+        super(ApiClient, self).__init__(
+            api_providers, user, password, key_file=key_file,
+            cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout)
@@ -73,6 +76,11 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         self.message = {}
         self._user = user
         self._password = password
+        self._key_file = key_file
+        self._cert_file = cert_file
+        self._ca_file = ca_file
+        # SSL server_name_indication
+        self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._auth_sch = auth_sch
 
@@ -83,19 +91,20 @@ class FortiAuthApiClient(eventlet_client.EventletApiClient):
         :param headers: Not use here
         :return: return authenticated Header
         """
-        return {'Authorization': self.format_auth_basic()}
+        if self._ssl_sni:
+            return {'Host': self._ssl_sni}
+        return {}
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
-        self.message = self.render(getattr(templates, opt), **message)
+        self.message = self.render(getattr(templates, opt),
+                                   content_type=content_type, **message)
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
-        print "request.url = %s" % url
-        print "request.method = %s" % method
-        print "request.body = %s" % body
         g = eventlet_request.GenericRequestEventlet(
-            self, method, url, body, content_type, auto_login=self._auto_login,
+            self, method, url, body, content_type, self.user_agent,
+            auto_login=self._auto_login,
             http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects)
         g.start()

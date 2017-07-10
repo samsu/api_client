@@ -123,7 +123,7 @@ class ApiClientBase(object):
         self._config_gen = value
 
     @staticmethod
-    def render(template, **message):
+    def render(template, content_type="application/json", **message):
         '''Render API message from it's template
 
         :param template: defined API message with essential params.
@@ -133,7 +133,12 @@ class ApiClientBase(object):
         if not message:
             message = {}
         msg = jinja2.Template(template).render(**message)
-        return jsonutils.loads(msg)
+        if 'application/json' in content_type:
+            return jsonutils.loads(msg)
+        else:
+            LOG.error("The content_type %(ct)s is not supported yet.",
+                      {'ct': content_type})
+            raise ValueError('The content_type is not supported yet')
 
     @staticmethod
     def login_msg():
