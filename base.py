@@ -27,6 +27,7 @@ import jinja2
 import time
 
 from oslo_log import log as logging
+from oslo_serialization import jsonutils
 import six
 import socket
 import ssl
