@@ -166,6 +166,11 @@ class ApiClientBase(object):
         return "Basic {}".format(base64.encodestring(auth).replace('\n', ''))
 
     def set_auth_basic(self, conn, auth_basic=None):
+        """ keep required http headers for authentication
+        :param conn:
+        :param auth_basic:
+        :return:
+        """
         data = self._get_provider_data(conn)
         if data:
             self._set_provider_data(conn, (data[0], auth_basic))
