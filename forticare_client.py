@@ -15,7 +15,6 @@
 #    under the License.
 #
 
-import jinja2
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
@@ -84,19 +83,6 @@ class FortiCareApiClient(eventlet_client.EventletApiClient):
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._auth_sch = auth_sch
-
-    @staticmethod
-    def render(template, **message):
-        '''Render API message from it's template
-
-        :param template: defined API message with essential params.
-        :param message: It is a dictionary, included values of the params
-                        for the template
-        '''
-        if not message:
-            message = {}
-        msg = jinja2.Template(template).render(**message)
-        return jsonutils.loads(msg)
 
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,

@@ -13,7 +13,7 @@ if __name__ == "__main__":
     api = [("172.30.38.89", 443, True)]
 
     # Sub CA
-    print "----TESTING with Sub CA certificate ------"
+    print "----TESTING API client with Sub CA certificate ------"
     key_file = "/root/subca/cert201706291056.key"
     cert_file = "/root/subca/cert201706291056.crt"
     cert_reqs = "/root/subca/cert201706291056.csr"
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     cli.request('TEST')
 
     # CA
-    print "----TESTING with CA certificate ------"
+    print "----TESTING API client with CA certificate ------"
     key_file = "/root/ca/cert201706291056.key"
     cert_file = "/root/ca/cert201706291056.crt"
     ca_file = "/root/ca/cacertkey1-sha2.pem"

@@ -23,6 +23,7 @@ try:
 except ImportError:
     import http.client as httplib
     from http import cookies as Cookie
+import jinja2
 import time
 
 from oslo_log import log as logging
@@ -119,6 +120,19 @@ class ApiClientBase(object):
             if self._gen_timeout != -1:
                 self._config_gen_ts = time.time()
         self._config_gen = value
+
+    @staticmethod
+    def render(template, **message):
+        '''Render API message from it's template
+
+        :param template: defined API message with essential params.
+        :param message: It is a dictionary, included values of the params
+                        for the template
+        '''
+        if not message:
+            message = {}
+        msg = jinja2.Template(template).render(**message)
+        return jsonutils.loads(msg)
 
     @staticmethod
     def login_msg():
