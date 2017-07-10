@@ -170,14 +170,13 @@ class ApiClientBase(object):
         if data:
             self._set_provider_data(conn, (data[0], auth_basic))
 
-    #@abc.abstractmethod
     def set_auth_data(self, conn, *data):
         """ Set authenticate data
         :param conn: conn parameters
         :param data:
         :return:
         """
-        raise ValueError
+        return self.set_auth_basic(conn, *data)
 
     @staticmethod
     def format_cookie(cookie):
@@ -310,8 +309,8 @@ class ApiClientBase(object):
         provider_sem = data[0]
         if provider_sem.acquire(blocking=False):
             try:
-                cookie = self._login(conn, headers)
-                self.set_auth_data(conn, cookie)
+                data = self._login(conn, headers)
+                self.set_auth_data(conn, data)
             finally:
                 provider_sem.release()
         else:

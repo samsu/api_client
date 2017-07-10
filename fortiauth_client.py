@@ -81,6 +81,3 @@ class FortiAuthApiClient(client.ApiClient):
         :return: return authenticated Header
         """
         return {'Authorization': self.format_auth_basic()}
-
-    def set_auth_data(self, conn, *data):
-        return self.set_auth_basic(conn, *data)
