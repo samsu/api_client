@@ -26,18 +26,7 @@ DEFAULT_API_REQUEST_POOL_SIZE = 1
 DEFAULT_MAXIMUM_REQUEST_ID = 4294967295
 DOWNLOAD_TIMEOUT = 180
 
-HTTP_HEADERS = {
+DEFAULT_HTTP_HEADERS = {
     'User-Agent': 'Fortinet Python API Client',
-    'Content-Type': 'application/json',
-    'www-authenticate': 'Basic Realm='
-}
-
-
-# HTTP authentication scheme (abbr. HTTP_AUTH_SCH)
-HTTP_BASIC_AUTH_SCH = 'HTTP Basic Authentication Scheme'
-LOGIN_COOKIE = 'Login cookie session'
-AUTH_FUNC_MAPS = {
-    HTTP_BASIC_AUTH_SCH: 'set_auth_basic',
-    LOGIN_COOKIE: 'set_auth_cookie'
-
+    'Content-Type': 'application/json'
 }

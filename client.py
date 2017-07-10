@@ -31,6 +31,7 @@ DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
+DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
 class ApiClient(eventlet_client.EventletApiClient):
@@ -47,8 +48,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
-                 auto_login=True,
-                 auth_sch=DEFAULT_HTTP_AUTH_SCH):
+                 auto_login=True):
         '''Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -79,7 +79,6 @@ class ApiClient(eventlet_client.EventletApiClient):
         # SSL server_name_indication
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
-        self._auth_sch = auth_sch
 
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,
@@ -92,7 +91,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             return {'Host': self._ssl_sni}
         return {}
 
-    def request(self, opt, content_type="application/json", **message):
+    def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
         '''Issues request to controller.'''
         self.message = self.render(getattr(self._template, opt),
                                    content_type=content_type, **message)

@@ -41,7 +41,7 @@ LOG = logging.getLogger(__name__)
 GENERATION_ID_TIMEOUT = const.GENERATION_ID_TIMEOUT
 DEFAULT_CONCURRENT_CONNECTIONS = const.DEFAULT_CONCURRENT_CONNECTIONS
 DEFAULT_CONNECT_TIMEOUT = const.DEFAULT_CONNECT_TIMEOUT
-
+DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 @six.add_metaclass(abc.ABCMeta)
 class ApiClientBase(object):
@@ -123,7 +123,7 @@ class ApiClientBase(object):
         self._config_gen = value
 
     @staticmethod
-    def render(template, content_type="application/json", **message):
+    def render(template, content_type=DEFAULT_CONTENT_TYPE, **message):
         '''Render API message from it's template
 
         :param template: defined API message with essential params.
@@ -133,7 +133,7 @@ class ApiClientBase(object):
         if not message:
             message = {}
         msg = jinja2.Template(template).render(**message)
-        if 'application/json' in content_type:
+        if content_type in DEFAULT_CONTENT_TYPE:
             return jsonutils.loads(msg)
         else:
             LOG.error("The content_type %(ct)s is not supported yet.",
@@ -169,14 +169,14 @@ class ApiClientBase(object):
         if data:
             self._set_provider_data(conn, (data[0], auth_basic))
 
+    @abc.abstractmethod
     def set_auth_data(self, conn, *data):
-        if self._auth_sch in const.AUTH_FUNC_MAPS:
-            auth_func = getattr(self, const.AUTH_FUNC_MAPS[self._auth_sch])
-            return auth_func(conn, *data)
-        else:
-            LOG.error(_LE("Invalid authentication scheme: %(sch)s"),
-                      {'sch': self._auth_sch})
-            raise ValueError
+        """ Set authenticate data
+        :param conn: conn parameters
+        :param data:
+        :return:
+        """
+        raise ValueError
 
     @staticmethod
     def format_cookie(cookie):
@@ -428,56 +428,3 @@ def wrap_socket(sock, keyfile=None, certfile=None,
                          do_handshake_on_connect=do_handshake_on_connect,
                          suppress_ragged_eofs=suppress_ragged_eofs,
                          ciphers=ciphers, server_hostname=server_hostname)
-
-
-if __name__ == '__main__':
-    # Little test-case of our class
-    from oslo_serialization import jsonutils
-
-    host = "172.30.38.89"
-    port = "443"
-    url = "/FortiGlobal/FortiCASB.asmx/Process"
-    method = "POST"
-    message = {
-        'd': {
-            '__type': 'FortiGlobal.FortiCASBAccountInfoRequest',
-            '__version': '1',
-            '__SW_version': 'xxxx',
-            '__SW_build': 'yyyyy',
-            'User_ID': '395939'
-        }
-    }
-
-    key_file = "/root/subca/cert201706291056.key"
-    cert_file = "/root/subca/cert201706291056.crt"
-    cert_reqs = "/root/subca/cert201706291056.csr"
-    ca_file = "/root/subca/chain.pem"
-    server_hostname = "fortinet-ca2.fortinet.com"
-
-    headers = {"Content-type": "application/json", "Host": server_hostname}
-
-    conn = HTTPSClientAuthConnection(host, port, key_file=key_file,
-                                     cert_file=cert_file, ca_file=ca_file,
-                                     ssl_sni=server_hostname)
-    body = jsonutils.dumps(message)
-    conn.request(method, url, body, headers)
-
-    response = conn.getresponse()
-    response.body = response.read()
-    response.headers = response.getheaders()
-    statuscode = response.status
-    res = response.body
-    header = response.headers
-    print "\n###  Starting the testing  ###\n"
-    print "API server: ", host
-    print "server port: 443"
-    print "Request.url: ", url
-    print "Request.method: ", method
-    print "Request.headers: ", headers
-    print "Request.body: ", body
-    print "Response.status: ", statuscode
-    print "Response.headers: ", header
-    print "Response.body: ", res
-    print "Response.reason: ", response.reason
-    print "\n###  The End  ###\n"
-    conn.close()

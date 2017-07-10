@@ -64,8 +64,7 @@ class FortiCareApiClient(client.ApiClient):
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
-            retries=retries, redirects=redirects, auto_login=auto_login,
-            auth_sch=auth_sch)
+            retries=retries, redirects=redirects, auto_login=auto_login)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout
@@ -79,7 +78,6 @@ class FortiCareApiClient(client.ApiClient):
         # SSL server_name_indication
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
-        self._auth_sch = auth_sch
         self._template = templates
 
     def _login(self, conn=None, headers=None):

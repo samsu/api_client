@@ -36,6 +36,8 @@ DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 class FortiAuthApiClient(client.ApiClient):
     """The FortiOS API Client."""
 
+    user_agent = 'FortiAuth Python API Client'
+
     def __init__(self, api_providers, user, password,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
@@ -60,8 +62,7 @@ class FortiAuthApiClient(client.ApiClient):
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
-            retries=retries, redirects=redirects, auto_login=auto_login,
-            auth_sch=auth_sch)
+            retries=retries, redirects=redirects, auto_login=auto_login)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout
@@ -72,7 +73,6 @@ class FortiAuthApiClient(client.ApiClient):
         self._user = user
         self._password = password
         self._auto_login = auto_login
-        self._auth_sch = auth_sch
         self._template = templates
 
     def _login(self, conn=None, headers=None):
@@ -83,3 +83,6 @@ class FortiAuthApiClient(client.ApiClient):
         :return: return authenticated Header
         """
         return {'Authorization': self.format_auth_basic()}
+
+    def set_auth_data(self, conn, *data):
+        return self.set_auth_basic(conn, *data)

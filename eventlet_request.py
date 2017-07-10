@@ -31,7 +31,7 @@ import constants as const
 import request
 
 LOG = logging.getLogger(__name__)
-USER_AGENT = const.HTTP_HEADERS['User-Agent']
+DEFAULT_USER_AGENT = const.DEFAULT_HTTP_HEADERS['User-Agent']
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES if request.DEFAULT_RETRIES < 2 else 2
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
@@ -79,7 +79,7 @@ class EventletApiRequest(request.ApiRequest):
         self._request_error = None
 
         if "User-Agent" not in self._headers:
-            self._headers["User-Agent"] = USER_AGENT
+            self._headers["User-Agent"] = DEFAULT_USER_AGENT
 
         self._green_thread = None
         # Retrieve and store this instance's unique request id.
@@ -169,7 +169,6 @@ class LoginRequestEventlet(EventletApiRequest):
                  headers=None):
         if headers is None:
             headers = {}
-        # headers.update({'Content-Type': const.HTTP_HEADERS['Content-Type']})
         message = client_obj.render(client_obj.login_msg())
         body = message.get('body', None)
         # base64 encode the username and password for http basic
