@@ -35,7 +35,6 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_HTTP_AUTH_SCH = const.HTTP_BASIC_AUTH_SCH
 
 
-@singleton.singleton
 class ApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 

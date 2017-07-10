@@ -66,6 +66,22 @@ class FortiCareApiClient(client.ApiClient):
             retries=retries, redirects=redirects, auto_login=auto_login,
             auth_sch=auth_sch)
 
+        self._request_timeout = http_timeout * retries
+        self._http_timeout = http_timeout
+        self._retries = retries
+        self._redirects = redirects
+        self._version = None
+        self.message = {}
+        self._user = user
+        self._password = password
+        self._key_file = key_file
+        self._cert_file = cert_file
+        self._ca_file = ca_file
+        # SSL server_name_indication
+        self._ssl_sni = ssl_sni
+        self._auto_login = auto_login
+        self._auth_sch = auth_sch
+
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,
            here reuse the name login to unify the API client process.
