@@ -22,6 +22,7 @@ import constants as const
 import client
 
 from common import singleton
+from templates import forticare as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -81,6 +82,7 @@ class FortiCareApiClient(client.ApiClient):
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._auth_sch = auth_sch
+        self._template = templates
 
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,

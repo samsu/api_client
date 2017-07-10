@@ -24,8 +24,6 @@ import eventlet_client
 import eventlet_request
 import exceptions
 from _i18n import _LE, _LW
-from common import singleton
-from templates import forticare as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -96,7 +94,7 @@ class ApiClient(eventlet_client.EventletApiClient):
 
     def request(self, opt, content_type="application/json", **message):
         '''Issues request to controller.'''
-        self.message = self.render(getattr(templates, opt),
+        self.message = self.render(getattr(self._template, opt),
                                    content_type=content_type, **message)
         method = self.message['method']
         url = self.message['path']
