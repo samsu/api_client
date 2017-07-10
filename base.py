@@ -170,7 +170,7 @@ class ApiClientBase(object):
         if data:
             self._set_provider_data(conn, (data[0], auth_basic))
 
-    @abc.abstractmethod
+    #@abc.abstractmethod
     def set_auth_data(self, conn, *data):
         """ Set authenticate data
         :param conn: conn parameters
