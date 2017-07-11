@@ -15,7 +15,6 @@
 # under the License.
 
 import base64
-
 import eventlet
 
 try:

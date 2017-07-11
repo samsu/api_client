@@ -371,7 +371,7 @@ class ApiClientBase(object):
         host, port, is_ssl = conn_params
         if port is None:
             port = 443 if is_ssl else 80
-        return (host, port, is_ssl)
+        return host, port, is_ssl
 
 
 class HTTPSClientAuthConnection(httplib.HTTPSConnection):

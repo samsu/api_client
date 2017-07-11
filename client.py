@@ -30,13 +30,14 @@ LOG = logging.getLogger(__name__)
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
+DEFAULT_USER_AGENT = const.DEFAULT_HTTP_HEADERS['User-Agent']
 DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
 class ApiClient(eventlet_client.EventletApiClient):
     """The FortiOS API Client."""
 
-    user_agent = 'Fortinet Python API Client'
+    user_agent = DEFAULT_USER_AGENT
 
     def __init__(self, api_providers, user=None, password=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
