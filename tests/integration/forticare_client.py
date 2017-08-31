@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 
-import time
-import os
-import inspect
-
 import api_client.forticare_client as client
 
 
-ApiClient=client.FortiCareApiClient
+ApiClient = client.FortiCareApiClient
 
 if __name__ == "__main__":
     api = [("172.30.38.89", 443, True)]
