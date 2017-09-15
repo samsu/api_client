@@ -217,3 +217,21 @@ GET_FORTITOKENS = """
     "method": "GET"
 }
 """
+
+# user authentication
+CREATE_AUTH = """
+{
+    "path": "/api/v1/auth/",
+    "method": "POST",
+    "body": {
+        {% if token_code is defined %}
+            "token_code": "{{ token_code }}",
+        {% endif %}
+        {% if password is defined %}
+            "password": "{{ password }}",
+        {% endif %}
+        "username": {{ username }}
+    }
+}
+"""
+
