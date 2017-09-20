@@ -82,4 +82,5 @@ class FortiAuthApiClient(client.ApiClient):
         return {'Authorization': self.format_auth_basic()}
 
     def request_response(self, method, url, response):
-        return response.status, self.request_response_body(response)
+        response.body = self.request_response_body(response)
+        return response
