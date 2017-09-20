@@ -141,10 +141,12 @@ class ApiRequest(object):
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
                           "%(status)s (%(elapsed)s seconds), "
-                          "request.url %(url)s, request.method %(method)s, "
-                          "request.headers %(headers)s, request.body %(body)s,"
-                          "response.headers %(response.headers)s, "
-                          "response.body %(response.body)s",
+                          "request.url: %(url)s, "
+                          "request.method: %(method)s, "
+                          "request.headers: %(headers)s, "
+                          "request.body %(body)s,"
+                          "response.headers: %(response.headers)s, "
+                          "response.body: %(response.body)s",
                           {'rid': self._rid(),
                            'conn': self._request_str(conn, url),
                            'status': response.status,
