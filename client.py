@@ -92,7 +92,9 @@ class ApiClient(eventlet_client.EventletApiClient):
         return {}
 
     def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
-        '''Issues request to controller.'''
+        """
+        Issues request to controller.
+        """
         self.message = self.render(getattr(self._template, opt),
                                    content_type=content_type, **message)
         method = self.message['method']
@@ -104,17 +106,19 @@ class ApiClient(eventlet_client.EventletApiClient):
             http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects)
         g.start()
-        response = g.join()
+        return self.request_response(method, url, g.join())
 
-        # response is a modified HTTPResponse object or None.
-        # response.read() will not work on response as the underlying library
-        # request_eventlet.ApiRequestEventlet has already called this
-        # method in order to extract the body and headers for processing.
-        # ApiRequestEventlet derived classes call .read() and
-        # .getheaders() on the HTTPResponse objects and store the results in
-        # the response object's .body and .headers data members for future
-        # access.
-
+    def request_response(self, method, url, response):
+        """
+          response is a modified HTTPResponse object or None.
+          response.read() will not work on response as the underlying library
+          request_eventlet.ApiRequestEventlet has already called this
+          method in order to extract the body and headers for processing.
+          ApiRequestEventlet derived classes call .read() and
+          .getheaders() on the HTTPResponse objects and store the results in
+          the response object's .body and .headers data members for future
+          access.
+        """
         if response is None:
             # Timeout.
             LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
@@ -122,6 +126,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             raise exceptions.RequestTimeout()
 
         status = response.status
+        LOG.debug("response.status = %(status)s", {'status': status})
         if status == 401:
             raise exceptions.UnAuthorizedRequest()
         # Fail-fast: Check for exception conditions and raise the
@@ -143,12 +148,14 @@ class ApiClient(eventlet_client.EventletApiClient):
                       {'method': method, 'url': url,
                        'status': response.status, 'body': response.body})
             return None
-        print "response.status = ", status
+        return self.request_response_body(response)
+
+    @staticmethod
+    def request_response_body(response):
         if response.body:
             try:
                 result = jsonutils.loads(response.body)
-                print "response.body = ", result
-                print ""
+                LOG.debug("response.body = %(body)s", {'body': result})
                 return result['objects'] if 'objects' in result else result
             except UnicodeDecodeError:
                 LOG.debug("The following strings cannot be decoded with "
@@ -156,9 +163,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                           {'body': response.body})
                 return jsonutils.loads(response.body, encoding='ISO-8859-1')
             except Exception as e:
-                LOG.error(_LE("Decode error, the response.body %(body)s"),
+                LOG.error(_LE("json decode error, the response.body %(body)s"),
                           {'body': response.body})
-                raise e
-        else:
-            print ""
-            return None
+                return response.body
+        return None

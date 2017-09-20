@@ -80,3 +80,9 @@ class FortiAuthApiClient(client.ApiClient):
         :return: return authenticated Header
         """
         return {'Authorization': self.format_auth_basic()}
+
+    def response(self, method, url, response):
+        status = response.status
+        headers = response.headers
+        body = self.request_response_body(response)
+        return body, headers, status

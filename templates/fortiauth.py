@@ -230,8 +230,7 @@ CREATE_AUTH = """
         {% if password is defined %}
             "password": "{{ password }}",
         {% endif %}
-        "username": {{ username }}
+        "username": "{{ username }}"
     }
 }
 """
-
