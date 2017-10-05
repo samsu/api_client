@@ -40,196 +40,32 @@ TEST = """
 }
 """
 
-# usergroups
-# query usergroups
-GET_USERGROUPS = """
+# customer account
+# query customer account
+GET_ACCOUNT = """
 {
-    {% if id is defined %}
-        "path": "/api/v1/usergroups/{{ id }}/",
-    {% else %}
-        {% if name is defined %}
-            "path": "/api/v1/usergroups/?name={{ name }}",
-        {% else %}
-            "path": "/api/v1/usergroups/",
-        {% endif %}
-    {% endif %}
-    "method": "GET"
-}
-"""
-
-# create an usergroup
-CREATE_USERGROUP = """
-{
-    "path": "/api/v1/usergroups/",
+    "path": "/FortiGlobalQ3/FortiAuthService.asmx",    
     "method": "POST",
-    "body": {
-        "name": "{{ name }}"
-    }
-}
-"""
-
-# delete an usergroup
-DELETE_USERGROUP = """
-{
-    "path": "/api/v1/usergroups/",
-    "method": "DELETE",
-    "body": {
-        "name": "{{ name }}"
-    }
-}
-"""
-
-## user
-# query users
-GET_USERS = """
-{
-    {% if id is defined %}
-        "path": "/api/v1/localusers/{{ id }}/",
-    {% else %}
-        {% set _options = {
-            "username": username,
-            "token_auth": token_auth,
-            "ftk_only": ftk_only,
-            "ftm_act_method": ftm_act_method,
-            "token_type": token_type,
-            "token_serial": token_serial,
-            "first_name": first_name,
-            "last_name": last_name,
-            "user_groups": user_groups,
-            "address": address,
-            "city": city,
-            "state": state,
-            "country": country,
-            "email": email,
-            "mobile_number": mobile_number,
-            "phone_number": phone_number,
-            "expires_at": expires_at,
-            "custom1": custom1,
-            "custom2": custom2,
-            "custom3": custom3,
-            "active": active
-        } %}
-        {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
-            {% if _query.append('&'+k+'='+v) %}
+    "body": {    
+        "d": {
+            "__type": "FortiGlobal.FASAccountInfoRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
             {% endif %}
-        {% endfor %}
-        {% if _query %}
-            {% set _query = ''.join(_query) %}
-            "path": "/api/v1/localusers/?{{ _query }}",
-        {% else %}
-            "path": "/api/v1/localusers/",
-        {% endif %}
-    {% endif %}
-    "method": "GET"
-}
-"""
-
-# create an user
-CREATE_USER = """
-{
-    "path": "/api/v1/localusers/",
-    "method": "POST",
-    "body": {
-        {%
-            set _options = {
-                "token_auth": token_auth,
-                "ftk_only": ftk_only,
-                "ftm_act_method": ftm_act_method,
-                "token_type": token_type,
-                "token_serial": token_serial,
-                "first_name": first_name,
-                "last_name": last_name,
-                "user_groups": user_groups,
-                "address": address,
-                "city": city,
-                "state": state,
-                "country": country,
-                "email": email,
-                "mobile_number": mobile_number,
-                "phone_number": phone_number,
-                "expires_at": expires_at,
-                "custom1": custom1,
-                "custom2": custom2,
-                "custom3": custom3,
-                "active": active
-            }
-        %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
-            "{{ k }}": "{{ v }}",
-        {% endfor %}
-        "username": "{{ username }}"
-    }
-}
-"""
-
-# modify an user
-MODIFY_USER = """
-{
-    "path": "/api/v1/localusers/{{ id }}/",
-    "method": "PATCH",
-    "body": {
-        {%
-            set _options = {
-                "token_auth": token_auth,
-                "ftk_only": ftk_only,
-                "ftm_act_method": ftm_act_method,
-                "token_type": token_type,
-                "token_serial": token_serial,
-                "first_name": first_name,
-                "last_name": last_name,
-                "user_groups": user_groups,
-                "address": address,
-                "city": city,
-                "state": state,
-                "country": country,
-                "email": email,
-                "mobile_number": mobile_number,
-                "phone_number": phone_number,
-                "expires_at": expires_at,
-                "custom1": custom1,
-                "custom2": custom2,
-                "custom3": custom3,
-                "active": active
-            }
-        %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
-            "{{ k }}": "{{ v }}",
-        {% endfor %}
-        "id": {{ id }}
-    }
-}
-"""
-
-# delete an usergroup
-DELETE_USER = """
-{
-    "path": "/api/v1/localusers/{{ id }}/",
-    "method": "DELETE"
-}
-"""
-
-## FortiToken
-# query FortiToken
-GET_FORTITOKENS = """
-{
-    {% set _options = {
-        "serial": serial,
-        "status": status,
-        "type": type
-    } %}
-    {% set _query = [] %}
-    {% for k, v in _options.iteritems() if v is defined and v %}
-        {% if _query.append('&'+k+'='+v) %}
-        {% endif %}
-    {% endfor %}
-    {% if _query %}
-        {% set _query = ''.join(_query) %}
-        {% set _query = '?' + _query[1:] %}
-        "path": "/api/v1/fortitokens/{{ _query }}",
-    {% else %}
-        "path": "/api/v1/fortitokens/",
-    {% endif %}
-    "method": "GET"
+            {% if sw_version is defined %}
+                "__SW_version": "{{ sw_version }}",
+            {% else %}
+                "__SW_version": "xxxx",
+            {% endif %}
+            {% if sw_build is defined %}
+                "__SW_build": "{{ sw_build }}",
+            {% else %}
+                "__SW_build": "yyyyy",
+            {% endif %}
+            "user_id": "{{ id }}"
+        }
+    }    
 }
 """
