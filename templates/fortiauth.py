@@ -52,6 +52,19 @@ CREATE_USERGROUP = """
 }
 """
 
+# modify a user group
+MODIFY_USERGROUP = """
+{
+    "path": "/api/v1/usergroups/{{ id }}/",
+    "method": "PATCH",
+     "body": {
+        {% if users is defined %}
+            "users": ["{{ users }}"]
+        {% endif %}
+     }    
+}
+"""
+
 # delete an usergroup
 DELETE_USERGROUP = """
 {
@@ -124,7 +137,6 @@ CREATE_USER = """
                 "token_serial": token_serial,
                 "first_name": first_name,
                 "last_name": last_name,
-                "user_groups": user_groups,
                 "address": address,
                 "city": city,
                 "state": state,
@@ -139,9 +151,12 @@ CREATE_USER = """
                 "active": active
             }
         %}
+        {% if user_groups is defined %}
+            "user_groups": ["{{ user_groups }}"],
+        {% endif %}
         {% for k, v in _options.iteritems() if v is defined and v %}
             "{{ k }}": "{{ v }}",
-        {% endfor %}
+        {% endfor %}        
         "username": "{{ username }}"
     }
 }
