@@ -52,7 +52,7 @@ CREATE_USERGROUP = """
 }
 """
 
-# modify a user group
+# modify an usergroup
 MODIFY_USERGROUP = """
 {
     "path": "/api/v1/usergroups/{{ id }}/",
