@@ -200,7 +200,8 @@ GET_FORTITOKENS = """
     {% set _options = {
         "serial": serial,
         "status": status,
-        "type": type
+        "type": type,
+        "limit": limit
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined and v %}
