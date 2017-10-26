@@ -192,7 +192,7 @@ MODIFY_USER = """
                 "active": active
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
+        {% for k, v in _options.iteritems() if v is defined and v is not None %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "id": {{ id }}
