@@ -107,7 +107,7 @@ GET_USERS = """
             "active": active
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
+        {% for k, v in _options.iteritems() if v is defined %}
             {% if _query.append('&'+k+'='+v) %}
             {% endif %}
         {% endfor %}
@@ -154,7 +154,7 @@ CREATE_USER = """
         {% if user_groups is defined %}
             "user_groups": ["{{ user_groups }}"],
         {% endif %}
-        {% for k, v in _options.iteritems() if v is defined and v %}
+        {% for k, v in _options.iteritems() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}        
         "username": "{{ username }}"
@@ -192,7 +192,7 @@ MODIFY_USER = """
                 "active": active
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined and v is not None %}
+        {% for k, v in _options.iteritems() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "id": {{ id }}
@@ -219,7 +219,7 @@ GET_FORTITOKENS = """
         "limit": limit
     } %}
     {% set _query = [] %}
-    {% for k, v in _options.iteritems() if v is defined and v %}
+    {% for k, v in _options.iteritems() if v is defined %}
         {% if _query.append('&'+k+'='+v) %}
         {% endif %}
     {% endfor %}
