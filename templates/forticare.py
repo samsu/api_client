@@ -40,15 +40,45 @@ TEST = """
 }
 """
 
+# login
+LOGIN = """
+{
+    {% if next_url is defined %} 
+        "path": "/RegistrationMR2017Q3_base/Main.aspx?from=FAS&RedirectURL={{ next_url }}",
+    {% else %}
+        "path": "/RegistrationMR2017Q3_base/Main.aspx?from=FAS&RedirectURL=",
+    {% endif %}
+    "method": "POST",
+    "body": {
+        "d": {
+            "User_ID": "395939",
+            "__SW_version": "xxxx",
+            "__SW_build": "yyyyy",
+            "__type": "FortiGlobal.FortiCASBAccountInfoRequest",
+            "__version": "1"
+        }
+    }
+}
+"""
+
 # customer account
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalQ3/FortiAuthService.asmx",    
+    "path": "/FortiGlobalQ3/FortiAuthService.asm/Process",    
     "method": "POST",
     "body": {    
         "d": {
             "__type": "FortiGlobal.FASAccountInfoRequest",
+            {% if id is defined %}
+                "user_id": "{{ id }}",
+            {% endif %}
+            {% if sn is defined %}
+                "Serial_Number": "{{ sn }}",
+            {% endif %}
+            {% if email is defined %}
+                "User_Email": "{{ email }}",
+            {% endif %}
             {% if version is defined %}
                 "__version": "{{ version }}",
             {% else %}
@@ -60,12 +90,12 @@ GET_ACCOUNT = """
                 "__SW_version": "xxxx",
             {% endif %}
             {% if sw_build is defined %}
-                "__SW_build": "{{ sw_build }}",
+                "__SW_build": "{{ sw_build }}"
             {% else %}
-                "__SW_build": "yyyyy",
+                "__SW_build": "yyyyy"
             {% endif %}
-            "user_id": "{{ id }}"
         }
     }    
 }
 """
+
