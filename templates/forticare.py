@@ -65,7 +65,7 @@ LOGIN = """
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalQ3/FortiAuthService.asm/Process",    
+    "path": "/FortiGlobalQ3/FortiAuthService.asmx/Process",    
     "method": "POST",
     "body": {    
         "d": {
