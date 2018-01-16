@@ -32,8 +32,8 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
 @singleton.singleton
-class FortiCareApiClient(client.ApiClient):
-    """The FortiOS API Client."""
+class FASApiClient(client.ApiClient):
+    """The FAS API Client."""
 
     user_agent = 'FortiCare Python API Client'
 
@@ -56,7 +56,7 @@ class FortiCareApiClient(client.ApiClient):
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
         '''
-        super(FortiCareApiClient, self).__init__(
+        super(FASApiClient, self).__init__(
             api_providers, key_file=key_file,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
