@@ -22,6 +22,6 @@ if __name__ == "__main__":
         res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
                           namespace='default')
         print "ADD_ACTIVATION = ", res
-
+    import pdb;pdb.set_trace()
     res = cli.request('DELETE_ACTIVATION', id=res.id)
     print "DELETE_ACTIVATION = ", res
