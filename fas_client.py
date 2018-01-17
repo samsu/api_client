@@ -22,7 +22,7 @@ import constants as const
 import client
 
 from common import singleton
-from templates import forticare as templates
+from templates import fas as templates
 
 LOG = logging.getLogger(__name__)
 
