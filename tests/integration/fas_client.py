@@ -26,8 +26,8 @@ if __name__ == "__main__":
     if isinstance(res, list):
         res_delete = []
         for record in res:
-            _res = cli.request('DELETE_ACTIVATION', id=record.id)
+            _res = cli.request('DELETE_ACTIVATION', id=record['id'])
             res_delete.append(_res)
     elif isinstance(res, dict):
-        res_delete = cli.request('DELETE_ACTIVATION', id=res.id)
+        res_delete = cli.request('DELETE_ACTIVATION', id=res['id'])
     print "DELETE_ACTIVATION = ", res_delete
