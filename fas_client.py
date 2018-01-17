@@ -35,7 +35,7 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 class FASApiClient(client.ApiClient):
     """The FAS API Client."""
 
-    user_agent = 'FortiCare Python API Client'
+    user_agent = 'FAS Python API Client'
 
     def __init__(self, api_providers, user=None, password=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
