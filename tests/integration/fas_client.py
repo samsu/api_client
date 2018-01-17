@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import api_client.forticare_client as client
+import api_client.fas_client as client
 
 
-ApiClient = client.FortiCareApiClient
+ApiClient = client.FASCareApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.61", 443, True)]
