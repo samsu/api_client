@@ -16,12 +16,18 @@ if __name__ == "__main__":
 
     cli = ApiClient(api, key_file=key_file,
                     cert_file=cert_file, ca_file=ca_file)
-    res = cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
+    res = cli.request('GET_ACTIVATION', sn='FG60DP4615001748', vdom='root')
     print "GET_ACTIVATION = ", res
     if not res:
         res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
                           namespace='default')
         print "ADD_ACTIVATION = ", res
     import pdb;pdb.set_trace()
-    res = cli.request('DELETE_ACTIVATION', id=res.id)
-    print "DELETE_ACTIVATION = ", res
+    if isinstance(res, list):
+        res_delete = []
+        for record in res:
+            _res = cli.request('DELETE_ACTIVATION', id=record.id)
+            res_delete.append(_res)
+    elif isinstance(res, dict):
+        res_delete = cli.request('DELETE_ACTIVATION', id=res.id)
+    print "DELETE_ACTIVATION = ", res_delete
