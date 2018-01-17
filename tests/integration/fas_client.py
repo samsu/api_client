@@ -9,14 +9,15 @@ if __name__ == "__main__":
     api = [("10.160.37.61", 443, True)]
     # CA
     print "----TESTING API client with CA certificate ------"
-    # key_file = "/root/ca/cert201706291056.key"
-    # cert_file = "/root/ca/cert201706291056.crt"
-    # ca_file = "/root/ca/cacertkey1-sha2.pem"
-
+    # sn is 'FG60DP4615001748' in the test
     key_file = "/root/fgt/box/fgt_b.key"
     cert_file = "/root/fgt/box/fgt_b.crt"
     ca_file = "/root/fgt/box/test_root_Fortinet_CA.cer"
 
     cli = ApiClient(api, key_file=key_file,
                     cert_file=cert_file, ca_file=ca_file)
-    print cli.request('GET_ACTIVATION')
+    print cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
+    print cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
+                      namespace='default')
+    #print cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
+    #print cli.request('DELETE_ACTIVATION')

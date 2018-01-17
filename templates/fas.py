@@ -23,7 +23,8 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
-# testing message
+# Activation
+# query
 GET_ACTIVATION = """
 {
     {% if id is defined %}
@@ -51,4 +52,24 @@ GET_ACTIVATION = """
 }
 """
 
+# query
+ADD_ACTIVATION = """
+{
+    "path": "/api/v1/activation/",
+    "method": "POST",
+    "body": {
+        "sn": ["{{ sn }}"],
+        "vdom": ["{{ vdom }}"],     
+        "namespace": "{{ namespace }}"
+    }
+}
+"""
 
+
+# delete an usergroup
+DELETE_ACTIVATION = """
+{
+    "path": "/api/v1/activation/{{ id }}/",
+    "method": "DELETE"
+}
+"""
