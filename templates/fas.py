@@ -58,8 +58,8 @@ ADD_ACTIVATION = """
     "path": "/api/v1/activation/",
     "method": "POST",
     "body": {
-        "sn": ["{{ sn }}"],
-        "vdom": ["{{ vdom }}"],     
+        "sn": "{{ sn }}",
+        "vdom": "{{ vdom }}",     
         "namespace": "{{ namespace }}"
     }
 }
