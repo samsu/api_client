@@ -19,4 +19,4 @@ if __name__ == "__main__":
 
     cli = ApiClient(api, key_file=key_file,
                     cert_file=cert_file, ca_file=ca_file)
-    cli.request('GET_ACTIVATION')
+    print cli.request('GET_ACTIVATION')
