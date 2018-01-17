@@ -3,7 +3,7 @@
 import api_client.fas_client as client
 
 
-ApiClient = client.FASCareApiClient
+ApiClient = client.FASApiClient
 
 if __name__ == "__main__":
     api = [("10.160.37.61", 443, True)]
