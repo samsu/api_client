@@ -16,8 +16,12 @@ if __name__ == "__main__":
 
     cli = ApiClient(api, key_file=key_file,
                     cert_file=cert_file, ca_file=ca_file)
-    print cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
-    print cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
-                      namespace='default')
-    #print cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
-    #print cli.request('DELETE_ACTIVATION')
+    res = cli.request('GET_ACTIVATION', sn='FG60DP4615001748')
+    print "GET_ACTIVATION = ", res
+    if not res:
+        res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
+                          namespace='default')
+        print "ADD_ACTIVATION = ", res
+
+    res = cli.request('DELETE_ACTIVATION', id=res.id)
+    print "DELETE_ACTIVATION = ", res
