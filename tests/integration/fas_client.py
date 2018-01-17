@@ -22,7 +22,6 @@ if __name__ == "__main__":
         res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
                           namespace='default')
         print "ADD_ACTIVATION = ", res
-    import pdb;pdb.set_trace()
     if isinstance(res, list):
         res_delete = []
         for record in res:
