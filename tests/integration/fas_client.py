@@ -14,8 +14,8 @@ if __name__ == "__main__":
     # ca_file = "/root/ca/cacertkey1-sha2.pem"
 
     key_file = "/root/fgt/box/fgt_b.key"
-    cert_file = "/root/fgt/fgt_b.crt"
-    ca_file = "/root/fgt/test_root_Fortinet_CA.cer"
+    cert_file = "/root/fgt/box/fgt_b.crt"
+    ca_file = "/root/fgt/box/test_root_Fortinet_CA.cer"
 
     cli = ApiClient(api, key_file=key_file,
                     cert_file=cert_file, ca_file=ca_file)
