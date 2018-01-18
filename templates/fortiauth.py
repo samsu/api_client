@@ -76,7 +76,7 @@ DELETE_USERGROUP = """
 }
 """
 
-## user
+# user
 # query users
 GET_USERS = """
 {
@@ -208,7 +208,7 @@ DELETE_USER = """
 }
 """
 
-## FortiToken
+# FortiToken
 # query FortiToken
 GET_FORTITOKENS = """
 {
@@ -234,7 +234,8 @@ GET_FORTITOKENS = """
 }
 """
 
-# user authentication
+# authentication
+# user authentication either with token_code or with password
 CREATE_AUTH = """
 {
     "path": "/api/v1/auth/",
@@ -246,6 +247,30 @@ CREATE_AUTH = """
         {% if password is defined %}
             "password": "{{ password }}",
         {% endif %}
+        "username": "{{ username }}"
+    }
+}
+"""
+
+# user push authentication
+CREATE_PUSHAUTH = """
+{
+    "path": "/api/v1/pushauth/",
+    "method": "POST",
+    "body": {
+        {%
+            set _options = {
+                "realm": realm,
+                "user_ip": user_ip,
+                "timestamp": timestamp,
+                "account": account,
+                "user_agent": user_agent,
+                "log_message": log_message
+            }
+        %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
         "username": "{{ username }}"
     }
 }
