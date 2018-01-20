@@ -89,3 +89,10 @@ ADD_VDOMUSER = """
     }
 }
 """
+
+DELETE_VDOMUSER = """
+{
+    "path": "/api/v1/activation/{{ id }}/",
+    "method": "DELETE"
+}
+"""
