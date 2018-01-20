@@ -73,3 +73,19 @@ DELETE_ACTIVATION = """
     "method": "DELETE"
 }
 """
+
+
+# vdomuser
+ADD_VDOMUSER = """
+{
+    "path": "/api/v1/vdomuser/",
+    "method": "POST",
+    "body": {
+        "sn": "{{ sn }}",
+        "vdom": "{{ vdom }}",     
+        "namespace": "{{ namespace }}",
+        "email": "{{ email }}",     
+        "username": "{{ username }}"
+    }
+}
+"""
