@@ -281,6 +281,6 @@ CREATE_PUSHAUTHRESP = """
 {
     "path": "/api/v1/pushauthresp/",
     "method": "POST",
-    "body": "{{ data }}"
+    "body": "{{ body }}"
 }
 """
