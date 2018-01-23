@@ -166,4 +166,4 @@ class ApiClient(eventlet_client.EventletApiClient):
                 LOG.error(_LE("json decode error, the response.body %(body)s"),
                           {'body': response.body})
                 return response.body
-        return None
+        return response
