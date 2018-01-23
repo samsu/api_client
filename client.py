@@ -152,7 +152,7 @@ class ApiClient(eventlet_client.EventletApiClient):
 
     @staticmethod
     def request_response_body(response):
-        if response.body:
+        if response and response.body:
             try:
                 result = jsonutils.loads(response.body)
                 LOG.debug("response.body = %(body)s", {'body': result})

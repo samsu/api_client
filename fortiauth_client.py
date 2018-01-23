@@ -21,7 +21,6 @@ import base
 import constants as const
 import client
 
-from common import singleton
 from templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
@@ -30,6 +29,7 @@ DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT * 3
 DEFAULT_RETRIES = 1
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_CONCURRENT_CONNECTIONS = base.DEFAULT_CONCURRENT_CONNECTIONS * 2
+
 
 class FortiAuthApiClient(client.ApiClient):
     """The FortiOS API Client."""
