@@ -281,6 +281,19 @@ CREATE_PUSHAUTHRESP = """
 {
     "path": "/api/v1/pushauthresp/",
     "method": "POST",
-    "body": "{{ body }}"
+    "body": {
+        {%
+            set _options = {                
+                "token_code": token_code,
+                "session_id": session_id,
+                "message": message,
+                "hmac": hmac
+            }
+        %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "action": "{{ action }}"
+    }
 }
 """
