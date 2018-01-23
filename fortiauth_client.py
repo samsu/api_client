@@ -26,10 +26,10 @@ from templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT * 2
+DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT * 3
 DEFAULT_RETRIES = 1
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
-
+DEFAULT_CONCURRENT_CONNECTIONS = base.DEFAULT_CONCURRENT_CONNECTIONS * 2
 
 class FortiAuthApiClient(client.ApiClient):
     """The FortiOS API Client."""
@@ -37,7 +37,7 @@ class FortiAuthApiClient(client.ApiClient):
     user_agent = 'FortiAuth Python API Client'
 
     def __init__(self, api_providers, user, password,
-                 concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
+                 concurrent_connections=DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
                  connect_timeout=base.DEFAULT_CONNECT_TIMEOUT,
