@@ -26,7 +26,7 @@ from templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
+DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT * 2
 DEFAULT_RETRIES = 1
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
