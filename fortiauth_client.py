@@ -97,8 +97,8 @@ class FortiAuthApiClient(client.ApiClient):
             auto_login=self._auto_login,
             http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects)
-        g.start()
-        return self.request_response(method, url, g.join())
+        response = g.start()
+        return self.request_response(method, url, response)
 
     def request_response(self, method, url, response):
         if response:
