@@ -89,20 +89,9 @@ class GenericApiRequest(request.ApiRequest):
         #next_request_id %= self.MAXIMUM_REQUEST_ID
         #EventletApiRequest.CURRENT_REQUEST_ID = next_request_id
 
-    @classmethod
-    def _spawn(cls, func, *args, **kwargs):
-        '''Allocate a green thread from the class pool.'''
-        return cls.API_REQUEST_POOL.spawn(func, *args, **kwargs)
-
-    def spawn(self, func, *args, **kwargs):
-        '''Spawn a new green thread with the supplied function and args.'''
-        return self.__class__._spawn(func, *args, **kwargs)
-
     def join(self):
         '''Wait for instance green thread to complete.'''
-        if self._green_thread is not None:
-            return self._green_thread.wait()
-        return Exception(_('Joining an invalid green thread'))
+        pass
 
     def start(self):
         '''Start request processing.'''
