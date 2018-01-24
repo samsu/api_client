@@ -21,6 +21,7 @@ import base
 import constants as const
 import client
 
+import generic_request
 from templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT * 10
 DEFAULT_RETRIES = 1
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_CONCURRENT_CONNECTIONS = base.DEFAULT_CONCURRENT_CONNECTIONS
+DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
 class FortiAuthApiClient(client.ApiClient):
@@ -80,6 +82,23 @@ class FortiAuthApiClient(client.ApiClient):
         :return: return authenticated Header
         """
         return {'Authorization': self.format_auth_basic()}
+
+    def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
+        """
+        Issues request to controller.
+        """
+        self.message = self.render(getattr(self._template, opt),
+                                   content_type=content_type, **message)
+        method = self.message['method']
+        url = self.message['path']
+        body = self.message['body'] if 'body' in self.message else None
+        g = generic_request.GenericRequestEventlet(
+            self, method, url, body, content_type, self.user_agent,
+            auto_login=self._auto_login,
+            http_timeout=self._http_timeout,
+            retries=self._retries, redirects=self._redirects)
+        g.start()
+        return self.request_response(method, url, g.join())
 
     def request_response(self, method, url, response):
         if response:
