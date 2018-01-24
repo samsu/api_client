@@ -92,7 +92,7 @@ class FortiAuthApiClient(client.ApiClient):
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
-        g = generic_request.GenericRequestEventlet(
+        g = generic_request.GenericRequest(
             self, method, url, body, content_type, self.user_agent,
             auto_login=self._auto_login,
             http_timeout=self._http_timeout,
