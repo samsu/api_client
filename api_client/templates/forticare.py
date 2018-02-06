@@ -62,6 +62,9 @@ GET_ACCOUNT = """
             {% if email is defined %}
                 "User_Email": "{{ email }}",
             {% endif %}
+            {% if account_id is defined %}
+                "account_id": "{{ account_id }}",
+            {% endif %}
             {% if version is defined %}
                 "__version": "{{ version }}",
             {% else %}
