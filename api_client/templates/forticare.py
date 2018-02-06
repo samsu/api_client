@@ -23,23 +23,6 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
-# testing message
-TEST = """
-{
-    "path": "/FortiGlobal/FortiCASB.asmx/Process",
-    "method": "POST",
-    "body": {
-        "d": {
-            "User_ID": "395939",
-            "__SW_version": "xxxx",
-            "__SW_build": "yyyyy",
-            "__type": "FortiGlobal.FortiCASBAccountInfoRequest",
-            "__version": "1"
-        }
-    }
-}
-"""
-
 # login
 LOGIN = """
 {
@@ -74,10 +57,10 @@ GET_ACCOUNT = """
                 "user_id": "{{ id }}",
             {% endif %}
             {% if sn is defined %}
-                "Serial_Number": "{{ sn }}",
+                "serial_number": "{{ sn }}",
             {% endif %}
             {% if email is defined %}
-                "User_Email": "{{ email }}",
+                "account_id": "{{ email }}",
             {% endif %}
             {% if version is defined %}
                 "__version": "{{ version }}",
@@ -98,4 +81,3 @@ GET_ACCOUNT = """
     }    
 }
 """
-
