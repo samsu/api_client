@@ -60,7 +60,7 @@ GET_ACCOUNT = """
                 "serial_number": "{{ sn }}",
             {% endif %}
             {% if email is defined %}
-                "account_id": "{{ email }}",
+                "User_Email": "{{ email }}",
             {% endif %}
             {% if version is defined %}
                 "__version": "{{ version }}",
