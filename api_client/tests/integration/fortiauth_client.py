@@ -20,7 +20,6 @@ if __name__ == "__main__":
     }
     print "----TESTING USERGROUPS------"
     cli.request('GET_USERGROUPS')
-    #import pdb;pdb.set_trace()
     cli.request("CREATE_USERGROUP", **message)
     cli.request('GET_USERGROUPS', **message)
     cli.request("DELETE_USERGROUP", **message)

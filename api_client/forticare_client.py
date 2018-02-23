@@ -87,3 +87,9 @@ class FortiCareApiClient(client.ApiClient):
         if self._ssl_sni:
             return {'Host': self._ssl_sni}
         return {}
+
+    @staticmethod
+    def request_response_body(response):
+        resp = super(FortiCareApiClient,
+                     FortiCareApiClient).request_response_body(response)
+        return resp['d'] if 'd' in resp else resp

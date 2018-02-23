@@ -125,12 +125,13 @@ class ApiClientBase(object):
 
     @staticmethod
     def render(template, content_type=DEFAULT_CONTENT_TYPE, **message):
-        '''Render API message from it's template
+        """ Render API message from it's template
 
         :param template: defined API message with essential params.
+        :param content_type: http content type
         :param message: It is a dictionary, included values of the params
                         for the template
-        '''
+        """
         if not message:
             message = {}
         msg = jinja2.Template(template).render(**message)
