@@ -19,8 +19,8 @@ if __name__ == "__main__":
     res = cli.request('GET_ACTIVATION', sn='FG60DP4615001748', vdom='root')
     print "GET_ACTIVATION = ", res
     if not res:
-        res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748', vdom='root',
-                          namespace='default')
+        res = cli.request('ADD_ACTIVATION', sn='FG60DP4615001748',
+                          vdom='root', namespace='default')
         print "ADD_ACTIVATION = ", res
     if isinstance(res, list):
         res_delete = []

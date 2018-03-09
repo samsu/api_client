@@ -84,3 +84,73 @@ GET_ACCOUNT = """
     }    
 }
 """
+
+# Get user balance
+GET_BALANCE = """
+{
+    "path": "/FortiGlobalQ1/FortiAuthService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type" : "FortiGlobal.FASInquiryRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
+            {% endif %}
+            {% if sw_version is defined %}
+                "__SW_version": "{{ sw_version }}",
+            {% else %}
+                "__SW_version": "xxxx",
+            {% endif %}
+            {% if sw_build is defined %}
+                "__SW_build": "{{ sw_build }}",
+            {% else %}
+                "__SW_build": "yyyyy",
+            {% endif %}
+            "user_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+# User balance update
+POST_USAGE = """
+{
+    "path": "/FortiGlobalQ1/FortiAuthService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortiGlobal.FASBalanceUpdateRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
+            {% endif %}
+            {% if sw_version is defined %}
+                "__SW_version": "{{ sw_version }}",
+            {% else %}
+                "__SW_version": "xxxx",
+            {% endif %}
+            {% if sw_build is defined %}
+                "__SW_build": "{{ sw_build }}",
+            {% else %}
+                "__SW_build": "yyyyy",
+            {% endif %}
+            "Used_Points":
+            [
+                {
+                    "Serial_Number": "{{ sn }}",
+                    "External_Id": "{{ ext_id }}",
+                    "Name_Space": "{{ ns }}",
+                    "Start_Date": "{{ start_date }}",
+                    "End_Date": "{{ end_date }}",
+                    "Parameter_Type": "FAS_Number_Of_User_Months",
+                    "Parameter_Value": "{{ usage }}"
+                }
+            ]
+        }
+    }
+}
+"""

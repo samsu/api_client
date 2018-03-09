@@ -23,6 +23,55 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
+# Namespace
+# query
+GET_NAMESPACE = """
+{
+    {% if id is defined %}
+        "path": "/api/v1/namespace/{{ id }}/",
+    {% else %}
+        {% set _options = {
+            "is_default": is_default,
+            "name": name,
+            "customer_id": customer_id
+        } %}
+        {% set _query = [] %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            {% if _query.append('&'+k+'='+v) %}
+            {% endif %}
+        {% endfor %}
+        {% if _query %}
+            {% set _query = ''.join(_query) %}
+            "path": "/api/v1/namespace/?{{ _query }}",
+        {% else %}
+            "path": "/api/v1/namespace/",
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_NAMESPACE = """
+{
+    "path": "/api/v1/namespace",   
+    "method": "POST",
+    "body": {
+        "name": "{{ name }}",
+        "description": "{{ description }}"
+    }
+}
+"""
+
+# delete
+DELETE_NAMESPACE = """
+{
+    "path": "/api/v1/namespace/{{ id }}/",
+    "method": "DELETE"
+}
+"""
+
+
 # Activation
 # query
 GET_ACTIVATION = """
@@ -52,7 +101,7 @@ GET_ACTIVATION = """
 }
 """
 
-# query
+# add
 ADD_ACTIVATION = """
 {
     "path": "/api/v1/activation/",
@@ -66,7 +115,7 @@ ADD_ACTIVATION = """
 """
 
 
-# delete an usergroup
+# delete
 DELETE_ACTIVATION = """
 {
     "path": "/api/v1/activation/{{ id }}/",
@@ -75,7 +124,7 @@ DELETE_ACTIVATION = """
 """
 
 
-# vdomuser
+# Vdomuser
 ADD_VDOMUSER = """
 {
     "path": "/api/v1/vdomuser/",
