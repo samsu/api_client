@@ -243,6 +243,10 @@ CREATE_AUTH = """
     "body": {
         {% if token_code is defined %}
             "token_code": "{{ token_code }}",
+        {% else %}
+            {% if display_name is defined and display_name is not None %}
+                "display_name": "{{ display_name }}",
+            {% endif %}
         {% endif %}
         {% if password is defined %}
             "password": "{{ password }}",
