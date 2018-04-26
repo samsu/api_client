@@ -124,24 +124,27 @@ DELETE_ACTIVATION = """
 """
 
 
-# Vdomuser
-ADD_VDOMUSER = """
+# count
+GET_COUNT = """
 {
-    "path": "/api/v1/vdomuser/",
-    "method": "POST",
-    "body": {
-        "sn": "{{ sn }}",
-        "vdom": "{{ vdom }}",     
-        "namespace": "{{ namespace }}",
-        "email": "{{ email }}",     
-        "username": "{{ username }}"
-    }
-}
-"""
+    {% set _options = {
+        "resource": resource,
+        "namespace_id": namespace_id,
+        "active": active,
+        "customer_id": customer_id
+    } %}
+    {% set _query = [] %}
+    {% for k, v in _options.iteritems() if v is defined %}
+        {% if _query.append('&'+k+'='+v) %}
+        {% endif %}
+    {% endfor %}
+    {% if _query %}
+        {% set _query = ''.join(_query) %}
+        "path": "/api/v1/count/?{{ _query }}",
+    {% else %}
+        "path": "/api/v1/count/",
+    {% endif %}
 
-DELETE_VDOMUSER = """
-{
-    "path": "/api/v1/vdomuser/{{ id }}/",
-    "method": "DELETE"
+    "method": "GET"
 }
 """
