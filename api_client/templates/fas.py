@@ -37,12 +37,12 @@ GET_NAMESPACE = """
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
-            {% if _query.append('&'+k+'='+v) %}
+            {% if _query.append(k+'='+v) %}
             {% endif %}
         {% endfor %}
         {% if _query %}
-            {% set _query = ''.join(_query) %}
-            "path": "/api/v1/namespace/?{{ _query }}",
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/namespace?{{ _query }}",
         {% else %}
             "path": "/api/v1/namespace/",
         {% endif %}
@@ -87,12 +87,12 @@ GET_ACTIVATION = """
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
-            {% if _query.append('&'+k+'='+v) %}
+            {% if _query.append(k+'='+v) %}
             {% endif %}
         {% endfor %}
         {% if _query %}
-            {% set _query = ''.join(_query) %}
-            "path": "/api/v1/activation/?{{ _query }}",
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/activation?{{ _query }}",
         {% else %}
             "path": "/api/v1/activation/",
         {% endif %}
@@ -109,7 +109,7 @@ ADD_ACTIVATION = """
     "body": {
         "sn": "{{ sn }}",
         "vdom": "{{ vdom }}",     
-        "namespace": "{{ namespace }}"
+        "namespace_id": "{{ namespace_id }}"
     }
 }
 """
@@ -155,7 +155,7 @@ ADD_AUTH = """
 {
     "path": "/api/v1/auth/",
     "method": "POST",
-    "body": {
+    "body": {        
         {% if token is defined and token is not None %}
             "token": "{{ token }}",
         {% endif %}
