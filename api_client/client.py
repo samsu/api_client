@@ -162,8 +162,13 @@ class ApiClient(eventlet_client.EventletApiClient):
                           "'utf-8, trying 'ISO-8859-1' instead. %(body)s",
                           {'body': response.body})
                 return jsonutils.loads(response.body, encoding='ISO-8859-1')
+            except ValueError:
+                LOG.info("Cannot decode response body with json, "
+                         "return body directly %(body)s",
+                         {'body': response.body})
+                return response.body
             except Exception as e:
-                LOG.error(_LE("json decode error, the response.body %(body)s"),
-                          {'body': response.body})
+                LOG.error("json decode error %(e)s, the response %(body)s",
+                          {'e': e.__class__, 'body': response.body})
                 return response.body
         return response
