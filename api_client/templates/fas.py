@@ -140,7 +140,7 @@ GET_COUNT = """
     {% endfor %}
     {% if _query %}
         {% set _query = '&'.join(_query) %}
-        "path": "/api/v1/count/?{{ _query }}",
+        "path": "/api/v1/count?{{ _query }}",
     {% else %}
         "path": "/api/v1/count/",
     {% endif %}
