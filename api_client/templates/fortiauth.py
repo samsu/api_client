@@ -244,7 +244,7 @@ CREATE_AUTH = """
         {% if token_code is defined %}
             "token_code": "{{ token_code }}",
         {% else %}
-            {% if display_name is defined and display_name is not None %}
+            {% if display_name is defined %}
                 "display_name": "{{ display_name }}",
             {% endif %}
         {% endif %}
