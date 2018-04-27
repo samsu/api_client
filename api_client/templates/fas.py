@@ -148,3 +148,20 @@ GET_COUNT = """
     "method": "GET"
 }
 """
+
+
+# authentication
+ADD_AUTH = """
+{
+    "path": "/api/v1/auth/",
+    "method": "POST",
+    "body": {
+        "sn": "{{ sn }}",
+        "namespace_id": "{{ namespace_id }}",     
+        "username": "{{ username }}",
+        {% if token is defined and token is not None %}
+            "token": "{{ token }}"
+        {% endif %}
+    }
+}
+"""
