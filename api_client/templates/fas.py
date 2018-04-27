@@ -156,7 +156,7 @@ ADD_AUTH = """
     "path": "/api/v1/auth/",
     "method": "POST",
     "body": {        
-        {% if token is defined and token is not None %}
+        {% if token is defined %}
             "token": "{{ token }}",
         {% endif %}
         "sn": "{{ sn }}",
