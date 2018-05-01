@@ -186,7 +186,7 @@ DELETE_USER = """
 MODIFY_USER = """
 {
     "path": "/api/v1/user/{{ id }}/",
-    "method": "PUT"
+    "method": "PUT",
     "body": {
         {% set _options = {        
         "email": email,
