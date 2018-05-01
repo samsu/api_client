@@ -114,12 +114,90 @@ ADD_ACTIVATION = """
 }
 """
 
-
 # delete
 DELETE_ACTIVATION = """
 {
     "path": "/api/v1/activation/{{ id }}/",
     "method": "DELETE"
+}
+"""
+
+
+# User
+# query
+GET_USER = """
+{
+    {% if id is defined %}
+        "path": "/api/v1/user/{{ id }}/",
+    {% else %}
+        {% set _options = {
+            "username": username,
+            "email": email,
+            "mobile_number": mobile_number,
+            "namespace_id": namespace_id,
+            "active": active,
+            "customer_id": customer_id
+        } %}
+        {% set _query = [] %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            {% if _query.append(k+'='+v) %}
+            {% endif %}
+        {% endfor %}
+        {% if _query %}
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/user?{{ _query }}",
+        {% else %}
+            "path": "/api/v1/user/",
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_USER = """
+{
+    "path": "/api/v1/user/",
+    "method": "POST",
+    "body": {
+        "sn": "{{ sn }}",             
+        "email": "{{ email }}",
+        "namespace_id": "{{ namespace_id }}",
+        {% if cluster_id is defined %}
+            "cluster_id": "{{ cluster_id }}",
+            {% if cluster_members is defined %}
+                "cluster_members": "{{ cluster_members }}",
+            {% endif %}
+        {% endif %}
+        "username": "{{ username }}"
+    }
+}
+"""
+
+# delete
+DELETE_USER = """
+{
+    "path": "/api/v1/user/{{ id }}/",
+    "method": "DELETE"
+}
+"""
+
+# put
+MODIFY_USER = """
+{
+    "path": "/api/v1/user/{{ id }}/",
+    "method": "PUT"
+    "body": {
+        {% set _options = {        
+        "email": email,
+        "mobile_number": mobile_number,        
+        "active": active,
+        "change_token": change_token        
+        } %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+    }
 }
 """
 
