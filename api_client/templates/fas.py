@@ -197,6 +197,7 @@ MODIFY_USER = """
         {% for k, v in _options.iteritems() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
+        "id": "{{ id }}"
     }
 }
 """
