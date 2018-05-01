@@ -141,7 +141,7 @@ POST_USAGE = """
             "Used_Points":
             [
                 {
-                    "Serial_Number": "{{ sn }}",
+                    "User_ID": "{{ user_id }}",
                     "External_Id": "{{ ext_id }}",
                     "Name_Space": "{{ ns }}",
                     "Start_Date": "{{ start_date }}",
