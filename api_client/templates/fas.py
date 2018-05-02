@@ -244,3 +244,28 @@ ADD_AUTH = """
     }
 }
 """
+
+
+# statement
+GET_STATEMENT = """
+{
+    {% set _options = {
+        "start": start,
+        "end": end,
+        "namespace_id": namespace_id
+    } %}
+    {% set _query = [] %}
+    {% for k, v in _options.iteritems() if v is defined %}
+        {% if _query.append(k+'='+v) %}
+        {% endif %}
+    {% endfor %}
+    {% if _query %}
+        {% set _query = '&'.join(_query) %}
+        "path": "/api/v1/statement?{{ _query }}",
+    {% else %}
+        "path": "/api/v1/statement/",
+    {% endif %}
+
+    "method": "GET"
+}
+"""
