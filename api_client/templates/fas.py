@@ -160,7 +160,8 @@ ADD_USER = """
     "path": "/api/v1/user/",
     "method": "POST",
     "body": {
-        "sn": "{{ sn }}",             
+        "sn": "{{ sn }}",
+        "vdom": "{{ vdom }}",    
         "email": "{{ email }}",
         "namespace_id": "{{ namespace_id }}",
         {% if cluster_id is defined %}
