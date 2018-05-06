@@ -269,6 +269,7 @@ CREATE_PUSHAUTH = """
                 "timestamp": timestamp,
                 "account": account,
                 "user_agent": user_agent,
+                "display_name": display_name,
                 "user_data": user_data,
                 "log_message": log_message
             }
