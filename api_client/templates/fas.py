@@ -57,8 +57,10 @@ ADD_NAMESPACE = """
     "path": "/api/v1/namespace",   
     "method": "POST",
     "body": {
-        "name": "{{ name }}",
-        "description": "{{ description }}"
+        {% if description is defined %}
+            "description": "{{ description }}",
+        {% endif %}
+        "name": "{{ name }}"        
     }
 }
 """
