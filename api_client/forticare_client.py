@@ -22,7 +22,8 @@ import constants as const
 import client
 
 from common import singleton
-from templates import forticare as templates
+from common import utils
+from templates import forticare as default_template
 
 LOG = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class FortiCareApiClient(client.ApiClient):
 
     user_agent = 'FortiCare Python API Client'
 
-    def __init__(self, api_providers, user=None, password=None,
+    def __init__(self, api_providers, template=None, user=None, password=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
@@ -76,7 +77,18 @@ class FortiCareApiClient(client.ApiClient):
         # SSL server_name_indication
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
-        self._template = templates
+        if template:
+            path, files = utils.get_module_files('templates')
+            if not template.endswith('.py'):
+                template = '.'.join([template, 'py'])
+
+            if template in files:
+                self._template = utils.import_file_module(path, template)
+            else:
+                raise EnvironmentError(
+                    "Cannot find the template file {t}".format(t=template))
+        else:
+            self._template = default_template
 
     def _login(self, conn=None, headers=None):
         """

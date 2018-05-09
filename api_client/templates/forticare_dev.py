@@ -48,7 +48,7 @@ LOGIN = """
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobal/FortiAuthService.asmx/Process",    
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",    
     "method": "POST",
     "body": {    
         "d": {
@@ -88,7 +88,7 @@ GET_ACCOUNT = """
 # Get user balance
 GET_BALANCE = """
 {
-    "path": "/FortiGlobal/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
@@ -118,7 +118,7 @@ GET_BALANCE = """
 # User balance update
 POST_USAGE = """
 {
-    "path": "/FortiGlobal/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {

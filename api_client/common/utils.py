@@ -20,6 +20,15 @@ try:
 except ImportError:
     import http.client as httplib
 
+try:
+    from imp import load_source as import_module_file
+except ImportError:
+    from importlib.util import spec_from_file_location as import_module_file
+
+from os import listdir
+from os.path import dirname
+from oslo_utils import importutils
+
 
 def ctrl_conn_to_str(conn):
     """Returns a string representing a connection URL to the controller."""
@@ -30,3 +39,37 @@ def ctrl_conn_to_str(conn):
     else:
         raise TypeError('Invalid connection type: %s' % type(conn))
     return "%s%s:%s" % (proto, conn.host, conn.port)
+
+
+def import_file_module(file_path, file_name, module_name=None):
+    if not file_name.endswith('.py'):
+        file_name = '.'.join([file_name, 'py'])
+    module_name = module_name or file_name[:-3]
+    return import_module_file(module_name, '/'.join([file_path, file_name]))
+
+
+def get_api_service_module(file_path):
+    """
+    :param file_path: file is the file path
+    e.g.
+        '/usr/lib/python2.7/site-packages/test/api/v1/hello.pyc'
+    :param file_name: api service filename, e.g. 'hello'
+    :return:
+    """
+    for postfix in ['.py', '.pyc']:
+        if file_path.endswith(postfix):
+            file_path = file_path.replace(postfix, '')
+    file_path = file_path.split('/')
+    _module = file_path[-4:]
+    _module.insert(1, 'services')
+    _module = '.'.join(_module)
+    return importutils.import_module(_module)
+
+
+def get_module_files(int_path):
+    path = dirname(__file__).split('/')[:-1]
+    path = '/'.join(path)
+    path = ''.join([path, int_path])
+    files = [f for f in listdir(path) if
+             f.endswith('.py') and f != '__init__.py']
+    return path, files
