@@ -78,7 +78,7 @@ class FortiCareApiClient(client.ApiClient):
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         if template:
-            path, files = utils.get_module_files('templates')
+            path, files = utils.get_module_files('/templates')
             if not template.endswith('.py'):
                 template = '.'.join([template, 'py'])
 
