@@ -41,6 +41,8 @@ GET_USERGROUPS = """
 }
 """
 
+GET_USERGROUP = GET_USERGROUPS
+
 # create an usergroup
 CREATE_USERGROUP = """
 {
@@ -121,6 +123,9 @@ GET_USERS = """
     "method": "GET"
 }
 """
+
+GET_USER = GET_USERS
+
 
 # create an user
 CREATE_USER = """
