@@ -70,11 +70,8 @@ MODIFY_USERGROUP = """
 # delete an usergroup
 DELETE_USERGROUP = """
 {
-    "path": "/api/v1/usergroups/",
-    "method": "DELETE",
-    "body": {
-        "name": "{{ name }}"
-    }
+    "path": "{{ resource_uri }}",    
+    "method": "DELETE" 
 }
 """
 
