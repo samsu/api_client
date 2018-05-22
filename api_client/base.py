@@ -125,9 +125,10 @@ class ApiClientBase(object):
         self._config_gen = value
 
     @staticmethod
-    def init_template_environment(template):
+    def extend_template_env(template):
         env = Environment(loader=FileSystemLoader(template))
         env.globals['translate_uri_chars'] = utils.translate_uri_chars
+        return env
 
     @staticmethod
     def render(template, content_type=DEFAULT_CONTENT_TYPE, **message):
@@ -140,8 +141,8 @@ class ApiClientBase(object):
         """
         if not message:
             message = {}
-        ApiClientBase.init_template_environment(template)
-        msg = jinja2.Template(template).render(**message)
+        env = ApiClientBase.extend_template_env(jinja2.Template(template))
+        msg = env.render(**message)
         if content_type in DEFAULT_CONTENT_TYPE:
             return jsonutils.loads(msg)
         else:
