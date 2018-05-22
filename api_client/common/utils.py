@@ -15,6 +15,7 @@
 # under the License.
 #
 
+import six
 try:
     import httplib
 except ImportError:
@@ -78,6 +79,8 @@ def get_module_files(int_path):
 
 
 def translate_uri_chars(var):
+    if not isinstance(var, six.string_types):
+        return var
     for old, new in consts.URI_CHAR_CODES.iteritems():
         var = var.replace(old, new)
     return var

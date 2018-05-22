@@ -209,7 +209,7 @@ MODIFY_USER = """
 # delete an usergroup
 DELETE_USER = """
 {
-    "path": "/api/v1/localusers/{{ translate_uri_chars(id) }}/",
+    "path": "/api/v1/localusers/{{ id }}/",
     "method": "DELETE"
 }
 """
