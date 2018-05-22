@@ -111,7 +111,7 @@ GET_USERS = """
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
-            {% if _query.append('&'+k+'='+v) %}
+            {% if _query.append('&'+k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
         {% if _query %}
