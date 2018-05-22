@@ -29,6 +29,8 @@ from os import listdir
 from os.path import dirname
 from oslo_utils import importutils
 
+from api_client import constants as consts
+
 
 def ctrl_conn_to_str(conn):
     """Returns a string representing a connection URL to the controller."""
@@ -73,3 +75,9 @@ def get_module_files(int_path):
     files = [f for f in listdir(path) if
              f.endswith('.py') and f != '__init__.py']
     return path, files
+
+
+def translate_uri_chars(var):
+    for old, new in consts.URI_CHAR_CODES.iteritems():
+        var = var.replace(old, new)
+    return var

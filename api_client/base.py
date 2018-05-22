@@ -24,6 +24,7 @@ except ImportError:
     import http.client as httplib
     from http import cookies as Cookie
 import jinja2
+from jinja2 import Environment, FileSystemLoader
 import time
 
 from oslo_log import log as logging
@@ -124,6 +125,11 @@ class ApiClientBase(object):
         self._config_gen = value
 
     @staticmethod
+    def init_template_environment(template):
+        env = Environment(loader=FileSystemLoader(template))
+        env.globals['translate_uri_chars'] = utils.translate_uri_chars
+
+    @staticmethod
     def render(template, content_type=DEFAULT_CONTENT_TYPE, **message):
         """ Render API message from it's template
 
@@ -134,6 +140,7 @@ class ApiClientBase(object):
         """
         if not message:
             message = {}
+        ApiClientBase.init_template_environment(template)
         msg = jinja2.Template(template).render(**message)
         if content_type in DEFAULT_CONTENT_TYPE:
             return jsonutils.loads(msg)

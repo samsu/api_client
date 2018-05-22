@@ -84,7 +84,7 @@ DELETE_USERGROUP = """
 GET_USERS = """
 {
     {% if id is defined %}
-        "path": "/api/v1/localusers/{{ id }}/",
+        "path": "/api/v1/localusers/{{ translate_uri_chars(id) }}/",
     {% else %}
         {% set _options = {
             "username": username,
@@ -171,7 +171,7 @@ CREATE_USER = """
 # modify an user
 MODIFY_USER = """
 {
-    "path": "/api/v1/localusers/{{ id }}/",
+    "path": "/api/v1/localusers/{{ translate_uri_chars(id) }}/",
     "method": "PATCH",
     "body": {
         {%
@@ -209,7 +209,7 @@ MODIFY_USER = """
 # delete an usergroup
 DELETE_USER = """
 {
-    "path": "/api/v1/localusers/{{ id }}/",
+    "path": "/api/v1/localusers/{{ translate_uri_chars(id) }}/",
     "method": "DELETE"
 }
 """
