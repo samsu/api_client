@@ -136,6 +136,8 @@ class EventletApiRequest(request.ApiRequest):
                 if badstatus <= DEFAULT_RETRIES:
                     badstatus += 1
                     attempt -= 1
+                    LOG.error("request {method} {url} {body} error".format(
+                        method=self._method, url=self._url, body=self._body))
                     continue
             # automatically raises any exceptions returned.
             if isinstance(req, httplib.HTTPResponse):
