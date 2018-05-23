@@ -80,14 +80,9 @@ class GenericApiRequest(request.ApiRequest):
         if "User-Agent" not in self._headers:
             self._headers["User-Agent"] = DEFAULT_USER_AGENT
 
-        #self._green_thread = None
         # Retrieve and store this instance's unique request id.
         self._request_id = request_id
-        # Update the class variable that tracks request id.
-        # Request IDs wrap around at MAXIMUM_REQUEST_ID
-        #next_request_id = self._request_id + 1
-        #next_request_id %= self.MAXIMUM_REQUEST_ID
-        #EventletApiRequest.CURRENT_REQUEST_ID = next_request_id
+
 
     def join(self):
         '''Wait for instance green thread to complete.'''
@@ -101,14 +96,17 @@ class GenericApiRequest(request.ApiRequest):
         '''First level request handling.'''
         attempt = 0
         timeout = 0
+        badstatus = 0
         response = None
         while response is None and attempt <= self._retries:
             attempt += 1
             try:
                 req = self._issue_request()
             except httplib.BadStatusLine:
-                attempt -= 1
-                continue
+                badstatus += 1
+                if badstatus <= DEFAULT_RETRIES:
+                    attempt -= 1
+                    continue
             # automatically raises any exceptions returned.
             if isinstance(req, httplib.HTTPResponse):
                 timeout = 0
