@@ -104,7 +104,11 @@ class GenericApiRequest(request.ApiRequest):
         response = None
         while response is None and attempt <= self._retries:
             attempt += 1
-            req = self._issue_request()
+            try:
+                req = self._issue_request()
+            except httplib.BadStatusLine:
+                attempt -= 1
+                continue
             # automatically raises any exceptions returned.
             if isinstance(req, httplib.HTTPResponse):
                 timeout = 0

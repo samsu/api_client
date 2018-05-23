@@ -221,6 +221,8 @@ class ApiRequest(object):
                          'msg': msg, 'elapsed': elapsed_time})
             self._request_error = e
             is_conn_error = True
+            if isinstance(e, httpclient.BadStatusLine):
+                raise e
             return e
 
         finally:
