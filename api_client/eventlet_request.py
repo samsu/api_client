@@ -133,8 +133,8 @@ class EventletApiRequest(request.ApiRequest):
             try:
                 req = self._issue_request()
             except httplib.BadStatusLine:
-                badstatus += 1
                 if badstatus <= DEFAULT_RETRIES:
+                    badstatus += 1
                     attempt -= 1
                     continue
             # automatically raises any exceptions returned.
