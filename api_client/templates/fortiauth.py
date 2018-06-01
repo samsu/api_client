@@ -30,6 +30,8 @@ GET_USERGROUPS = """
 {
     {% if id is defined %}
         "path": "/api/v1/usergroups/{{ id }}/",
+    {% elif resource_uri is defined %}
+        "path": "{{ resource_uri }}",
     {% else %}
         {% if name is defined %}
             "path": "/api/v1/usergroups/?name={{ name }}",
