@@ -139,6 +139,7 @@ CREATE_USER = """
         {%
             set _options = {
                 "token_auth": token_auth,
+                "password": password,
                 "ftk_only": ftk_only,
                 "ftm_act_method": ftm_act_method,
                 "token_type": token_type,
@@ -307,6 +308,139 @@ CREATE_PUSHAUTHRESP = """
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "action": "{{ action }}"
+    }
+}
+"""
+
+GET_FTMLICENSE = """
+{
+    "path": "/api/v1/fortitokenmobilelicenses/",
+    "method": "GET"
+}
+"""
+
+UPLOAD_FTMLICENSE = """
+{
+    "path": "/api/v1/fortitokenmobilelicenses/",
+    "method": "POST",
+    "body": {
+        "license": "{{ license }}"
+    }
+}
+"""
+
+GET_SMTPSERVER = """
+{
+    {% if id is defined %}
+    "path": "/api/v1/smtpservers/{{ id }}/",
+    {% else %}
+    "path": "/api/v1/smtpservers/",
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+CREATE_SMTPSERVER = """
+{
+    "path": "/api/v1/smtpservers/",
+    "method": "POST",
+    "body": {
+        "sender_email": "{{ sender_email }}",
+        "address": "{{ address }}",
+        {% if port is defined %}
+        "port": "{{ port }}",
+        {% endif %}
+        {% if sender_name is defined %}
+        "sender_name": "{{ sender_name }}",
+        {% endif %}
+        {% if secure is defined %}
+        "secure": "{{ secure }}",
+        {% endif %}
+        {% if authentication is defined %}
+        "authentication": "{{ authentication }}",
+        {% endif %}
+        {% if authentication_name is defined %}
+        "authentication_name": "{{ authentication_name }}",
+        {% endif %}
+        {% if authentication_password is defined %}
+        "authentication_password": "{{ authentication_password }}",
+        {% endif %}
+        {% if default is defined %}
+        "default": {{ default }},
+        {% endif %}
+        "name": "{{ name }}"
+    }
+}
+"""
+
+MODIFY_SMTPSERVER = """
+{
+    "path": "/api/v1/smtpservers/{{ id }}/",
+    "method": "PATCH",
+    "body": {
+        {%
+            set _options = {
+                "name": name,
+                "sender_email": sender_email,
+                "sender_name": sender_name,
+                "address": address,
+                "secure": secure,
+                "authentication_name": authentication_name,
+                "authentication_password": authentication_password
+            }
+        %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        {%
+            set _non_str_options = {
+                "port": port,
+                "default": default,
+                "authentication": authentication
+            }
+        %}
+        {% for k, v in _non_str_options.iteritems() if v is defined %}
+            "{{ k }}": {{ v }},
+        {% endfor %}
+        "id": {{ id }}
+    }
+}
+
+"""
+
+DELETE_SMTPSERVER = """
+{
+    "path": "/api/v1/smtpservers/{{ id }}/",
+    "method": "DELETE"
+}
+"""
+
+GET_USERLOCKOUTPOLICY = """
+{
+    "path": "/api/v1/userlockoutpolicy/",
+    "method": "GET"
+}
+"""
+
+MODIFY_USERLOCKOUTPOLICY = """
+{
+    "path": "/api/v1/userlockoutpolicy/",
+    "method": "POST",
+    "body": {
+        {%
+            set _options = [
+                ("failed_login_lockout", lockout),
+                ("failed_login_lockout_max_attempts", max_attempts),
+                ("failed_login_lockout_permanent", permanent),
+                ("failed_login_lockout_period", period),
+                ("inactivity_lockout", inactivity_lockout),
+                ("inactivity_lockout_period", inactivity_lockout_period)
+            ]
+        %}
+        {% for option in _options[:-1] %}
+            "{{ option[0] }}": {{ option[1] }},
+        {% endfor %}
+        "{{ _options[-1][0] }}": {{ _options[-1][1] }}
     }
 }
 """
