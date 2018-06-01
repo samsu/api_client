@@ -136,7 +136,7 @@ class EventletApiClient(base.ApiClientBase):
             result_conn = conn
         if result_conn:
             result_conn.last_used = time.time()
-            if auto_login and self.auth_cookie(conn) is None:
+            if auto_login and self.auth_data(conn) is None:
                 self._wait_for_login(result_conn, headers)
         return result_conn
 
