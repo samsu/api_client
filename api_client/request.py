@@ -203,8 +203,9 @@ class ApiRequest(object):
                 LOG.warning(_LW("[%(rid)d] Request '%(method)s %(url)s' "
                                 "received: %(status)s"),
                             {'rid': self._rid(), 'method': self._method,
-                             'url': self._url, 'status': response.status})
-                raise Exception(_('Server error return: %s'), response.status)
+                             'url': self._url, 'status': response.status,
+                             'body': getattr(response, 'body', None)})
+                #raise Exception(_('Server error return: %s'), response.status)
             return response
 
         except Exception as e:
