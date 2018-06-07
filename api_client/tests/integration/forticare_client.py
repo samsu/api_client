@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print "----TESTING API client with Sub CA certificate ------"
     key_file = "/root/subca/cert201706291056.key"
     cert_file = "/root/subca/cert201706291056.crt"
-    cert_reqs = "/root/subca/cert201706291056.csr"
+    #cert_reqs = "/root/subca/cert201706291056.csr"
     ca_file = "/root/subca/chain.pem"
     server_hostname = "fortinet-ca2.fortinet.com"
     cli = ApiClient(api, key_file=key_file,
