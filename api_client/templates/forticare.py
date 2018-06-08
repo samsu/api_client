@@ -154,3 +154,21 @@ POST_USAGE = """
     }
 }
 """
+
+GET_APPLIST = """
+{
+    "path": "/FortiGlobalQ2/FortiCareService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortiGlobal.FortinetAppListRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
+            {% endif %}
+            "request_app": "CustomerManagement"
+        }
+    }
+}
+"""
