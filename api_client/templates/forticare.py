@@ -172,3 +172,26 @@ GET_APPLIST = """
     }
 }
 """
+
+GET_ACCOUNTLIST = """
+{
+    "path": "/FortiGlobalQ2/FortiCareService.asmx/Process",
+    "method": "POST",
+    "body": {
+                "d": {
+                      "__type" : "FortiGlobal.AccountSelectionRequest",
+                      {% if version is defined %}
+                      "__version": "{{ version }}",
+                      {% else %}
+                      "__version": "1",
+                      {% endif %}
+                      "fortinet_id": "{{ fortinet_id }}",
+                      {% if service_type is defined %}
+                      "service_type": "{{ service_type }}"
+                      {% else %}
+                      "service_type": "FAS"
+                      {% endif %}
+                }
+    }
+}
+"""
