@@ -33,9 +33,9 @@ import six
 import socket
 import ssl
 
-from _i18n import _LE, _LI, _LW
-import common.utils as utils
-import constants as const
+from ._i18n import _LE, _LI, _LW
+from .common import utils
+from . import constants as const
 
 
 LOG = logging.getLogger(__name__)

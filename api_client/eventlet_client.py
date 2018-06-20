@@ -21,9 +21,9 @@ import eventlet
 eventlet.monkey_patch()
 from oslo_log import log as logging
 
-from _i18n import _LE
-import base
-import eventlet_request
+from ._i18n import _LE
+from . import base
+from . import eventlet_request
 
 LOG = logging.getLogger(__name__)
 

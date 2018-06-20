@@ -16,7 +16,7 @@
 #
 
 
-from _i18n import _
+from ._i18n import _
 
 
 class ApiException(Exception):
