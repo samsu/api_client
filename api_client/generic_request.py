@@ -125,10 +125,10 @@ class GenericApiRequest(request.ApiRequest):
                         continue
                     # else fall through to return the error code
 
-                LOG.debug("[%(rid)d] Completed request '%(method)s %(url)s'"
-                          ": %(status)s",
-                          {'rid': self._rid(), 'method': self._method,
-                           'url': self._url, 'status': req.status})
+                LOG.info("[%(rid)d] Completed request '%(method)s %(url)s'"
+                         ": %(status)s",
+                         {'rid': self._rid(), 'method': self._method,
+                          'url': self._url, 'status': req.status})
                 self._request_error = None
                 response = req
             else:
