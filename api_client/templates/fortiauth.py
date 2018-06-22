@@ -444,3 +444,20 @@ MODIFY_USERLOCKOUTPOLICY = """
     }
 }
 """
+
+GET_FTMFQDN = """
+{
+    "path": "/api/v1/system/external_ip_fqdn/",
+    "method": "GET"
+}
+"""
+
+MODIFY_FTMFQDN = """
+{
+    "path": "/api/v1/system/external_ip_fqdn/",
+    "method": "PUT",
+    "body": {
+        "value": "{{ fqdn }}"
+    }
+}
+"""
