@@ -38,7 +38,7 @@ class FortiAuthApiClient(client.ApiClient):
 
     user_agent = 'FortiAuth Python API Client'
 
-    def __init__(self, api_providers, user, password,
+    def __init__(self, api_providers, user=None, password=None,
                  concurrent_connections=DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
