@@ -116,7 +116,8 @@ class ApiRequest(object):
 
                 headers = copy.copy(self._headers)
                 auth = self._api_client.auth_data(conn)
-                headers.update(auth)
+                if auth:
+                    headers.update(auth)
                 try:
                     if self._body:
                         body = jsonutils.dumps(self._body)
