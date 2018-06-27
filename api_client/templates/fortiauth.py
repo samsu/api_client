@@ -24,6 +24,15 @@
 # MODIFY_XXX   -->    PATCH
 
 
+# METADATA
+# query METADATA
+GET_METADATA = """
+{
+    "path": "/saml-idp/{{ prefix }}/metadata/",
+    "method": "GET"
+}
+"""
+
 # usergroups
 # query usergroups
 GET_USERGROUPS = """

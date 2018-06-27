@@ -10,10 +10,14 @@ import api_client.fortiauth_client as client
 ApiClient=client.FortiAuthApiClient
 
 if __name__ == "__main__":
-    api = [("10.160.37.98", 443, True)]
+    #api = [("10.160.37.98", 443, True)]
+    api = [("customersso1-test.fortinet.com", 443, True)]
     user = "admin"
     password = "slRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
-    cli = ApiClient(api, user, password)
+    cli = ApiClient(api, auto_login=False)
+    print cli.request('GET_METADATA', prefix='4b7qmklio9wj8u9n')
+
+    """
     #print "----TESTING USER_GROUPS------"
     message = {
         "name": "test123"
@@ -53,3 +57,4 @@ if __name__ == "__main__":
     print "----TESTING FORTITOKENS------"
     cli.request("GET_FORTITOKENS", **message)
     cli.request("GET_FORTITOKENS")
+    """
