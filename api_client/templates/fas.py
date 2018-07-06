@@ -35,6 +35,7 @@ GET_NAMESPACE = """
         {% endif %}
     {% else %}
         {% set _options = {
+            "sn": sn,
             "is_default": is_default,
             "name": name,
             "customer_id": customer_id
