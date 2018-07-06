@@ -28,7 +28,11 @@
 GET_NAMESPACE = """
 {
     {% if id is defined %}
-        "path": "/api/v1/namespace/{{ id }}/",
+        {% if sn is defined %}
+            "path": "/api/v1/namespace/{{ id }}?sn={{ sn }}",
+        {% else %}
+            "path": "/api/v1/namespace/{{ id }}/
+        {% endif %}
     {% else %}
         {% set _options = {
             "is_default": is_default,

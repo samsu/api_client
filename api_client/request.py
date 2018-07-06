@@ -206,7 +206,6 @@ class ApiRequest(object):
                             {'rid': self._rid(), 'method': self._method,
                              'url': self._url, 'status': response.status,
                              'body': getattr(response, 'body', None)})
-                #raise Exception(_('Server error return: %s'), response.status)
             return response
 
         except Exception as e:
