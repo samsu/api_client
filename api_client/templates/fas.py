@@ -31,7 +31,7 @@ GET_NAMESPACE = """
         {% if sn is defined %}
             "path": "/api/v1/namespace/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/namespace/{{ id }}/
+            "path": "/api/v1/namespace/{{ id }}/,
         {% endif %}
     {% else %}
         {% set _options = {
@@ -76,7 +76,11 @@ ADD_NAMESPACE = """
 # delete
 DELETE_NAMESPACE = """
 {
-    "path": "/api/v1/namespace/{{ id }}/",
+    {% if sn is defined %}
+        "path": "/api/v1/namespace/{{ id }}?sn={{ sn }}",
+    {% else %}
+        "path": "/api/v1/namespace/{{ id }}/,
+    {% endif %}    
     "method": "DELETE"
 }
 """
@@ -87,7 +91,11 @@ DELETE_NAMESPACE = """
 GET_ACTIVATION = """
 {
     {% if id is defined %}
-        "path": "/api/v1/activation/{{ id }}/",
+        {% if sn is defined %}
+            "path": "/api/v1/activation/{{ id }}?sn={{ sn }}",
+        {% else %}
+            "path": "/api/v1/activation/{{ id }}/,
+        {% endif %}        
     {% else %}
         {% set _options = {
             "sn": sn,
@@ -127,7 +135,11 @@ ADD_ACTIVATION = """
 # delete
 DELETE_ACTIVATION = """
 {
-    "path": "/api/v1/activation/{{ id }}/",
+    {% if sn is defined %}
+        "path": "/api/v1/activation/{{ id }}?sn={{ sn }}",
+    {% else %}
+        "path": "/api/v1/activation/{{ id }}/,
+    {% endif %}    
     "method": "DELETE"
 }
 """
@@ -138,9 +150,14 @@ DELETE_ACTIVATION = """
 GET_USER = """
 {
     {% if id is defined %}
-        "path": "/api/v1/user/{{ id }}/",
+        {% if sn is defined %}
+            "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
+        {% else %}
+            "path": "/api/v1/user/{{ id }}/,
+        {% endif %}        
     {% else %}
         {% set _options = {
+            "sn": sn
             "username": username,
             "email": email,
             "mobile_number": mobile_number,
@@ -188,7 +205,11 @@ ADD_USER = """
 # delete
 DELETE_USER = """
 {
-    "path": "/api/v1/user/{{ id }}/",
+    {% if sn is defined %}
+        "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
+    {% else %}
+        "path": "/api/v1/user/{{ id }}/,
+    {% endif %}
     "method": "DELETE"
 }
 """
@@ -199,7 +220,8 @@ MODIFY_USER = """
     "path": "/api/v1/user/{{ id }}/",
     "method": "PUT",
     "body": {
-        {% set _options = {        
+        {% set _options = {
+        "sn": sn,        
         "email": email,
         "mobile_number": mobile_number,        
         "active": active,
@@ -218,6 +240,7 @@ MODIFY_USER = """
 GET_COUNT = """
 {
     {% set _options = {
+        "sn": sn,
         "resource": resource,
         "namespace_id": namespace_id,
         "active": active,
@@ -261,6 +284,7 @@ ADD_AUTH = """
 GET_STATEMENT = """
 {
     {% set _options = {
+        "sn": sn,
         "start": start,
         "end": end,
         "namespace_id": namespace_id
