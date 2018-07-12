@@ -65,10 +65,10 @@ ADD_NAMESPACE = """
         {% if description is defined %}
             "description": "{{ description }}",
         {% endif %}
-        "name": "{{ name }}",
         {% if sn is defined %}
             "sn": "{{ sn }}",
         {% endif %}
+        "name": "{{ name }}"
     }
 }
 """
