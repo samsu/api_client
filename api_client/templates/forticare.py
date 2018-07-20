@@ -157,7 +157,7 @@ POST_USAGE = """
 
 GET_APPLIST = """
 {
-    "path": "/FortiGlobalQ2/FortiCareService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiCareService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
@@ -175,7 +175,7 @@ GET_APPLIST = """
 
 GET_ACCOUNTLIST = """
 {
-    "path": "/FortiGlobalQ2/FortiCareService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiCareService.asmx/Process",
     "method": "POST",
     "body": {
                 "d": {
