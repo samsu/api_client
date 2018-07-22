@@ -461,3 +461,21 @@ MODIFY_FTMFQDN = """
     }
 }
 """
+
+GET_FTMTOKENS = """
+{
+    {% if ftm_license is defined %}
+    "path": "/api/v1/fortitokens/?type=ftm&license={{ ftm_license }}",
+    {% else %}
+    "path": "/api/v1/fortitokens/?type=ftm",
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+DELETE_FTMTOKENS = """
+{
+    "path": "{{ resource_uri }}",
+    "method": "DELETE"
+}
+"""
