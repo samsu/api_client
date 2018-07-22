@@ -21,6 +21,7 @@ try:
     import httplib
 except ImportError:
     import http.client as httplib
+import socket
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
@@ -102,7 +103,7 @@ class GenericApiRequest(request.ApiRequest):
             attempt += 1
             try:
                 req = self._issue_request()
-            except httplib.BadStatusLine:
+            except (httplib.BadStatusLine, socket.error):
                 if badstatus <= DEFAULT_RETRIES:
                     badstatus += 1
                     attempt -= 1
