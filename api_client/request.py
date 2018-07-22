@@ -216,10 +216,10 @@ class ApiRequest(object):
                 msg = str(e)
             if response is None:
                 elapsed_time = time.time() - issued_time
-            LOG.warning("[{rid}] Failed request '{conn}': '{msg}' "
+            LOG.warning(("[{rid}] Failed request '{conn}': '{msg}' "
                         "({elapsed} seconds), error type '{err}'.").format(
                         rid=self._rid(), conn=self._request_str(conn, url),
-                        msg=msg, elapsed=elapsed_time, err=type(e))
+                        msg=msg, elapsed=elapsed_time, err=type(e)))
             self._request_error = e
             is_conn_error = True
             if isinstance(e, (httpclient.BadStatusLine, socket.error)):
