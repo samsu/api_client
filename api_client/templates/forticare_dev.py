@@ -27,9 +27,9 @@
 LOGIN = """
 {
     {% if next_url is defined %} 
-        "path": "/RegistrationTrunk/Main.aspx?from=FAS&RedirectURL={{ next_url }}",
+        "path": "/RegistrationDev/Main.aspx?from=FAS&RedirectURL={{ next_url }}",
     {% else %}
-        "path": "/RegistrationTrunk/Main.aspx?from=FAS&RedirectURL=",
+        "path": "/RegistrationDev/Main.aspx?from=FAS&RedirectURL=",
     {% endif %}
     "method": "POST",
     "body": {
@@ -48,7 +48,7 @@ LOGIN = """
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalTrunk/FortiAuthService.asmx/Process",    
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",    
     "method": "POST",
     "body": {    
         "d": {
@@ -88,7 +88,7 @@ GET_ACCOUNT = """
 # Get user balance
 GET_BALANCE = """
 {
-    "path": "/FortiGlobalTrunk/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
@@ -118,7 +118,7 @@ GET_BALANCE = """
 # User balance update
 POST_USAGE = """
 {
-    "path": "/FortiGlobalTrunk/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {

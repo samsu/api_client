@@ -24,6 +24,15 @@
 # MODIFY_XXX   -->    PATCH
 
 
+# METADATA
+# query METADATA
+GET_METADATA = """
+{
+    "path": "/saml-idp/{{ prefix }}/metadata/",
+    "method": "GET"
+}
+"""
+
 # usergroups
 # query usergroups
 GET_USERGROUPS = """
@@ -425,22 +434,23 @@ GET_USERLOCKOUTPOLICY = """
 MODIFY_USERLOCKOUTPOLICY = """
 {
     "path": "/api/v1/userlockoutpolicy/",
-    "method": "POST",
+    "method": "PATCH",
     "body": {
         {%
-            set _options = [
-                ("failed_login_lockout", lockout),
-                ("failed_login_lockout_max_attempts", max_attempts),
-                ("failed_login_lockout_permanent", permanent),
-                ("failed_login_lockout_period", period),
-                ("inactivity_lockout", inactivity_lockout),
-                ("inactivity_lockout_period", inactivity_lockout_period)
-            ]
+            set _options = {
+                "failed_login_lockout": lockout,
+                "failed_login_lockout_max_attempts": max_attempts,
+                "failed_login_lockout_permanent": permanent,
+                "failed_login_lockout_period": period,
+                "inactivity_lockout": inactivity_lockout,
+                "inactivity_lockout_period": inactivity_lockout_period
+            }
         %}
-        {% for option in _options[:-1] %}
-            "{{ option[0] }}": {{ option[1] }},
+         {% for k, v in _options.iteritems() if v is defined %}
+            "{{ k }}": {{ v }}
+            {{ "," if not loop.last }}
         {% endfor %}
-        "{{ _options[-1][0] }}": {{ _options[-1][1] }}
+
     }
 }
 """
