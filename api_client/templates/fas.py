@@ -23,6 +23,15 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
+# Version
+GET_VERSION = """
+{
+    "path": "/version/,    
+    "method": "GET"
+}
+"""
+
+
 # Namespace
 # query
 GET_NAMESPACE = """
