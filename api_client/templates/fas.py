@@ -29,7 +29,7 @@ GET_VERSION = """
     {% if sn is defined %}
         "path": "/version?sn={{ sn }}",
     {% else %}
-        "path": "/version/,
+        "path": "/version/",
     {% endif %}    
     "method": "GET"
 }
