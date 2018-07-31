@@ -131,6 +131,7 @@ class EventletApiRequest(request.ApiRequest):
         while response is None and attempt <= self._retries:
             eventlet.greenthread.sleep(timeout)
             attempt += 1
+            req = None
             try:
                 req = self._issue_request()
             except (httplib.BadStatusLine, socket.error):
