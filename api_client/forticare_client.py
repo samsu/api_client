@@ -17,13 +17,13 @@
 
 from oslo_log import log as logging
 
-import base
-import constants as const
-import client
+from . import base
+from . import constants as const
+from . import client
 
-from common import singleton
-from common import utils
-from templates import forticare as default_template
+from .common import singleton
+from .common import utils
+from .templates import forticare as default_template
 
 LOG = logging.getLogger(__name__)
 

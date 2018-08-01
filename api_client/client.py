@@ -18,12 +18,12 @@
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-import base
-import constants as const
-import eventlet_client
-import eventlet_request
-import exceptions
-from _i18n import _LE, _LW
+from . import base
+from . import constants as const
+from . import eventlet_client
+from . import eventlet_request
+from . import exceptions
+from ._i18n import _LE, _LW
 
 LOG = logging.getLogger(__name__)
 

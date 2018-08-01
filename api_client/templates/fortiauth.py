@@ -148,6 +148,7 @@ CREATE_USER = """
         {%
             set _options = {
                 "token_auth": token_auth,
+                "password": password,
                 "ftk_only": ftk_only,
                 "ftm_act_method": ftm_act_method,
                 "token_type": token_type,
@@ -451,5 +452,40 @@ MODIFY_USERLOCKOUTPOLICY = """
         {% endfor %}
 
     }
+}
+"""
+
+GET_FTMFQDN = """
+{
+    "path": "/api/v1/system/external_ip_fqdn/",
+    "method": "GET"
+}
+"""
+
+MODIFY_FTMFQDN = """
+{
+    "path": "/api/v1/system/external_ip_fqdn/",
+    "method": "PUT",
+    "body": {
+        "value": "{{ fqdn }}"
+    }
+}
+"""
+
+GET_FTMTOKENS = """
+{
+    {% if ftm_license is defined %}
+    "path": "/api/v1/fortitokens/?type=ftm&license={{ ftm_license }}",
+    {% else %}
+    "path": "/api/v1/fortitokens/?type=ftm",
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+DELETE_FTMTOKENS = """
+{
+    "path": "{{ resource_uri }}",
+    "method": "DELETE"
 }
 """

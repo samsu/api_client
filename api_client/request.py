@@ -33,9 +33,9 @@ from oslo_utils import excutils
 import six
 import six.moves.urllib.parse as urlparse
 
-from _i18n import _, _LI, _LW
-import common.utils as utils
-import constants as const
+from ._i18n import _, _LI, _LW
+from .common import utils
+from . import constants as const
 
 LOG = logging.getLogger(__name__)
 
