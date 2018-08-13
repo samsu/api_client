@@ -24,14 +24,13 @@ except ImportError:
     import http.client as httplib
     from http import cookies as Cookie
 import jinja2
-from jinja2 import Environment, FileSystemLoader
+import six
+import socket
+import ssl
 import time
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
-import six
-import socket
-import ssl
 
 from ._i18n import _LE, _LI, _LW
 from .common import utils

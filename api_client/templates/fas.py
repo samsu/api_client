@@ -50,7 +50,7 @@ GET_NAMESPACE = """
         {% set _options = {
             "sn": sn,
             "is_default": is_default,
-            "name": name,
+            "name": translate_uri_chars(name),
             "customer_id": customer_id
         } %}
         {% set _query = [] %}
