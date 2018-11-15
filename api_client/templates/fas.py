@@ -38,13 +38,13 @@ GET_VERSION = """
 
 # Namespace
 # query
-GET_NAMESPACE = """
+GET_REALM = """
 {
     {% if id is defined %}
         {% if sn is defined %}
-            "path": "/api/v1/namespace/{{ id }}?sn={{ sn }}",
+            "path": "/api/v1/realm/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/namespace/{{ id }}/,
+            "path": "/api/v1/realm/{{ id }}/,
         {% endif %}
     {% else %}
         {% set _options = {
@@ -60,9 +60,9 @@ GET_NAMESPACE = """
         {% endfor %}
         {% if _query %}
             {% set _query = '&'.join(_query) %}
-            "path": "/api/v1/namespace?{{ _query }}",
+            "path": "/api/v1/realm?{{ _query }}",
         {% else %}
-            "path": "/api/v1/namespace/",
+            "path": "/api/v1/realm/",
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -70,9 +70,9 @@ GET_NAMESPACE = """
 """
 
 # add
-ADD_NAMESPACE = """
+ADD_REALM = """
 {
-    "path": "/api/v1/namespace",   
+    "path": "/api/v1/realm",   
     "method": "POST",
     "body": {
         {% if description is defined %}
@@ -87,12 +87,12 @@ ADD_NAMESPACE = """
 """
 
 # delete
-DELETE_NAMESPACE = """
+DELETE_REALM = """
 {
     {% if sn is defined %}
-        "path": "/api/v1/namespace/{{ id }}?sn={{ sn }}",
+        "path": "/api/v1/realm/{{ id }}?sn={{ sn }}",
     {% else %}
-        "path": "/api/v1/namespace/{{ id }}/,
+        "path": "/api/v1/realm/{{ id }}/,
     {% endif %}    
     "method": "DELETE"
 }
@@ -113,7 +113,7 @@ GET_ACTIVATION = """
         {% set _options = {
             "sn": sn,
             "vdom": vdom,
-            "namespace_id": namespace_id,
+            "realm_id": realm_id,
             "customer_id": customer_id
         } %}
         {% set _query = [] %}
@@ -140,7 +140,7 @@ ADD_ACTIVATION = """
     "body": {
         "sn": "{{ sn }}",
         "vdom": "{{ vdom }}",     
-        "namespace_id": "{{ namespace_id }}"
+        "realm_id": "{{ realm_id }}"
     }
 }
 """
@@ -174,7 +174,7 @@ GET_USER = """
             "username": username,
             "email": email,
             "mobile_number": mobile_number,
-            "namespace_id": namespace_id,
+            "realm_id": realm_id,
             "active": active,
             "customer_id": customer_id
         } %}
@@ -203,7 +203,7 @@ ADD_USER = """
         "sn": "{{ sn }}",
         "vdom": "{{ vdom }}",    
         "email": "{{ email }}",
-        "namespace_id": "{{ namespace_id }}",
+        "realm_id": "{{ realm_id }}",
         {% if cluster_id is defined %}
             "cluster_id": "{{ cluster_id }}",
             {% if cluster_members is defined %}
@@ -255,7 +255,7 @@ GET_COUNT = """
     {% set _options = {
         "sn": sn,
         "resource": resource,
-        "namespace_id": namespace_id,
+        "realm_id": realm_id,
         "active": active,
         "customer_id": customer_id
     } %}
@@ -286,7 +286,7 @@ ADD_AUTH = """
             "token": "{{ token }}",
         {% endif %}
         "sn": "{{ sn }}",
-        "namespace_id": "{{ namespace_id }}",     
+        "realm_id": "{{ realm_id }}",     
         "username": "{{ username }}"
     }
 }
@@ -300,7 +300,7 @@ GET_STATEMENT = """
         "sn": sn,
         "start": start,
         "end": end,
-        "namespace_id": namespace_id
+        "realm_id": realm_id
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined %}
@@ -315,5 +315,18 @@ GET_STATEMENT = """
     {% endif %}
 
     "method": "GET"
+}
+"""
+
+# token activation
+ADD_TOKEN_ACTIVATION = """
+{
+    "path": "/api/v1/token/activation",
+    "method": "POST",
+    "body": {        
+        {% if token is defined %}
+            "token": "{{ token }}",
+        {% endif %}    
+    }
 }
 """
