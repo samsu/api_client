@@ -252,6 +252,9 @@ GET_FORTITOKENS = """
 }
 """
 
+GET_FORTITOKEN = GET_FORTITOKENS
+
+
 # authentication
 # user authentication either with token_code or with password
 CREATE_AUTH = """
