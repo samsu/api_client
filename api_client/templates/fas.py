@@ -170,7 +170,7 @@ GET_USER = """
         {% endif %}        
     {% else %}
         {% set _options = {
-            "sn": sn
+            "sn": sn,
             "username": username,
             "email": email,
             "mobile_number": mobile_number,
@@ -327,6 +327,21 @@ ADD_TOKEN_ACTIVATION = """
         {% if token is defined %}
             "token": "{{ token }}",
         {% endif %}    
+    }
+}
+"""
+
+TOKEN_TRANSFER_START = """
+{
+    "path": "/api/v1/token/transfer/start",
+    "method": "POST",
+    "body": {
+        "sn": "{{ sn }}",      
+        "tokens": "{{ tokens }}",
+        "reg_id": "{{ reg_id }}",
+        "hmac": "{{ hmac }}",
+        "transfer_code": "{{ transfer_code }}",
+        "msg_sn": "FortiToken Cloud"
     }
 }
 """
