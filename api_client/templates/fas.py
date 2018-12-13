@@ -175,6 +175,8 @@ GET_USER = """
             "email": email,
             "mobile_number": mobile_number,
             "realm_id": realm_id,
+            "realm": realm,
+            "vdom": vdom,
             "active": active,
             "customer_id": customer_id
         } %}
