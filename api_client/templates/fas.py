@@ -203,7 +203,11 @@ ADD_USER = """
         "sn": "{{ sn }}",
         "vdom": "{{ vdom }}",    
         "email": "{{ email }}",
-        "realm_id": "{{ realm_id }}",
+        {% if realm_id is defined %}
+            "realm_id": "{{ realm_id }}",
+        {% elif realm is defined %}
+            "realm": "{{ realm }}",
+        {% endif %}
         {% if cluster_id is defined %}
             "cluster_id": "{{ cluster_id }}",
             {% if cluster_members is defined %}
