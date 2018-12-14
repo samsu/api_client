@@ -214,7 +214,7 @@ ADD_USER = """
             "mobile_number": "{{ mobile_number }}",         
         {% endif %}
         {% if cluster_members is defined %}
-            "cluster_members": "{{ cluster_members }}",         
+            "cluster_members": {{ cluster_members }},         
         {% endif %}
         "username": "{{ username }}"
     }
