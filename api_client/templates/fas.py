@@ -213,8 +213,12 @@ ADD_USER = """
         {% if mobile_number is defined %}
             "mobile_number": "{{ mobile_number }}",         
         {% endif %}
-        {% if cluster_members is defined %}
-            "cluster_members": {{ cluster_members }},         
+        {% if cluster_members is defined %}        
+            "cluster_members": [
+            {% for member in cluster_members %} 
+                "{{ member }}"{{ "," if not loop.last }}
+            {% endfor %}
+            ]         
         {% endif %}
         "username": "{{ username }}"
     }
