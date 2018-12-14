@@ -218,7 +218,7 @@ ADD_USER = """
             {% for member in cluster_members %} 
                 "{{ member }}"{{ "," if not loop.last }}
             {% endfor %}
-            ]         
+            ],         
         {% endif %}
         "username": "{{ username }}"
     }
