@@ -99,15 +99,15 @@ DELETE_REALM = """
 """
 
 
-# Activation
+# authenticated api client
 # query
-GET_ACTIVATION = """
+GET_CLIENT = """
 {
     {% if id is defined %}
         {% if sn is defined %}
-            "path": "/api/v1/activation/{{ id }}?sn={{ sn }}",
+            "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/activation/{{ id }}/,
+            "path": "/api/v1/client/{{ id }}/,
         {% endif %}        
     {% else %}
         {% set _options = {
@@ -123,35 +123,23 @@ GET_ACTIVATION = """
         {% endfor %}
         {% if _query %}
             {% set _query = '&'.join(_query) %}
-            "path": "/api/v1/activation?{{ _query }}",
+            "path": "/api/v1/client?{{ _query }}",
         {% else %}
-            "path": "/api/v1/activation/",
+            "path": "/api/v1/client/",
         {% endif %}
     {% endif %}
     "method": "GET"
 }
 """
 
-# add
-ADD_ACTIVATION = """
-{
-    "path": "/api/v1/activation/",
-    "method": "POST",
-    "body": {
-        "sn": "{{ sn }}",
-        "vdom": "{{ vdom }}",     
-        "realm_id": "{{ realm_id }}"
-    }
-}
-"""
 
 # delete
-DELETE_ACTIVATION = """
+DELETE_CLIENT = """
 {
     {% if sn is defined %}
-        "path": "/api/v1/activation/{{ id }}?sn={{ sn }}",
+        "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
     {% else %}
-        "path": "/api/v1/activation/{{ id }}/,
+        "path": "/api/v1/client/{{ id }}/,
     {% endif %}    
     "method": "DELETE"
 }
