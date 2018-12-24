@@ -168,14 +168,18 @@ GET_USER = """
             "realm": realm,
             "vdom": vdom,
             "active": active,
-            "customer_id": customer_id,
-            "cluster_members": cluster_members
+            "customer_id": customer_id            
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
             {% if _query.append(k+'='+v) %}
             {% endif %}
         {% endfor %}
+        {% if cluster_members is defined %}
+            {% for member in cluster_members %} 
+                _query.append('cluster_members[]=' + member)
+            {% endfor %}
+        {% endif %}
         {% if _query %}
             {% set _query = '&'.join(_query) %}
             "path": "/api/v1/user?{{ _query }}",
