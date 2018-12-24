@@ -51,7 +51,8 @@ GET_REALM = """
             "sn": sn,
             "is_default": is_default,
             "name": name,
-            "customer_id": customer_id
+            "customer_id": customer_id,
+            "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
@@ -114,7 +115,8 @@ GET_CLIENT = """
             "sn": sn,
             "vdom": vdom,
             "realm_id": realm_id,
-            "customer_id": customer_id
+            "customer_id": customer_id,
+            "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
@@ -166,7 +168,8 @@ GET_USER = """
             "realm": realm,
             "vdom": vdom,
             "active": active,
-            "customer_id": customer_id
+            "customer_id": customer_id,
+            "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
@@ -255,7 +258,8 @@ GET_COUNT = """
         "resource": resource,
         "realm_id": realm_id,
         "active": active,
-        "customer_id": customer_id
+        "customer_id": customer_id,
+        "cluster_members": cluster_members
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined %}
@@ -298,7 +302,8 @@ GET_STATEMENT = """
         "sn": sn,
         "start": start,
         "end": end,
-        "realm_id": realm_id
+        "realm_id": realm_id,
+        "cluster_members": cluster_members
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined %}
