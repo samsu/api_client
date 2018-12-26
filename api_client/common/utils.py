@@ -30,7 +30,10 @@ from os import listdir
 from os.path import dirname
 from oslo_utils import importutils
 
-import urllib
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 
 def ctrl_conn_to_str(conn):
@@ -81,5 +84,5 @@ def get_module_files(int_path):
 def translate_uri_chars(var):
     if not isinstance(var, six.string_types):
         return var
-    var = urllib.quote(var)
+    var = quote(var, safe='')
     return var
