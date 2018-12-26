@@ -56,7 +56,7 @@ GET_REALM = """
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
-            {% if _query.append(k+'='+v) %}
+            {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
         {% if _query %}
@@ -120,7 +120,7 @@ GET_CLIENT = """
         } %}
         {% set _query = [] %}
         {% for k, v in _options.iteritems() if v is defined %}
-            {% if _query.append(k+'='+v) %}
+            {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
         {% if _query %}
@@ -219,10 +219,21 @@ ADD_USER = """
 # delete
 DELETE_USER = """
 {
-    {% if sn is defined %}
-        "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
+    {% if cluster_members is defined %}
+        {% set _members = translate_uri_chars(cluster_members) %}
+        {% set _url_base = 
+            "/api/v1/user/{{ id }}?cluster_members={{ _members }}" %}
+        {% if sn is defined %}
+            "path": "{{ _url_base }}&sn={{ sn }}",
+        {% else %}
+            "path": "{{ _url_base }}",
+        {% endif %}
     {% else %}
-        "path": "/api/v1/user/{{ id }}/,
+        {% if sn is defined %}
+            "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
+        {% else %}
+            "path": "/api/v1/user/{{ id }}/,
+        {% endif %}
     {% endif %}
     "method": "DELETE"
 }
@@ -263,7 +274,7 @@ GET_COUNT = """
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined %}
-        {% if _query.append(k+'='+v) %}
+        {% if _query.append(k+'='+translate_uri_chars(v)) %}
         {% endif %}
     {% endfor %}
     {% if _query %}
@@ -307,7 +318,7 @@ GET_STATEMENT = """
     } %}
     {% set _query = [] %}
     {% for k, v in _options.iteritems() if v is defined %}
-        {% if _query.append(k+'='+v) %}
+        {% if _query.append(k+'='+translate_uri_chars(v)) %}
         {% endif %}
     {% endfor %}
     {% if _query %}
