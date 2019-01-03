@@ -316,7 +316,7 @@ class ApiClientBase(object):
                    'qsize': self._conn_pool.qsize()})
 
     def _wait_for_login(self, conn, headers=None):
-        '''Block until a login has occurred for the current API provider.'''
+        """Block until a login has occurred for the current API provider."""
         data = self._get_provider_data(conn)
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),

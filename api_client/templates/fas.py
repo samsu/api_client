@@ -221,12 +221,11 @@ DELETE_USER = """
 {
     {% if cluster_members is defined %}
         {% set _members = translate_uri_chars(cluster_members) %}
-        {% set _url_base = 
-            "/api/v1/user/{{ id }}?cluster_members={{ _members }}" %}
+        {% set _url = "/api/v1/user/" + id + "?cluster_members=" + _members %}
         {% if sn is defined %}
-            "path": "{{ _url_base }}&sn={{ sn }}",
+            "path": "{{ _url }}&sn={{ sn }}",
         {% else %}
-            "path": "{{ _url_base }}",
+            "path": "{{ _url }}",
         {% endif %}
     {% else %}
         {% if sn is defined %}
