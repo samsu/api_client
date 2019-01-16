@@ -157,24 +157,6 @@ POST_USAGE = """
 
 GET_APPLIST = """
 {
-    "path": "/FortiGlobalDev/FortiCareService.asmx/Process",
-    "method": "POST",
-    "body": {
-        "d": {
-            "__type": "FortiGlobal.FortinetAppListRequest",
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            "request_app": "CustomerManagement"
-        }
-    }
-}
-"""
-
-GET_PROD_APPLIST = """
-{
     "path": "/FortiGlobal/FortiCareService.asmx/Process",
     "method": "POST",
     "body": {
@@ -192,29 +174,6 @@ GET_PROD_APPLIST = """
 """
 
 GET_ACCOUNTLIST = """
-{
-    "path": "/FortiGlobalDev/FortiCareService.asmx/Process",
-    "method": "POST",
-    "body": {
-                "d": {
-                      "__type" : "FortiGlobal.AccountSelectionRequest",
-                      {% if version is defined %}
-                      "__version": "{{ version }}",
-                      {% else %}
-                      "__version": "1",
-                      {% endif %}
-                      "fortinet_id": "{{ fortinet_id }}",
-                      {% if service_type is defined %}
-                      "service_type": "{{ service_type }}"
-                      {% else %}
-                      "service_type": "FAS"
-                      {% endif %}
-                }
-    }
-}
-"""
-
-GET_PROD_ACCOUNTLIST = """
 {
     "path": "/FortiGlobal/FortiCareService.asmx/Process",
     "method": "POST",
