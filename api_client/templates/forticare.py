@@ -157,24 +157,6 @@ POST_USAGE = """
 
 GET_APPLIST = """
 {
-    "path": "/FortiGlobalDev/FortinetOneCommonService.asmx/Process",
-    "method": "POST",
-    "body": {
-        "d": {
-            "__type": "FortinetOneAPI.CommonService.GetPortalListRequest",
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            "request_channel": "CustomerManagement"
-        }
-    }
-}
-"""
-
-GET_PROD_APPLIST = """
-{
     "path": "/FortiGlobal/FortiCareService.asmx/Process",
     "method": "POST",
     "body": {
@@ -192,31 +174,6 @@ GET_PROD_APPLIST = """
 """
 
 GET_ACCOUNTLIST = """
-{
-    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",
-    "method": "POST",
-    "body": {
-                "d": {
-                      "__type" : "FortinetOneAPI.IdentityService.GetLoginAccountsByEmailRequest",
-                      {% if version is defined %}
-                      "__version": "{{ version }}",
-                      {% else %}
-                      "__version": "1",
-                      {% endif %}
-                      "search_filters": {
-                        "email": "{{ fortinet_id }}"
-                      },
-                      {% if service_type is defined %}
-                      "request_channel": "{{ service_type }}"
-                      {% else %}
-                      "request_channel": "FAS"
-                      {% endif %}
-                }
-    }
-}
-"""
-
-GET_PROD_ACCOUNTLIST = """
 {
     "path": "/FortiGlobal/FortiCareService.asmx/Process",
     "method": "POST",
