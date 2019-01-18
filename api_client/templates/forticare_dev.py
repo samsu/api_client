@@ -48,38 +48,17 @@ LOGIN = """
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",    
+    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",    
     "method": "POST",
     "body": {    
         "d": {
-            "__type": "FortiGlobal.FASAccountInfoRequest",
-            {% if id is defined %}
-                "user_id": "{{ id }}",
-            {% endif %}
-            {% if sn is defined %}
-                "serial_number": "{{ sn }}",
-            {% endif %}
-            {% if email is defined %}
-                "User_Email": "{{ email }}",
-            {% endif %}
-            {% if account_id is defined %}
-                "account_id": "{{ account_id }}",
-            {% endif %}
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            {% if sw_version is defined %}
-                "__SW_version": "{{ sw_version }}",
-            {% else %}
-                "__SW_version": "xxxx",
-            {% endif %}
-            {% if sw_build is defined %}
-                "__SW_build": "{{ sw_build }}"
-            {% else %}
-                "__SW_build": "yyyyy"
-            {% endif %}
+            "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
+            "__version" : "1",
+            "request_channel" : "FTC",
+            "search_filters" : 
+            { 
+                "account_id": "{{ id }}" 
+            }
         }
     }    
 }

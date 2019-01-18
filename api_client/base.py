@@ -24,14 +24,13 @@ except ImportError:
     import http.client as httplib
     from http import cookies as Cookie
 import jinja2
-from jinja2 import Environment, FileSystemLoader
+import six
+import socket
+import ssl
 import time
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
-import six
-import socket
-import ssl
 
 from ._i18n import _LE, _LI, _LW
 from .common import utils
@@ -317,7 +316,7 @@ class ApiClientBase(object):
                    'qsize': self._conn_pool.qsize()})
 
     def _wait_for_login(self, conn, headers=None):
-        '''Block until a login has occurred for the current API provider.'''
+        """Block until a login has occurred for the current API provider."""
         data = self._get_provider_data(conn)
         if data is None:
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
