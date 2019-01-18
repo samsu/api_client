@@ -94,7 +94,6 @@ GET_ACCOUNTLIST = """
                       {% else %}
                       "__version": "1",
                       {% endif %}
-                      "fortinet_id": "{{ fortinet_id }}",
                       "search_filters": {
                         "email": "{{ fortinet_id }}"
                       },
