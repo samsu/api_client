@@ -173,6 +173,8 @@ GET_APPLIST = """
 }
 """
 
+GET_PROD_APPLIST = GET_APPLIST
+
 GET_ACCOUNTLIST = """
 {
     "path": "/FortiGlobal/FortiCareService.asmx/Process",
@@ -195,3 +197,5 @@ GET_ACCOUNTLIST = """
     }
 }
 """
+
+GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
