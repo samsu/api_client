@@ -67,7 +67,6 @@ GET_ACCOUNT = """
                 "account_email": "{{ email }}"
             {% endif %}
             } 
-            }
         }
     }    
 }
