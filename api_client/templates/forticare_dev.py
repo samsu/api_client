@@ -56,8 +56,17 @@ GET_ACCOUNT = """
             "__version" : "1",
             "request_channel" : "FTC",
             "search_filters" : 
-            { 
-                "account_id": "{{ id }}" 
+            {
+            {% if id is defined %}
+                "account_id": "{{ id }}"
+            {% endif %}
+            {% if sn is defined %}
+                "serial_number": "{{ sn }}"
+            {% endif %}
+            {% if email is defined %}
+                "account_email": "{{ email }}"
+            {% endif %}
+            } 
             }
         }
     }    
