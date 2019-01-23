@@ -15,7 +15,6 @@
 # under the License.
 #
 
-import six
 try:
     import httplib
 except ImportError:
@@ -26,9 +25,11 @@ try:
 except ImportError:
     from importlib.util import spec_from_file_location as import_module_file
 
+import json
 from os import listdir
 from os.path import dirname
 from oslo_utils import importutils
+import six
 
 try:
     from urllib.parse import quote
@@ -84,5 +85,7 @@ def get_module_files(int_path):
 def translate_uri_chars(var):
     if not isinstance(var, six.string_types):
         return var
+    if isinstance(var, (list, dict)):
+        var = json.dumps(var)
     var = quote(var, safe='')
     return var

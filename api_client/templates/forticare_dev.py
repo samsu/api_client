@@ -23,49 +23,29 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
-# login
-LOGIN = """
-{
-    {% if next_url is defined %} 
-        "path": "/RegistrationDev/Main.aspx?from=FAS&RedirectURL={{ next_url }}",
-    {% else %}
-        "path": "/RegistrationDev/Main.aspx?from=FAS&RedirectURL=",
-    {% endif %}
-    "method": "POST",
-    "body": {
-        "d": {
-            "User_ID": "395939",
-            "__SW_version": "xxxx",
-            "__SW_build": "yyyyy",
-            "__type": "FortiGlobal.FortiCASBAccountInfoRequest",
-            "__version": "1"
-        }
-    }
-}
-"""
 
 # customer account
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",    
+    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",
     "method": "POST",
-    "body": {    
+    "body": {
         "d": {
             "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
             "__version" : "1",
             "request_channel" : "FTC",
-            "search_filters" : 
+            "search_filters" :
             {
-            {% if id is defined %}
-                "account_id": "{{ id }}"
-            {% endif %}
-            {% if sn is defined %}
-                "serial_number": "{{ sn }}"
-            {% endif %}
-            {% if email is defined %}
-                "account_email": "{{ email }}"
-            {% endif %}
+                {% if id is defined %}
+                    "account_id": "{{ id }}"
+                {% endif %}
+                {% if sn is defined %}
+                    "serial_number": "{{ sn }}"
+                {% endif %}
+                {% if email is defined %}
+                    "account_email": "{{ email }}"
+                {% endif %}
             } 
         }
     }    
@@ -95,22 +75,22 @@ GET_ACCOUNTLIST = """
     "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",
     "method": "POST",
     "body": {
-                "d": {
-                      "__type" : "FortinetOneAPI.IdentityService.GetLoginAccountsByEmailRequest",
-                      {% if version is defined %}
-                      "__version": "{{ version }}",
-                      {% else %}
-                      "__version": "1",
-                      {% endif %}
-                      "search_filters": {
-                        "email": "{{ fortinet_id }}"
-                      },
-                      {% if service_type is defined %}
-                      "request_channel": "{{ service_type }}"
-                      {% else %}
-                      "request_channel": "FAS"
-                      {% endif %}
-                }
+        "d": {
+            "__type" : "FortinetOneAPI.IdentityService.GetLoginAccountsByEmailRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
+            {% endif %}
+            "search_filters": {
+                "email": "{{ fortinet_id }}"
+            },
+            {% if service_type is defined %}
+                "request_channel": "{{ service_type }}"
+            {% else %}
+                "request_channel": "FTC"
+            {% endif %}
+        }
     }
 }
 """

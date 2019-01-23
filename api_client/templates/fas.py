@@ -259,6 +259,35 @@ MODIFY_USER = """
 }
 """
 
+SYNC_USER = """
+{
+    "path": "/api/v1/user_sync/",
+    "method": "POST",
+    "body": {        
+        {% if vdom is defined %}
+            "vdom": "{{ vdom }}",
+        {% endif %}
+        {% if realm is defined %}
+            "realm": "{{ realm }}",
+        {% endif %}
+        {% if users is defined %}
+            "users": [
+            {% for user in users %} 
+                {{ user }}{{ "," if not loop.last }}
+            {% endfor %}
+            ],         
+        {% endif %}
+        {% if cluster_members is defined %}        
+            "cluster_members": [
+            {% for member in cluster_members %} 
+                "{{ member }}"{{ "," if not loop.last }}
+            {% endfor %}
+            ],         
+        {% endif %}
+        "sn": "{{ sn }}"
+}
+"""
+
 
 # count
 GET_COUNT = """
