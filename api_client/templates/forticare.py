@@ -27,42 +27,73 @@
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobal/FortiAuthService.asmx/Process",    
+    "path": "/FortiGlobal/FortinetOneIdentityService.asmx/Process",
     "method": "POST",
-    "body": {    
+    "body": {
         "d": {
-            "__type": "FortiGlobal.FASAccountInfoRequest",
-            {% if id is defined %}
-                "user_id": "{{ id }}",
-            {% endif %}
-            {% if sn is defined %}
-                "serial_number": "{{ sn }}",
-            {% endif %}
-            {% if email is defined %}
-                "User_Email": "{{ email }}",
-            {% endif %}
-            {% if account_id is defined %}
-                "account_id": "{{ account_id }}",
-            {% endif %}
+            "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
+            "__version" : "1",
+            "request_channel" : "FTC",
+            "search_filters" :
+            {
+                {% if id is defined %}
+                    "account_id": "{{ id }}"
+                {% endif %}
+                {% if sn is defined %}
+                    "serial_number": "{{ sn }}"
+                {% endif %}
+                {% if email is defined %}
+                    "account_email": "{{ email }}"
+                {% endif %}
+            } 
+        }
+    }    
+}
+"""
+
+GET_APPLIST = """
+{
+    "path": "/FortiGlobal/FortinetOneCommonService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOneAPI.CommonService.GetPortalListRequest",
             {% if version is defined %}
                 "__version": "{{ version }}",
             {% else %}
                 "__version": "1",
             {% endif %}
-            {% if sw_version is defined %}
-                "__SW_version": "{{ sw_version }}",
-            {% else %}
-                "__SW_version": "xxxx",
-            {% endif %}
-            {% if sw_build is defined %}
-                "__SW_build": "{{ sw_build }}"
-            {% else %}
-                "__SW_build": "yyyyy"
-            {% endif %}
+            "request_channel": "CustomerManagement"
         }
-    }    
+    }
 }
 """
+
+GET_ACCOUNTLIST = """
+{
+    "path": "/FortiGlobal/FortinetOneIdentityService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type" : "FortinetOneAPI.IdentityService.GetLoginAccountsByEmailRequest",
+            {% if version is defined %}
+                "__version": "{{ version }}",
+            {% else %}
+                "__version": "1",
+            {% endif %}
+            "search_filters": {
+                "email": "{{ fortinet_id }}"
+            },
+            {% if service_type is defined %}
+                "request_channel": "{{ service_type }}"
+            {% else %}
+                "request_channel": "FTC"
+            {% endif %}
+        }
+    }
+}
+"""
+
 
 # Get user balance
 GET_BALANCE = """
@@ -134,47 +165,6 @@ POST_USAGE = """
 }
 """
 
-GET_APPLIST = """
-{
-    "path": "/FortiGlobal/FortiCareService.asmx/Process",
-    "method": "POST",
-    "body": {
-        "d": {
-            "__type": "FortiGlobal.FortinetAppListRequest",
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            "request_app": "CustomerManagement"
-        }
-    }
-}
-"""
 
 GET_PROD_APPLIST = GET_APPLIST
-
-GET_ACCOUNTLIST = """
-{
-    "path": "/FortiGlobal/FortiCareService.asmx/Process",
-    "method": "POST",
-    "body": {
-                "d": {
-                      "__type" : "FortiGlobal.AccountSelectionRequest",
-                      {% if version is defined %}
-                      "__version": "{{ version }}",
-                      {% else %}
-                      "__version": "1",
-                      {% endif %}
-                      "fortinet_id": "{{ fortinet_id }}",
-                      {% if service_type is defined %}
-                      "service_type": "{{ service_type }}"
-                      {% else %}
-                      "service_type": "FAS"
-                      {% endif %}
-                }
-    }
-}
-"""
-
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
