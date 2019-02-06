@@ -48,7 +48,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
-                 auto_login=True, eventlet=True):
+                 auto_login=True, singlethread=False):
         '''Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -79,7 +79,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         # SSL server_name_indication
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
-        self._eventlet = eventlet
+        self._singlethread = singlethread
 
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,
@@ -106,7 +106,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             auto_login=self._auto_login,
             http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects,
-            eventlet=self._eventlet)
+            singlethread=self._singlethread)
         g.start()
         return self.request_response(method, url, g.join())
 

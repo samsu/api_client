@@ -63,7 +63,7 @@ class EventletApiRequest(request.ApiRequest):
                  auto_login=True,
                  redirects=DEFAULT_REDIRECTS,
                  http_timeout=DEFAULT_HTTP_TIMEOUT, client_conn=None,
-                 eventlet=True):
+                 singlethread=False):
         '''Constructor.'''
         self._api_client = client_obj
         self._url = url
@@ -78,7 +78,7 @@ class EventletApiRequest(request.ApiRequest):
         self._client_conn = client_conn
         self._abort = False
         self._request_error = None
-        self._eventlet = eventlet
+        self._singlethread = singlethread
 
         if "User-Agent" not in self._headers:
             self._headers["User-Agent"] = DEFAULT_USER_AGENT
@@ -103,17 +103,17 @@ class EventletApiRequest(request.ApiRequest):
 
     def join(self):
         '''Wait for instance green thread to complete.'''
+        if self._singlethread:
+            return self._run()
+
         if self._green_thread is not None:
             return self._green_thread.wait()
-        else:
-            return self._run()
+        return Exception(_('Joining an invalid green thread'))
 
     def start(self):
         '''Start request processing.'''
-        if self._eventlet:
+        if not self._singlethread:
             self._green_thread = self.spawn(self._run)
-        else:
-            self._green_thread = None
 
     def _run(self):
         '''Method executed within green thread.'''
@@ -246,13 +246,13 @@ class GenericRequestEventlet(EventletApiRequest):
                  auto_login=False,
                  http_timeout=request.DEFAULT_HTTP_TIMEOUT,
                  retries=request.DEFAULT_RETRIES,
-                 redirects=request.DEFAULT_REDIRECTS, eventlet=True):
+                 redirects=request.DEFAULT_REDIRECTS, singlethread=False):
         headers = {'Content-Type': content_type, 'User-Agent': user_agent}
         super(GenericRequestEventlet, self).__init__(
             client_obj, url, method, body, headers,
             retries=retries,
             auto_login=auto_login, redirects=redirects,
-            http_timeout=http_timeout, eventlet=eventlet)
+            http_timeout=http_timeout, singlethread=singlethread)
 
     def session_cookie(self):
         if self.successful():
