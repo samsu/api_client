@@ -32,7 +32,6 @@ DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
-@singleton.singleton
 class FortiCareApiClient(client.ApiClient):
     """The FortiOS API Client."""
 

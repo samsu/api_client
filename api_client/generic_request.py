@@ -84,7 +84,6 @@ class GenericApiRequest(request.ApiRequest):
         # Retrieve and store this instance's unique request id.
         self._request_id = request_id
 
-
     def join(self):
         '''Wait for instance green thread to complete.'''
         pass
@@ -180,7 +179,7 @@ class GetApiProvidersRequestEventlet(GenericApiRequest):
         def _provider_from_listen_addr(addr):
             # (pssl|ptcp):<ip>:<port> => (host, port, is_ssl)
             parts = addr.split(':')
-            return (parts[1], int(parts[2]), parts[0] == 'pssl')
+            return parts[1], int(parts[2]), parts[0] == 'pssl'
 
         try:
             if self.successful():
