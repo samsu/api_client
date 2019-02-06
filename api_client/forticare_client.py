@@ -47,7 +47,7 @@ class FortiCareApiClient(client.ApiClient):
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
-                 auto_login=True):
+                 auto_login=True, eventlet=True):
         '''Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -63,7 +63,8 @@ class FortiCareApiClient(client.ApiClient):
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
-            retries=retries, redirects=redirects, auto_login=auto_login)
+            retries=retries, redirects=redirects, auto_login=auto_login,
+            eventlet=eventlet)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout
