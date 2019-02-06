@@ -21,7 +21,6 @@ from . import base
 from . import constants as const
 from . import client
 
-from .common import singleton
 from .common import utils
 from .templates import forticare as default_template
 
