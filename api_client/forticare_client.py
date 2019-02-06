@@ -56,7 +56,7 @@ class FortiCareApiClient(client.ApiClient):
         :param redirects: the number of concurrent connections.
         '''
         super(FortiCareApiClient, self).__init__(
-            api_providers, key_file=key_file,
+            api_providers, user=user, password=password, key_file=key_file,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
