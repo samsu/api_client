@@ -137,7 +137,7 @@ class ApiRequest(object):
                             {'rid': self._rid(), 'e': e})
 
                 response = conn.getresponse()
-                response.body = response.read()
+                response.body = response.read().encode("utf-8")
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "

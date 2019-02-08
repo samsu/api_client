@@ -387,3 +387,30 @@ TOKEN_TRANSFER_START = """
     }
 }
 """
+
+# authenticated api client
+# query
+GET_TASK = """
+{
+    {% if id is defined %}        
+        {% set _options = {
+            "sn": sn,
+            "vdom": vdom,
+            "realm_id": realm_id,
+            "customer_id": customer_id,
+            "cluster_members": cluster_members
+        } %}
+        {% set _query = [] %}
+        {% for k, v in _options.iteritems() if v is defined %}
+            {% if _query.append(k+'='+translate_uri_chars(v)) %}
+            {% endif %}
+        {% endfor %}
+        {% if _query %}
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/task/{{ id }}?{{ _query }}",
+        {% else %}
+            "path": "/api/v1/task/{{ id }}",
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}"""
