@@ -413,4 +413,5 @@ GET_TASK = """
         {% endif %}
     {% endif %}
     "method": "GET"
-}"""
+}
+"""

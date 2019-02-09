@@ -137,7 +137,7 @@ class ApiRequest(object):
                             {'rid': self._rid(), 'e': e})
 
                 response = conn.getresponse()
-                response.body = response.read().encode("utf-8")
+                response.body = response.read()
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
@@ -156,7 +156,7 @@ class ApiRequest(object):
                            'method': self._method, "url": url,
                            'headers': headers, 'body': body,
                            'response.headers': response.headers,
-                           'response.body': response.body})
+                           'response.body': response.body.encode("utf-8")})
 
                 if response.status in (401, 302):
                     # if response.headers:
