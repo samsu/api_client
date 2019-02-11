@@ -140,6 +140,11 @@ class ApiRequest(object):
                 response.body = response.read()
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
+                content_type = response.getheader('content-type')
+                if content_type and 'application/json' in content_type:
+                    response_body = jsonutils.loads(response.body)
+                else:
+                    response_body = response.body
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
                           "%(status)s (%(elapsed)s seconds), "
@@ -156,7 +161,7 @@ class ApiRequest(object):
                            'method': self._method, "url": url,
                            'headers': headers, 'body': body,
                            'response.headers': response.headers,
-                           'response.body': response.body.encode("utf-8")})
+                           'response.body': response_body})
 
                 if response.status in (401, 302):
                     # if response.headers:

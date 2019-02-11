@@ -126,7 +126,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
                       {'method': method, 'url': url})
             raise exceptions.RequestTimeout()
-
+        response_body = self.request_response_body(response)
         status = response.status
         LOG.debug("response.status = %(status)s", {'status': status})
         if status == 401:
@@ -136,11 +136,11 @@ class ApiClient(eventlet_client.EventletApiClient):
         if status in [404]:
             LOG.warning(_LW("Resource not found. Response status: %(status)s, "
                             "response body: %(response.body)s"),
-                        {'status': status, 'response.body': response.body})
+                        {'status': status, 'response.body': response_body})
             exceptions.ERROR_MAPPINGS[status](response)
         elif status in exceptions.ERROR_MAPPINGS:
             LOG.error(_LE("Received error code: %s"), status)
-            LOG.error(_LE("Server Error Message: %s"), response.body)
+            LOG.error(_LE("Server Error Message: %s"), response_body)
             exceptions.ERROR_MAPPINGS[status](response)
 
         # Continue processing for non-error condition.
@@ -148,9 +148,9 @@ class ApiClient(eventlet_client.EventletApiClient):
             LOG.error(_LE("%(method)s to %(url)s, unexpected response code: "
                           "%(status)d (content = '%(body)s')"),
                       {'method': method, 'url': url,
-                       'status': response.status, 'body': response.body})
+                       'status': response.status, 'body': response_body})
             return None
-        return self.request_response_body(response)
+        return response_body
 
     @staticmethod
     def request_response_body(response):
