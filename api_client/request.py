@@ -45,6 +45,7 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_API_REQUEST_POOL_SIZE = const.DEFAULT_API_REQUEST_POOL_SIZE
 DEFAULT_MAXIMUM_REQUEST_ID = const.DEFAULT_MAXIMUM_REQUEST_ID
 DOWNLOAD_TIMEOUT = const.DOWNLOAD_TIMEOUT
+DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -140,8 +141,8 @@ class ApiRequest(object):
                 response.body = response.read()
                 response.headers = response.getheaders()
                 elapsed_time = time.time() - issued_time
-                content_type = response.getheader('content-type')
-                if content_type and 'application/json' in content_type:
+                content_type = response.getheader('content-type') or ''
+                if DEFAULT_CONTENT_TYPE in content_type and response.body:
                     response_body = jsonutils.loads(response.body)
                 else:
                     response_body = response.body
