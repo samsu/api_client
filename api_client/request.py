@@ -138,14 +138,14 @@ class ApiRequest(object):
                             {'rid': self._rid(), 'e': e})
 
                 response = conn.getresponse()
+                content_type = response.getheader('content-type') or ''
                 response.body = response.read()
                 response.headers = response.getheaders()
-                elapsed_time = time.time() - issued_time
-                content_type = response.getheader('content-type') or ''
                 if DEFAULT_CONTENT_TYPE in content_type and response.body:
                     response_body = jsonutils.loads(response.body)
                 else:
                     response_body = response.body
+                elapsed_time = time.time() - issued_time
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
                           "%(status)s (%(elapsed)s seconds), "
