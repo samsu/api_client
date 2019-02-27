@@ -289,6 +289,8 @@ class ApiClientBase(object):
                             "reconnecting to %(conn)s"),
                         {'rid': rid,
                          'conn': utils.ctrl_conn_to_str(http_conn)})
+            http_conn.close()
+            http_conn = self._create_connection(*self._conn_params(http_conn))
             conns = []
             while not self._conn_pool.empty():
                 priority, conn = self._conn_pool.get()
