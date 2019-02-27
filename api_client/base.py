@@ -228,9 +228,13 @@ class ApiClientBase(object):
         :returns: An available HTTPConnection instance or None if no
                  api_providers are configured.
         '''
-        if self._conn_pool.empty():
-            LOG.debug("[%d] Waiting to acquire API client connection.", rid)
-        priority, conn = self._conn_pool.get()
+        if not self.singlethread:
+            if self._conn_pool.empty():
+                LOG.debug("[%d] Waiting to acquire API client connection.",
+                          rid)
+            priority, conn = self._conn_pool.get()
+        else:
+            priority, conn = 0, self._conn
         now = time.time()
         if getattr(conn, 'last_used', now) < now - self.CONN_IDLE_TIMEOUT:
             LOG.info(_LI("[%(rid)d] Connection %(conn)s idle for "
@@ -242,11 +246,12 @@ class ApiClientBase(object):
             self.set_auth_data(conn)
         conn.last_used = now
         conn.priority = priority  # stash current priority for release
-        qsize = self._conn_pool.qsize()
-        LOG.debug("[%(rid)d] Acquired connection %(conn)s. %(qsize)d "
-                  "connection(s) available.",
-                  {'rid': rid, 'conn': utils.ctrl_conn_to_str(conn),
-                   'qsize': qsize})
+        if not self.singlethread:
+            qsize = self._conn_pool.qsize()
+            LOG.debug("[%(rid)d] Acquired connection %(conn)s. %(qsize)d "
+                      "connection(s) available.",
+                      {'rid': rid, 'conn': utils.ctrl_conn_to_str(conn),
+                       'qsize': qsize})
         if auto_login and self.auth_data(conn) is None:
             self._wait_for_login(conn, headers)
         return conn
@@ -272,14 +277,18 @@ class ApiClientBase(object):
         elif hasattr(http_conn, "no_release"):
             return
 
+        if self.singlethread:
+            http_conn.close()
+            http_conn = self._create_connection(*self._conn_params(http_conn))
+            self._conn = http_conn
+            return
+
         if bad_state:
             # Reconnect to provider.
             LOG.warning(_LW("[%(rid)d] Connection returned in bad state, "
                             "reconnecting to %(conn)s"),
                         {'rid': rid,
                          'conn': utils.ctrl_conn_to_str(http_conn)})
-            http_conn.close()
-            http_conn = self._create_connection(*self._conn_params(http_conn))
             conns = []
             while not self._conn_pool.empty():
                 priority, conn = self._conn_pool.get()

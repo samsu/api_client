@@ -36,7 +36,8 @@ class EventletApiClient(base.ApiClientBase):
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
-                 connect_timeout=base.DEFAULT_CONNECT_TIMEOUT):
+                 connect_timeout=base.DEFAULT_CONNECT_TIMEOUT,
+                 singlethread=False):
         '''Constructor
 
         :param api_providers: a list of tuples of the form: (host, port,
@@ -68,11 +69,15 @@ class EventletApiClient(base.ApiClientBase):
         self._config_gen = None
         self._config_gen_ts = None
         self._gen_timeout = gen_timeout
+        self.singlethread = singlethread
 
         # Connection pool is a list of queues.
         self._conn_pool = eventlet.queue.PriorityQueue()
+        self._conn = None
         self._next_conn_priority = 1
         for host, port, is_ssl in api_providers:
+            if singlethread:
+                self._conn = self._create_connection(host, port, is_ssl)
             for __ in range(concurrent_connections):
                 conn = self._create_connection(host, port, is_ssl)
                 self._conn_pool.put((self._next_conn_priority, conn))
@@ -94,8 +99,20 @@ class EventletApiClient(base.ApiClientBase):
                  in the connection pool and one of these new connections
                  returned.
         """
-        result_conn = None
         data = self._get_provider_data(conn_params)
+        #redirect target not already known, setup provider lists
+        if not data:
+            self._api_providers.update([conn_params])
+            self._set_provider_data(conn_params,
+                                    (eventlet.semaphore.Semaphore(1), None))
+        if self.singlethread:
+            if self._conn_params(self._conn) != conn_params:
+                conn = self._create_connection(*conn_params)
+                conn.last_used = time.time()
+                conn.priority = 0
+                self._conn = conn
+            return self._conn
+        result_conn = None
         if data:
             # redirect target already exists in provider data and connections
             # to the provider have been added to the connection pool. Try to
@@ -120,10 +137,6 @@ class EventletApiClient(base.ApiClientBase):
                 conn.no_release = True
                 result_conn = conn
         else:
-            #redirect target not already known, setup provider lists
-            self._api_providers.update([conn_params])
-            self._set_provider_data(conn_params,
-                                    (eventlet.semaphore.Semaphore(1), None))
             # redirects occur during cluster upgrades, i.e. results to old
             # redirects to new, so give redirect targets highest priority
             priority = 0
