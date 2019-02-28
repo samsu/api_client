@@ -63,7 +63,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
-            connect_timeout=connect_timeout)
+            connect_timeout=connect_timeout, singlethread=singlethread)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout

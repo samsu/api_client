@@ -20,6 +20,7 @@ import time
 import eventlet
 eventlet.monkey_patch()
 from oslo_log import log as logging
+import Queue
 
 from ._i18n import _LE
 from . import base
@@ -36,7 +37,8 @@ class EventletApiClient(base.ApiClientBase):
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
-                 connect_timeout=base.DEFAULT_CONNECT_TIMEOUT):
+                 connect_timeout=base.DEFAULT_CONNECT_TIMEOUT,
+                 singlethread=False):
         '''Constructor
 
         :param api_providers: a list of tuples of the form: (host, port,
@@ -70,7 +72,11 @@ class EventletApiClient(base.ApiClientBase):
         self._gen_timeout = gen_timeout
 
         # Connection pool is a list of queues.
-        self._conn_pool = eventlet.queue.PriorityQueue()
+        if singlethread:
+            _queue = Queue.PriorityQueue
+        else:
+            _queue = eventlet.queue.PriorityQueue
+        self._conn_pool = _queue()
         self._next_conn_priority = 1
         for host, port, is_ssl in api_providers:
             for __ in range(concurrent_connections):
