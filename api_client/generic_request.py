@@ -26,9 +26,10 @@ import socket
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from _i18n import _, _LI, _LW
-import constants as const
-import request
+from ._i18n import _, _LI, _LW
+
+from api_client import constants as const
+from api_client import request
 
 LOG = logging.getLogger(__name__)
 DEFAULT_USER_AGENT = const.DEFAULT_HTTP_HEADERS['User-Agent']
