@@ -146,7 +146,7 @@ class EventletApiRequest(request.ApiRequest):
                     attempt -= 1
                     msg = ("# request {method} {url} {body} error {e}"
                            ).format(method=self._method, url=self._url,
-                                    body=self._body, e=e.message)
+                                    body=self._body, e=e)
                     LOG.error(msg)
                     continue
             # automatically raises any exceptions returned.

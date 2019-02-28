@@ -17,12 +17,12 @@
 
 from oslo_log import log as logging
 
-import base
-import constants as const
-import client
+from api_client import base
+from api_client import constants as const
+from api_client import client
 
-import generic_request
-from templates import fortiauth as templates
+from api_client import generic_request
+from api_client.templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
 
