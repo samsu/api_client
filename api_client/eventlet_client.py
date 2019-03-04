@@ -20,7 +20,7 @@ import time
 import eventlet
 eventlet.monkey_patch()
 from oslo_log import log as logging
-import Queue
+import queue
 
 from ._i18n import _LE
 from . import base
