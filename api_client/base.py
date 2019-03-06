@@ -322,18 +322,23 @@ class ApiClientBase(object):
             LOG.error(_LE("Login request for an invalid connection: '%s'"),
                       utils.ctrl_conn_to_str(conn))
             return
-        provider_sem = data[0]
-        if provider_sem.acquire(blocking=False):
-            try:
-                data = self._login(conn, headers)
-                self.set_auth_data(conn, data)
-            finally:
-                provider_sem.release()
+
+        if self._singlethread:
+            data = self._login(conn, headers)
+            self.set_auth_data(conn, data)
         else:
-            LOG.debug("Waiting for auth to complete")
-            # Wait until we can acquire then release
-            provider_sem.acquire(blocking=True)
-            provider_sem.release()
+            provider_sem = data[0]
+            if provider_sem.acquire(blocking=False):
+                try:
+                    data = self._login(conn, headers)
+                    self.set_auth_data(conn, data)
+                finally:
+                    provider_sem.release()
+            else:
+                LOG.debug("Waiting for auth to complete")
+                # Wait until we can acquire then release
+                provider_sem.acquire(blocking=True)
+                provider_sem.release()
 
     def _get_provider_data(self, conn_or_conn_params, default=None):
         """Get data for specified API provider.
