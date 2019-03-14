@@ -56,10 +56,11 @@ class EventletApiClient(base.ApiClientBase):
         '''
         if not api_providers:
             api_providers = []
+        self._singlethread = singlethread
         self._api_providers = set([tuple(p) for p in api_providers])
         self._api_provider_data = {}  # tuple(semaphore, session_cookie|auth)
         for p in self._api_providers:
-            self._set_provider_data(p, (eventlet.semaphore.Semaphore(1), None))
+            self._set_provider_data(p, self.get_default_data())
         self._user = user
         self._password = password
         self._key_file = key_file
@@ -87,9 +88,15 @@ class EventletApiClient(base.ApiClientBase):
                 self._conn_pool.put((self._next_conn_priority, conn))
                 self._next_conn_priority += 1
 
+    def get_default_data(self):
+        if self._singlethread:
+            return None
+        else:
+            return eventlet.semaphore.Semaphore(1), None
+
     def acquire_redirect_connection(self, conn_params, auto_login=True,
                                     headers=None):
-        """Check out or create connection to redirected NSX API server.
+        """ Check out or create connection to redirected API server.
 
         Args:
             conn_params: tuple specifying target of redirect, see
@@ -129,10 +136,9 @@ class EventletApiClient(base.ApiClientBase):
                 conn.no_release = True
                 result_conn = conn
         else:
-            #redirect target not already known, setup provider lists
+            # redirect target not already known, setup provider lists
             self._api_providers.update([conn_params])
-            self._set_provider_data(conn_params,
-                                    (eventlet.semaphore.Semaphore(1), None))
+            self._set_provider_data(conn_params, self.get_default_data())
             # redirects occur during cluster upgrades, i.e. results to old
             # redirects to new, so give redirect targets highest priority
             priority = 0

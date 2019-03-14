@@ -341,7 +341,7 @@ class ApiClientBase(object):
                 provider_sem.release()
 
     def _get_provider_data(self, conn_or_conn_params, default=None):
-        """Get data for specified API provider.
+        """ Get data for specified API provider.
 
         Args:
             conn_or_conn_params: either a HTTP(S)Connection object or the
@@ -353,7 +353,7 @@ class ApiClientBase(object):
         return self._api_provider_data.get(conn_params, default)
 
     def _set_provider_data(self, conn_or_conn_params, data):
-        """Set data for specified API provider.
+        """ Set data for specified API provider.
 
         Args:
             conn_or_conn_params: either a HTTP(S)Connection object or the
@@ -367,7 +367,7 @@ class ApiClientBase(object):
             self._api_provider_data[conn_params] = data
 
     def _normalize_conn_params(self, conn_or_conn_params):
-        """Normalize conn_param tuple.
+        """ Normalize conn_param tuple.
 
         Args:
             conn_or_conn_params: either a HTTP(S)Connection object or the
