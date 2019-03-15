@@ -15,15 +15,14 @@
 # under the License.
 #
 
+import eventlet
+eventlet.monkey_patch(thread=False)
+
 import time
 try:
     import Queue
 except Exception:
     import queue as Queue
-PriorityQueue = Queue.PriorityQueue
-
-import eventlet
-eventlet.monkey_patch()
 
 from oslo_log import log as logging
 
@@ -79,7 +78,7 @@ class EventletApiClient(base.ApiClientBase):
 
         # Connection pool is a list of queues.
         if self._singlethread:
-            _queue = PriorityQueue
+            _queue = Queue.PriorityQueue
         else:
             _queue = eventlet.queue.PriorityQueue
         self._conn_pool = _queue()
