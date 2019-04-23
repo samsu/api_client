@@ -35,20 +35,20 @@ GET_ACCOUNT = """
             "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
             "__version" : "1",
             "request_channel" : "FTC",
+            {% set _options = {
+                "account_id": id,
+                "account_email": email,
+                "serial_number": sn,
+                "user_id": user_id
+            } %}
             "search_filters" :
             {
-                {% if id is defined %}
-                    "account_id": "{{ id }}"
-                {% endif %}
-                {% if sn is defined %}
-                    "serial_number": "{{ sn }}"
-                {% endif %}
-                {% if email is defined %}
-                    "account_email": "{{ email }}"
-                {% endif %}
+            {% for k, v in _options.iteritems() if v is defined %}
+              {{ k }}: "{{ v }}"{{ "," if not loop.last }}
+            {% endfor %}
             } 
         }
-    }    
+    }
 }
 """
 

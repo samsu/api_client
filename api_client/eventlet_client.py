@@ -16,7 +16,7 @@
 #
 
 import eventlet
-eventlet.monkey_patch(thread=False)
+eventlet.monkey_patch(thread=False, socket=False)
 
 import time
 try:
