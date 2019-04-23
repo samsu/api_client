@@ -43,7 +43,7 @@ GET_ACCOUNT = """
             "search_filters" :
             {
             {% for k, v in _options.iteritems() if v is defined %}
-              {{ k }}: "{{ v }}"{{ "," if not loop.last }}
+              "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
             {% endfor %}
             }
         }
