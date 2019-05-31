@@ -327,7 +327,11 @@ ADD_AUTH = """
             "token": "{{ token }}",
         {% endif %}
         "sn": "{{ sn }}",
-        "realm_id": "{{ realm_id }}",     
+        {% if realm_id is defined %}
+            "realm_id": "{{ realm_id }}",
+        {% elif realm is defined %}
+            "realm": "{{ realm }}",
+        {% endif %}   
         "username": "{{ username }}"
     }
 }
@@ -342,6 +346,7 @@ GET_STATEMENT = """
         "start": start,
         "end": end,
         "realm_id": realm_id,
+        "realm": realm,
         "cluster_members": cluster_members
     } %}
     {% set _query = [] %}
