@@ -168,6 +168,8 @@ GET_USER = """
             "realm": realm,
             "vdom": vdom,
             "active": active,
+            "auth_method": auth_method,
+            "notification_method": notification_method,
             "customer_id": customer_id,
             "cluster_members": cluster_members            
         } %}
@@ -204,6 +206,12 @@ ADD_USER = """
         {% if mobile_number is defined %}
             "mobile_number": "{{ mobile_number }}",         
         {% endif %}
+        {% if auth_method is defined %}
+            "auth_method": "{{ auth_method }}",         
+        {% endif %}
+        {% if notification_method is defined %}
+            "notification_method": "{{ notification_method }}",         
+        {% endif %}        
         {% if cluster_members is defined %}        
             "cluster_members": [
             {% for member in cluster_members %} 
@@ -331,6 +339,9 @@ ADD_AUTH = """
             "realm_id": "{{ realm_id }}",
         {% elif realm is defined %}
             "realm": "{{ realm }}",
+        {% endif %}
+        {% if auth_method is defined %}
+            "auth_method": "{{ auth_method }}",         
         {% endif %}   
         "username": "{{ username }}"
     }
