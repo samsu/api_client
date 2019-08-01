@@ -32,6 +32,7 @@ from oslo_serialization import jsonutils
 from oslo_utils import excutils
 import six
 import six.moves.urllib.parse as urlparse
+import traceback
 
 from ._i18n import _, _LI, _LW
 from .common import utils
@@ -97,9 +98,9 @@ class ApiRequest(object):
             return error
 
         url = self._url
-        LOG.debug("[%(rid)d] Issuing - request url: %(conn)s, body: %(body)s",
-                  {'rid': self._rid(), 'conn': self._request_str(conn, url),
-                   'body': self._body})
+        # LOG.debug("[%(rid)d] Issuing - request url: %(conn)s, body: %(body)s",
+        #           {'rid': self._rid(), 'conn': self._request_str(conn, url),
+        #            'body': self._body})
         issued_time = time.time()
         is_conn_error = False
         is_conn_service_unavail = False
@@ -120,16 +121,20 @@ class ApiRequest(object):
                 auth = self._api_client.auth_data(conn)
                 if auth:
                     headers.update(auth)
+                body = self._body
+                log_body = None
                 try:
-                    if self._body:
+                    content_type = self._headers.get('Content-Type', None)
+                    if content_type == const.FGD_CONTENT_TYPE:
+                        log_body = 'byte stream'
+                    elif content_type == const.DEFAULT_CONTENT_TYPE:
                         body = jsonutils.dumps(self._body)
-                    else:
-                        body = None
+                        log_body = body
                     LOG.debug("Issuing request: self._method = [%(method)s], "
                               "url= %(url)s, body=%(body)s, "
                               "headers=%(headers)s",
                               {'method': self._method, "url": url,
-                               "body": body, "headers": headers})
+                               "body": log_body, "headers": headers})
                     conn.request(self._method, url, body, headers)
                 except Exception as e:
                     with excutils.save_and_reraise_exception():
@@ -144,7 +149,7 @@ class ApiRequest(object):
                 if DEFAULT_CONTENT_TYPE in content_type and response.body:
                     response_body = jsonutils.loads(response.body)
                 else:
-                    response_body = response.body
+                    response_body = 'byte stream'
                 elapsed_time = time.time() - issued_time
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
@@ -160,7 +165,7 @@ class ApiRequest(object):
                            'status': response.status,
                            'elapsed': elapsed_time,
                            'method': self._method, "url": url,
-                           'headers': headers, 'body': body,
+                           'headers': headers, 'body': log_body,
                            'response.headers': response.headers,
                            'response.body': response_body})
 

@@ -26,10 +26,20 @@ DEFAULT_API_REQUEST_POOL_SIZE = 1
 DEFAULT_MAXIMUM_REQUEST_ID = 4294967295
 DOWNLOAD_TIMEOUT = 180
 
+DEFAULT_CONTENT_TYPE = 'application/json'
 DEFAULT_HTTP_HEADERS = {
     'User-Agent': 'Fortinet Python API Client',
-    'Content-Type': 'application/json'
+    'Content-Type': DEFAULT_CONTENT_TYPE
 }
+
+FGD_REQ_FLAGS = 0x00000000L
+FGD_CONTENT_TYPE = 'application/octet-stream'
+FGD_OBJ_TYPES = ['FTSI', 'FNSD', 'OBLT']
+FGD_OPTIONS = ['oheader_crc_key', 'pheader_crc_key', 'encrypt_des_flag',
+               'des_key_str', 'compress_gzip_flag']
+FTC_FW_VERSION = 'FTC-FW-1.1.0-0866'
+PHEADER_FORMAT = 'I8sIII12s24sI'
+OHEADER_FORMAT = '4s20s20sIII8s44sIIIII'
 
 URI_CHAR_CODES = {
     '<': '%3C',
