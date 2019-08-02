@@ -148,8 +148,10 @@ class ApiRequest(object):
                 response.headers = response.getheaders()
                 if DEFAULT_CONTENT_TYPE in content_type and response.body:
                     response_body = jsonutils.loads(response.body)
-                else:
+                elif content_type == const.FGD_CONTENT_TYPE:
                     response_body = 'byte stream'
+                else:
+                    response_body = response.body
                 elapsed_time = time.time() - issued_time
                 LOG.debug("@@@@@@ [ _issue_request ] [%(rid)d] "
                           "Completed request '%(conn)s': "
