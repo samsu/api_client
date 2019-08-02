@@ -100,7 +100,7 @@ class FortiAuthApiClient(client.ApiClient):
         response = g.start()
         return self.request_response(method, url, response)
 
-    def request_response(self, method, url, response):
+    def request_response(self, method, url, response, **kwargs):
         if response:
             response.body = self.request_response_body(response)
         return response

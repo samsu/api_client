@@ -100,7 +100,8 @@ class FortiCareApiClient(client.ApiClient):
         return {}
 
     @staticmethod
-    def request_response_body(response):
+    def request_response_body(response, **kwargs):
         resp = super(FortiCareApiClient,
-                     FortiCareApiClient).request_response_body(response)
+                     FortiCareApiClient).request_response_body(response,
+                                                               **kwargs)
         return resp['d'] if 'd' in resp else resp
