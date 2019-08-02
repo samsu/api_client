@@ -145,7 +145,8 @@ class ApiClientBase(object):
         _template = jinja2.Template(template)
         _template.environment.globals.update(env)
         msg = _template.render(**message)
-        if content_type in DEFAULT_CONTENT_TYPE:
+        if content_type in [DEFAULT_CONTENT_TYPE,
+                            const.FGD_CONTENT_TYPE]:
             return jsonutils.loads(msg)
         else:
             LOG.error("The content_type %(ct)s is not supported yet.",

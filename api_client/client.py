@@ -108,9 +108,10 @@ class ApiClient(eventlet_client.EventletApiClient):
             retries=self._retries, redirects=self._redirects,
             singlethread=self._singlethread)
         g.start()
-        return self.request_response(method, url, g.join())
+        return self.request_response(method, url, g.join(),
+                                     resp_type=self.message.get('obj_type', None))
 
-    def request_response(self, method, url, response):
+    def request_response(self, method, url, response, **kwargs):
         """
           response is a modified HTTPResponse object or None.
           response.read() will not work on response as the underlying library
@@ -126,7 +127,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
                       {'method': method, 'url': url})
             raise exceptions.RequestTimeout()
-        response_body = self.request_response_body(response)
+        response_body = self.request_response_body(response, **kwargs)
         status = response.status
         LOG.debug("response.status = %(status)s", {'status': status})
         if status == 401:
@@ -153,7 +154,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         return response_body
 
     @staticmethod
-    def request_response_body(response):
+    def request_response_body(response, **kwargs):
         if response and response.body:
             try:
                 result = jsonutils.loads(response.body)
