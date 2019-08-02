@@ -404,6 +404,17 @@ TOKEN_TRANSFER_START = """
 }
 """
 
+# Trial
+ADD_TRIAL = """
+{
+    "path": "/api/v1/trial/",
+    "method": "POST",
+    "body": {
+        "sn": "{{ sn }}"
+    }
+}
+"""
+
 # authenticated api client
 # query
 GET_TASK = """

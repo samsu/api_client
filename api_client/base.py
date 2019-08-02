@@ -233,11 +233,11 @@ class ApiClientBase(object):
         priority, conn = self._conn_pool.get()
         now = time.time()
         if getattr(conn, 'last_used', now) < now - self.CONN_IDLE_TIMEOUT:
-            LOG.info(_LI("[%(rid)d] Connection %(conn)s idle for "
-                         "%(sec)0.2f seconds; reconnecting."),
-                     {'rid': rid,
-                      'conn': utils.ctrl_conn_to_str(conn),
-                      'sec': now - conn.last_used})
+            LOG.debug(_LI("[%(rid)d] Connection %(conn)s idle for "
+                          "%(sec)0.2f seconds; reconnecting."),
+                      {'rid': rid,
+                       'conn': utils.ctrl_conn_to_str(conn),
+                       'sec': now - conn.last_used})
             conn = self._create_connection(*self._conn_params(conn))
             self.set_auth_data(conn)
         conn.last_used = now
