@@ -32,7 +32,7 @@ DEFAULT_HTTP_HEADERS = {
     'Content-Type': DEFAULT_CONTENT_TYPE
 }
 
-FGD_REQ_FLAGS = 0x00000000L
+FGD_REQ_FLAGS = 0x00000000
 FGD_CONTENT_TYPE = 'application/octet-stream'
 FGD_OBJ_TYPES = ['FTSI', 'FNSD', 'OBLT']
 FGD_OPTIONS = ['oheader_crc_key', 'pheader_crc_key', 'encrypt_des_flag',
