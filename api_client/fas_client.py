@@ -47,7 +47,8 @@ class FASApiClient(client.ApiClient):
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
                  auto_login=True):
-        '''Constructor. Adds the following:
+        """
+        Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
         :param http_timeout: how long to wait before aborting an
@@ -55,7 +56,7 @@ class FASApiClient(client.ApiClient):
             controller in the cluster)
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
-        '''
+        """
         super(FASApiClient, self).__init__(
             api_providers, key_file=key_file,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,

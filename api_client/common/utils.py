@@ -83,9 +83,10 @@ def get_module_files(int_path):
 
 
 def translate_uri_chars(var):
-    if not isinstance(var, six.string_types):
-        return var
     if isinstance(var, (list, dict)):
         var = json.dumps(var)
+    elif not isinstance(var, six.string_types):
+        return var
+
     var = quote(var, safe='')
     return var
