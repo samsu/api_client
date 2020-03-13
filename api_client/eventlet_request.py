@@ -147,7 +147,7 @@ class EventletApiRequest(request.ApiRequest):
                     msg = ("# request {method} {url} {body} error {e}"
                            ).format(method=self._method, url=self._url,
                                     body=self._body, e=e)
-                    LOG.error(msg)
+                    LOG.debug(msg)
                     continue
             # automatically raises any exceptions returned.
             if isinstance(req, httplib.HTTPResponse):
