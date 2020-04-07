@@ -166,5 +166,28 @@ POST_USAGE = """
 """
 
 
+# license status
+GET_LICENSE = """ 
+{
+    "path": "/FortiGlobal/FortinetOneProductService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOneAPI.ProductService.GetLicenseListRequest",
+            "__version": "2.0",
+            "request_channel": "FTC",
+            "search_filters": {
+                "account_id": "{{ id }}",
+                {% if user_id is defined %}
+                    "user_id": "{{ user_id }}",
+                {% endif %}
+                "product_snmask": "FAS"
+            }
+        }
+    }
+}
+"""
+
+
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
