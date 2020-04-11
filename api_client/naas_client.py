@@ -31,7 +31,6 @@ DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
-@singleton.singleton
 class NaaSApiClient(client.ApiClient):
     """The FAS API Client."""
 
