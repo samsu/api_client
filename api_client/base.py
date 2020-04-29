@@ -58,6 +58,7 @@ class ApiClientBase(object):
                                                      ca_file=self.ca_file,
                                                      key_file=self.key_file,
                                                      cert_file=self.cert_file,
+                                                     timeout=self._connect_timeout,
                                                      ssl_sni=self.ssl_sni)
                 else:
                     context = ssl._create_unverified_context(
