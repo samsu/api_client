@@ -125,6 +125,20 @@ GET_BALANCE = """
 """
 
 
+# Get all users' balance
+GET_ALL_BALANCE = """
+{
+    "path": "/CloudAPI/v3/Common/FortinetOneAuthService.asmx/Process",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetPointBalanceForAllUsersPayload"
+        }
+    }
+}
+"""
+
+
 # User balance update
 POST_USAGE = """
 {
