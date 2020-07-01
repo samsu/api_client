@@ -190,12 +190,16 @@ GET_LICENSE = """
             "__type": "FortinetOneAPI.ProductService.GetLicenseListRequest",
             "__version": "2.0",
             "request_channel": "FTC",
-            "search_filters": {
-                "account_id": "{{ id }}",
-                {% if user_id is defined %}
-                    "user_id": "{{ user_id }}",
-                {% endif %}
-                "product_snmask": "FAS"
+            {% set _options = {
+                "account_id": id,
+                "user_id": user_id
+            } %}
+            "search_filters":
+            {
+            {% for k, v in _options.iteritems() if v is defined %}
+              "{{ k }}": "{{ v }}",
+            {% endfor %}
+            "product_snmask": "FAS"
             }
         }
     }
