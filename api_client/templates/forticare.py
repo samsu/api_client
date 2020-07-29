@@ -42,7 +42,7 @@ GET_ACCOUNT = """
             } %}
             "search_filters" :
             {
-            {% for k, v in _options.iteritems() if v is defined %}
+            {% for k, v in _options.items() if v is defined %}
               "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
             {% endfor %}
             }
@@ -196,7 +196,7 @@ GET_LICENSE = """
             } %}
             "search_filters":
             {
-            {% for k, v in _options.iteritems() if v is defined %}
+            {% for k, v in _options.items() if v is defined %}
               "{{ k }}": "{{ v }}",
             {% endfor %}
             "product_snmask": "FAS"
