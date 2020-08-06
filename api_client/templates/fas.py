@@ -55,7 +55,7 @@ GET_REALM = """
             "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
@@ -119,7 +119,7 @@ GET_CLIENT = """
             "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
@@ -174,7 +174,7 @@ GET_USER = """
             "cluster_members": cluster_members            
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}        
@@ -259,7 +259,7 @@ MODIFY_USER = """
         "active": active,
         "change_token": change_token        
         } %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "id": "{{ id }}"
@@ -309,7 +309,7 @@ GET_COUNT = """
         "cluster_members": cluster_members
     } %}
     {% set _query = [] %}
-    {% for k, v in _options.iteritems() if v is defined %}
+    {% for k, v in _options.items() if v is defined %}
         {% if _query.append(k+'='+translate_uri_chars(v)) %}
         {% endif %}
     {% endfor %}
@@ -361,7 +361,7 @@ GET_STATEMENT = """
         "cluster_members": cluster_members
     } %}
     {% set _query = [] %}
-    {% for k, v in _options.iteritems() if v is defined %}
+    {% for k, v in _options.items() if v is defined %}
         {% if _query.append(k+'='+translate_uri_chars(v)) %}
         {% endif %}
     {% endfor %}
@@ -428,7 +428,7 @@ GET_TASK = """
             "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}

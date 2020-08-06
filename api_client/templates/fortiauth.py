@@ -121,7 +121,7 @@ GET_USERS = """
             "active": active
         } %}
         {% set _query = [] %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             {% if _query.append('&'+k+'='+translate_uri_chars(v)) %}
             {% endif %}
         {% endfor %}
@@ -172,7 +172,7 @@ CREATE_USER = """
         {% if user_groups is defined %}
             "user_groups": ["{{ user_groups }}"],
         {% endif %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}        
         "username": "{{ username }}"
@@ -210,7 +210,7 @@ MODIFY_USER = """
                 "active": active
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "id": {{ id }}
@@ -237,7 +237,7 @@ GET_FORTITOKENS = """
         "limit": limit
     } %}
     {% set _query = [] %}
-    {% for k, v in _options.iteritems() if v is defined %}
+    {% for k, v in _options.items() if v is defined %}
         {% if _query.append('&'+k+'='+v) %}
         {% endif %}
     {% endfor %}
@@ -295,7 +295,7 @@ CREATE_PUSHAUTH = """
                 "log_message": log_message
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "username": "{{ username }}"
@@ -316,7 +316,7 @@ CREATE_PUSHAUTHRESP = """
                 "hmac": hmac
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "action": "{{ action }}"
@@ -401,7 +401,7 @@ MODIFY_SMTPSERVER = """
                 "authentication_password": authentication_password
             }
         %}
-        {% for k, v in _options.iteritems() if v is defined %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
         {%
@@ -411,7 +411,7 @@ MODIFY_SMTPSERVER = """
                 "authentication": authentication
             }
         %}
-        {% for k, v in _non_str_options.iteritems() if v is defined %}
+        {% for k, v in _non_str_options.items() if v is defined %}
             "{{ k }}": {{ v }},
         {% endfor %}
         "id": {{ id }}
@@ -449,7 +449,7 @@ MODIFY_USERLOCKOUTPOLICY = """
                 "inactivity_lockout_period": inactivity_lockout_period
             }
         %}
-         {% for k, v in _options.iteritems() if v is defined %}
+         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": {{ v }}
             {{ "," if not loop.last }}
         {% endfor %}
