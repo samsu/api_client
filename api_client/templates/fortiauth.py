@@ -492,3 +492,10 @@ DELETE_FTMTOKENS = """
     "method": "DELETE"
 }
 """
+
+GET_SYSTEMINFO = """
+{
+    "path": "/api/v1/systeminfo/",
+    "method": "GET"
+}
+"""

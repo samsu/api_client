@@ -53,3 +53,6 @@ if __name__ == "__main__":
     print "----TESTING FORTITOKENS------"
     cli.request("GET_FORTITOKENS", **message)
     cli.request("GET_FORTITOKENS")
+
+    print "----TESTING SYSTEMINFO------"
+    cli.request("GET_SYSTEMINFO")
