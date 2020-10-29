@@ -335,6 +335,7 @@ ADD_AUTH = """
             "token": "{{ token }}",
         {% endif %}
         "sn": "{{ sn }}",
+        "vdom": "{{ vdom }}",
         {% if realm_id is defined %}
             "realm_id": "{{ realm_id }}",
         {% elif realm is defined %}
@@ -442,3 +443,29 @@ GET_TASK = """
     "method": "GET"
 }
 """
+
+GET_COUNT_AUTH = """
+{
+    "path": "/faas_auth*/_search?pretty",
+    "method": "GET",
+    "body": {
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": "now-7d",
+                    "lte": "now"
+                }
+            }
+        },
+        "aggs": {
+            "auth_by_customer_id": {
+                "terms": {
+                    "field": "context.customer_id.keyword",
+                    "size": 50
+                }
+            }
+        }
+    }
+}
+"""
+
