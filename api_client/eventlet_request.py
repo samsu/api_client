@@ -260,4 +260,20 @@ class GenericRequestEventlet(EventletApiRequest):
         return None
 
 
+class TokenRequestEventlet(EventletApiRequest):
+    '''get Token Request'''
+
+    def __init__(self, client_obj, client_id, client_secret, client_conn=None,
+                 headers=None):
+        if headers is None:
+            headers = {}
+        message = client_obj.render(client_obj.login_msg(),
+                                    client_id=client_obj.client_id,
+                                    client_secret=client_obj.client_secret)
+
+        super(TokenRequestEventlet, self).__init__(
+            client_obj, message['path'], message['method'], message['body'],
+            headers,auto_login=True, client_conn=client_conn)
+
+
 request.ApiRequest.register(EventletApiRequest)
