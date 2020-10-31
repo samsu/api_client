@@ -20,18 +20,22 @@ from oslo_log import log as logging
 import base
 import constants as const
 import client
+import json
+import time
 
 from common import singleton
 from templates import fascomm as templates
+from api_client import generic_request
+from api_client import eventlet_request
+
 
 LOG = logging.getLogger(__name__)
-
-from api_client import generic_request
 
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
+
 
 @singleton.singleton
 class FASCommApiClient(client.ApiClient):
@@ -40,7 +44,7 @@ class FASCommApiClient(client.ApiClient):
     user_agent = 'FAS Python Commercial API Client'
 
     def __init__(self, api_providers, user=None, password=None,
-                 access_token=None,
+                 access_token=None, client_id=None, client_secret=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
@@ -82,6 +86,8 @@ class FASCommApiClient(client.ApiClient):
         self._auto_login = auto_login
         self._template = templates
         self.access_token = access_token
+        self.client_id = client_id
+        self.client_secret = client_secret
 
     def _login(self, conn=None, headers=None):
         """
@@ -89,11 +95,46 @@ class FASCommApiClient(client.ApiClient):
         :param headers: Not use here
         :return: return authenticated Header
         """
-        if self.access_token:
-            return {'Authorization': 'Bearer {}'.format(self.access_token)}
-        return None
 
-    
+        print('execute login')
+
+        g = eventlet_request.TokenRequestEventlet(
+            self, self.client_id, self.client_secret, conn, headers)
+        g.start()
+
+        ret = g.join()
+
+        if ret:
+            if isinstance(ret, Exception):
+                LOG.error("login error {}".format(ret))
+                raise ret
+
+            if ret.status != 201:
+                LOG.error("login error {}".format(ret))
+                raise Exception('Fail to fetch the token')
+
+            ret_body = json.loads(ret.body)
+            access_token = ret_body['access_token']
+
+        return {'Authorization': 'Bearer {}'.format(access_token), 'Date': time.time()}
+
+    def login_msg(self):
+
+        return getattr(self._template, 'LOGIN')
+
+    def auth_data(self, conn):
+        # auth_data could be cookie or other fields with authentication
+        # info in http headers.
+        auth_data = None
+        data = self._get_provider_data(conn)
+        if data:
+            auth_data = data[1]
+            if auth_data:
+                create_time = auth_data['Date']
+                if time.time() - create_time > const.FTC_TOKEN_EXPIRE:
+                    return None
+        return auth_data
+
     def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
         """
         Issues request to controller.
@@ -115,4 +156,3 @@ class FASCommApiClient(client.ApiClient):
         if response:
             response.body = self.request_response_body(response)
         return response
-    
