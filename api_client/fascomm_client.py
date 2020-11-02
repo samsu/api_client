@@ -44,7 +44,7 @@ class FASCommApiClient(client.ApiClient):
     user_agent = 'FAS Python Commercial API Client'
 
     def __init__(self, api_providers, user=None, password=None,
-                 access_token=None, client_id=None, client_secret=None,
+                 client_id=None, client_secret=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
@@ -85,7 +85,6 @@ class FASCommApiClient(client.ApiClient):
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._template = templates
-        self.access_token = access_token
         self.client_id = client_id
         self.client_secret = client_secret
 

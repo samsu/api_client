@@ -60,8 +60,7 @@ ADD_USER = """
             "user_data": "{{ user_data }}",
         {% endif %}
         "username": "{{ username }}",
-        "email": "{{ email }}",
-        "vdom": "{{ vdom }}"
+        "email": "{{ email }}"
     }
 }
 """
