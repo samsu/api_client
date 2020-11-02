@@ -67,5 +67,3 @@ URI_CHAR_CODES = {
     '"': '%22',
     ' ': '%20'
 }
-
-FTC_TOKEN_EXPIRE = 60*59
