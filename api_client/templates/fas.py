@@ -451,6 +451,9 @@ ADD_TRIAL = """
         {% if sn is defined %}
             "sn": "{{ sn }}"
         {% endif %}
+        {% if customer_id is defined %}
+            "customer_id": "{{ customer_id }}"
+        {% endif %}
     }
 }
 """

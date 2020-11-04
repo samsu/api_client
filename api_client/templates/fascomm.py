@@ -39,10 +39,6 @@ LOGIN = """
 }
 """
 
-# TRIAL
-
-ADD_TRIAL = fas.ADD_TRIAL
-
 #REALM
 # query
 
