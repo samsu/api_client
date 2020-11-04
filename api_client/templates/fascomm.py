@@ -25,7 +25,7 @@
 
 # LOGIN
 
-import fas
+from . import fas
 
 LOGIN = """
 {

@@ -369,6 +369,7 @@ GET_AUTH = """
     {% else %}
         {% set _options = {
             "sn": sn,
+            "chunksize": chunksize
         } %}
         {% set _query = [] %}
         {% for k, v in _options.items() if v is defined %}
@@ -449,9 +450,6 @@ ADD_TRIAL = """
     "body": {
         {% if sn is defined %}
             "sn": "{{ sn }}"
-        {% endif %}
-        {% if customer_id is defined %}
-            "customer_id": "{{ customer_id }}"
         {% endif %}
     }
 }
