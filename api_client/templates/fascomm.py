@@ -65,5 +65,8 @@ DELETE_USER = fas.DELETE_USER
 # authentication
 ADD_AUTH = fas.ADD_AUTH
 
+GET_AUTH = fas.GET_AUTH
+
 # Version
 GET_VERSION = fas.GET_VERSION
+
