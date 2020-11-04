@@ -25,6 +25,8 @@
 
 # LOGIN
 
+import fas
+
 LOGIN = """
 {
     "path": "/api/v1/login/",
@@ -37,47 +39,31 @@ LOGIN = """
 }
 """
 
+# TRIAL
+
+ADD_TRIAL = fas.ADD_TRIAL
+
+#REALM
+# query
+
+GET_REALM = fas.GET_REALM
+
+# User
+# query
+GET_USER = fas.GET_USER
+
 # Add Users
 
-ADD_USER = """
-{
-    "path": "/api/v1/user",
-    "method": "POST",
-    "body": {
-        {% if realm is defined %}
-            "realm": "{{ realm }}",
-        {% endif %}
-        {% if mobile_number is defined %}
-            "mobile_number": "{{ mobile_number }}",         
-        {% endif %}
-        {% if auth_method is defined %}
-            "auth_method": "{{ auth_method }}",         
-        {% endif %}
-        {% if notification_method is defined %}
-            "notification_method": "{{ notification_method }}",         
-        {% endif %}
-        {% if user_data is defined %}
-            "user_data": "{{ user_data }}",
-        {% endif %}
-        "username": "{{ username }}",
-        "email": "{{ email }}"
-    }
-}
-"""
+ADD_USER = fas.ADD_USER
 
-# Balance
+# put
+MODIFY_USER = fas.MODIFY_USER
 
-GET_BALANCE = """
-{
-    "path": "/api/v1/balance",
-    "method": "GET"
-}
-"""
+# delete
+DELETE_USER = fas.DELETE_USER
+
+# authentication
+ADD_AUTH = fas.ADD_AUTH
 
 # Version
-GET_VERSION = """
-{
-    "path": "/version/",
-    "method": "GET"
-}
-"""
+GET_VERSION = fas.GET_VERSION
