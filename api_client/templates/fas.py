@@ -44,7 +44,7 @@ GET_REALM = """
         {% if sn is defined %}
             "path": "/api/v1/realm/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/realm/{{ id }}/,
+            "path": "/api/v1/realm/{{ id }}/",
         {% endif %}
     {% else %}
         {% set _options = {
@@ -156,7 +156,7 @@ GET_USER = """
         {% if sn is defined %}
             "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/user/{{ id }}/,
+            "path": "/api/v1/user/{{ id }}/",
         {% endif %}        
     {% else %}
         {% set _options = {
@@ -195,8 +195,12 @@ ADD_USER = """
     "path": "/api/v1/user/",
     "method": "POST",
     "body": {
-        "sn": "{{ sn }}",
-        "vdom": "{{ vdom }}",    
+        {% if sn is defined %}
+            "sn": "{{ sn }}",
+        {% endif %}
+        {% if vdom is defined %}
+            "vdom": "{{ vdom }}",
+        {% endif %}
         "email": "{{ email }}",
         {% if realm_id is defined %}
             "realm_id": "{{ realm_id }}",
@@ -211,7 +215,10 @@ ADD_USER = """
         {% endif %}
         {% if notification_method is defined %}
             "notification_method": "{{ notification_method }}",         
-        {% endif %}        
+        {% endif %}
+        {% if user_data is defined %}
+            "user_data": "{{ user_data }}",
+        {% endif %}
         {% if cluster_members is defined %}        
             "cluster_members": [
             {% for member in cluster_members %} 
@@ -239,7 +246,7 @@ DELETE_USER = """
         {% if sn is defined %}
             "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/user/{{ id }}/,
+            "path": "/api/v1/user/{{ id }}/",
         {% endif %}
     {% endif %}
     "method": "DELETE"
@@ -334,7 +341,14 @@ ADD_AUTH = """
         {% if token is defined %}
             "token": "{{ token }}",
         {% endif %}
+<<<<<<< HEAD
         "sn": "{{ sn }}",
+        "vdom": "{{ vdom }}",
+=======
+        {% if sn is defined %}
+            "sn": "{{ sn }}",
+        {% endif %}
+>>>>>>> Add the template for FTC commercial API
         {% if realm_id is defined %}
             "realm_id": "{{ realm_id }}",
         {% elif realm is defined %}
@@ -348,6 +362,30 @@ ADD_AUTH = """
 }
 """
 
+GET_AUTH = """
+{
+    {% if id is defined %}
+        "path": "/api/v1/auth/{{ id }}/",
+    {% else %}
+        {% set _options = {
+            "sn": sn,
+            "chunksize": chunksize
+        } %}
+        {% set _query = [] %}
+        {% for k, v in _options.items() if v is defined %}
+            {% if _query.append(k+'='+translate_uri_chars(v)) %}
+            {% endif %}
+        {% endfor %}
+        {% if _query %}
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/auth?{{ _query }}",
+        {% else %}
+            "path": "/api/v1/auth/",
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
 
 # statement
 GET_STATEMENT = """
@@ -410,7 +448,12 @@ ADD_TRIAL = """
     "path": "/api/v1/trial/",
     "method": "POST",
     "body": {
-        "sn": "{{ sn }}"
+        {% if sn is defined %}
+            "sn": "{{ sn }}"
+        {% endif %}
+        {% if customer_id is defined %}
+            "customer_id": "{{ customer_id }}"
+        {% endif %}
     }
 }
 """
@@ -442,3 +485,29 @@ GET_TASK = """
     "method": "GET"
 }
 """
+
+GET_COUNT_AUTH = """
+{
+    "path": "/faas_auth*/_search?pretty",
+    "method": "GET",
+    "body": {
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": "now-7d",
+                    "lte": "now"
+                }
+            }
+        },
+        "aggs": {
+            "auth_by_customer_id": {
+                "terms": {
+                    "field": "context.customer_id.keyword",
+                    "size": 50
+                }
+            }
+        }
+    }
+}
+"""
+

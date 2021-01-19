@@ -317,6 +317,32 @@ class ApiClientBase(object):
                   {'rid': rid, 'conn': utils.ctrl_conn_to_str(http_conn),
                    'qsize': self._conn_pool.qsize()})
 
+    def close_connection(self, http_conn=None, rid=-1):
+        """
+        close the http connection and remove it from the pool
+
+        :param http_conn: An HTTPConnection instance obtained from this
+            instance.
+        :param rid: request id passed in from request eventlet.
+        """
+        if http_conn is not None:
+            conn_params = self._conn_params(http_conn)
+            if self._conn_params(http_conn) not in self._api_providers:
+                LOG.debug("[%(rid)d] Released connection %(conn)s is not an "
+                          "API provider for the cluster",
+                          {'rid': rid,
+                           'conn': utils.ctrl_conn_to_str(http_conn)})
+                return
+        else:
+            conn_params = None
+        while not self._conn_pool.empty():
+            priority, conn = self._conn_pool.get()
+            if conn_params is None:
+                conn.close()
+            else:
+                if self._conn_params(conn) == conn_params:
+                    conn.close()
+
     def _wait_for_login(self, conn, headers=None):
         """Block until a login has occurred for the current API provider."""
         data = self._get_provider_data(conn)

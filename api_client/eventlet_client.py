@@ -18,6 +18,7 @@
 import eventlet
 eventlet.monkey_patch(thread=False, socket=False)
 
+import atexit
 import time
 try:
     import Queue
@@ -88,6 +89,8 @@ class EventletApiClient(base.ApiClientBase):
                 conn = self._create_connection(host, port, is_ssl)
                 self._conn_pool.put((self._next_conn_priority, conn))
                 self._next_conn_priority += 1
+        
+        atexit.register(self.close_connection)
 
     def get_default_data(self):
         if self._singlethread:

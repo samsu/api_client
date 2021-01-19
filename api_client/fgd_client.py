@@ -111,14 +111,16 @@ class FortiGuardApiClient(client.ApiClient):
         total_size = 0
         for obj in obj_list:
             total_size += len(obj)
-        header_args = [0x46545550, fw_version, len(obj_list), total_size,
-                       pheader_size, date_time, '\0' * 24,
+        header_args = [0x46545550, fw_version.encode('utf8'), len(obj_list), total_size,
+                       pheader_size, date_time.encode('utf8'), '\0'.encode('utf8') * 24,
                        self._fgd_params['pheader_crc_key']]
         pheader = pheader.pack(*tuple(header_args))
         header_chksum = zlib.crc32(pheader) & 0xffffffff
         header_args[-1] = header_chksum
         pheader = struct.pack(package_format, *tuple(header_args))
-        package = pheader + ''.join(obj_list)
+        package = pheader
+        for obj in obj_list:
+            package = package + obj
         return package
 
     def _createObject(self, obj, obj_type, subtype, desc, version, fw_version,
@@ -128,8 +130,9 @@ class FortiGuardApiClient(client.ApiClient):
         header_format = const.OHEADER_FORMAT
         header_size = struct.calcsize(header_format)
         header_args = list(
-            [obj_type, desc, version, flags, obj_size, header_size,
-             fw_version, '\0' * 44, 0, 0, subtype, data_crc,
+            [obj_type.encode('utf8'), desc.encode('utf8'), version.encode('utf8'),
+             flags, obj_size, header_size, fw_version.encode('utf8'),
+             '\0'.encode('utf8') * 44, 0, 0, subtype, data_crc,
              self._fgd_params['oheader_crc_key']])
         header = struct.pack(header_format, *tuple(header_args))
         header_checksum = zlib.crc32(header) & 0xffffffff
@@ -155,8 +158,8 @@ class FortiGuardApiClient(client.ApiClient):
         for i in range(0, pheader[2]):
             obj_header = obj_list[obj_pointer:obj_pointer + oheader_size]
             obj_header = struct.unpack_from(const.OHEADER_FORMAT, obj_header)
-            if resp_type != obj_header[0]:
-                if obj_header[0] == 'FCPR':
+            if resp_type.encode('utf8') != obj_header[0]:
+                if obj_header[0] == 'FCPR'.encode('utf8'):
                     resp = obj_list[obj_pointer + oheader_size:obj_pointer +
                                     oheader_size + obj_header[4]]
                     if obj_header[3] & self._fgd_params['encrypt_des_flag']:
@@ -198,6 +201,6 @@ class FortiGuardApiClient(client.ApiClient):
         cipher = DES.new(key, DES.MODE_CBC, key)
         decrypted_string = ''
         for i in range(0, len(string), len(key)):
-            decrypted_string += cipher.decrypt(string[i:i + len(key)])
+            decrypted_string += cipher.decrypt(string[i:i + len(key)]).decode('utf8')
         return decrypted_string.split('\r\n\r\n')[0]
 

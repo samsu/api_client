@@ -17,12 +17,13 @@
 
 from oslo_log import log as logging
 
-import base
-import constants as const
-import client
+from . import base
+from . import constants as const
+from . import client
 
-from common import singleton
-from templates import fas as templates
+from .common import singleton
+from .templates import fas as templates
+
 
 LOG = logging.getLogger(__name__)
 

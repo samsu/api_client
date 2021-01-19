@@ -237,6 +237,9 @@ class ApiRequest(object):
             self._request_error = e
             is_conn_error = True
             if isinstance(e, (httpclient.BadStatusLine, socket.error)):
+                self._api_client.release_connection(conn, is_conn_error,
+                                                    is_conn_service_unavail,
+                                                    rid=self._rid())
                 raise e
             return e
 
