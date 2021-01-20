@@ -17,14 +17,14 @@
 
 from oslo_log import log as logging
 
-import base
-import constants as const
-import client
+from . import base
+from . import constants as const
+from . import client
 import json
 import time
 
-from common import singleton
-from templates import fascomm as templates
+from .common import singleton
+from .templates import fascomm as templates
 from api_client import generic_request
 from api_client import eventlet_request
 
