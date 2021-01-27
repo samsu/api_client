@@ -27,7 +27,7 @@
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetAccountDetails",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetAccountDetails",
     "method": "POST",
     "body": {
         "d": {
@@ -50,7 +50,7 @@ GET_ACCOUNT = """
 
 GET_APPLIST = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetPortalList",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetPortalList",
     "method": "POST",
     "body": {
         "d": {
@@ -62,7 +62,7 @@ GET_APPLIST = """
 
 GET_ACCOUNTLIST = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetAccountsByEmail",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetAccountsByEmail",
     "method": "POST",
     "body": {
         "d": {
@@ -188,7 +188,7 @@ GET_LICENSE = """
 # get premium logo
 GET_LOGO = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudLogo",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudLogo",
     "method": "POST",
     "body": {
         "d": {
@@ -202,7 +202,7 @@ GET_LOGO = """
 # get premium status
 GET_PREMIUM_STATUS = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudPremiumSubscription",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudPremiumSubscription",
     "method": "POST",
     "body": {
         "d": {
@@ -216,7 +216,7 @@ GET_PREMIUM_STATUS = """
 # get common data
 GET_COMMON_DATA = """
 {
-    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetCommonData",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetCommonData",
     "method": "POST",
     "body": {
         "d": {
