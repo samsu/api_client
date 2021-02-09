@@ -124,6 +124,28 @@ GET_BALANCE = """
 }
 """
 
+# Get all users' balance
+GET_BATCH_BALANCE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetPointBalanceForAllUsers",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetPointBalanceForAllUsersPayload",
+            {% if page_index is defined %}
+                "page_index": "{{ page_index }}",
+            {% else %}
+                "page_index": "1",
+            {% endif %}
+            {% if page_size is defined %}
+                "page_size": "{{ page_size }}"
+            {% else %}
+                "page_size": "1000"
+            {% endif %}            
+        }
+    }
+}
+"""
 
 # User balance update
 POST_USAGE = """
@@ -160,6 +182,35 @@ POST_USAGE = """
                     "Parameter_Value": "{{ usage }}"
                 }
             ]
+        }
+    }
+}
+"""
+
+# On-premises agent(OPA) license
+ADD_OPA_LICENSE = """
+{
+    "path": "/CloudAPI_IAM/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetNewFACVMLicense",
+    "method": "POST",
+    "body": { 
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetNewFACVMLicensePayload",
+            "license_version": "latest"
+        }
+    }
+}
+"""
+
+# query OPA license
+GET_OPA_LICENSE = """
+{   
+    "path": "/CloudAPI_IAM/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetExistingFACVMLicense",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetExistingFACVMLicensePayload",
+            "serial_number": "{{ sn }}",
+            "license_version": "latest"
         }
     }
 }
