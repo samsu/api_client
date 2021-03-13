@@ -236,5 +236,38 @@ GET_COMMON_DATA = """
 }
 """
 
+# get user permission
+GET_USERPERMISSION = """
+{
+    "path": "/CloudAPI/V3/Common/FortinetOneAuthService.asmx/GetUserPermissions",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetUserPermissionsPayload",
+            "auth_attributes": [
+            {% set _options = {
+                "IAM_account_name": iam_account_name,
+                "IAM_account_alias": iam_account_alias,
+                "IAM_username": iam_username,
+                "Authentication_status": auth_status
+            } %}
+            {% for k, v in _options.items() if v is defined %}
+                {
+                    "name": "{{ k }}",
+                    "value": "{{ v }}"
+                },
+            {% endfor %}
+                {
+                    "name": "NameID",
+                    "value": "{{ name_id }}"
+                }
+            ]
+        }
+    }
+}
+"""
+
+
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
+
