@@ -256,16 +256,16 @@ GET_BATCH_FTC_LICENSE = """
     "body": {
         "d": {
             "__type": "FortinetOne.API.V3.FortiTokenCloud.GetProductEntitlementsForAllAccountsPayload",
-            { % if page_index is defined %}
+            {% if page_index is defined %}
                 "page_index": "{{ page_index }}",
-            { % else %}
+            {% else %}
                 "page_index": "1",
-            { % endif %}
-            { % if page_size is defined %}
+            {% endif %}
+            {% if page_size is defined %}
                 "page_size": "{{ page_size }}"
-            { % else %}
+            {% else %}
                 "page_size": "1000"
-            { % endif %}
+            {% endif %}
         }
     }
 }
