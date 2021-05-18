@@ -236,5 +236,41 @@ GET_COMMON_DATA = """
 }
 """
 
+GET_FTC_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetProductEntitlementsPayload",
+            "accountIds": ["{{ id }}"]
+        }
+    }
+}
+"""
+
+GET_BATCH_FTC_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetProductEntitlementsForAllAccounts",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetProductEntitlementsForAllAccountsPayload",
+            { % if page_index is defined %}
+                "page_index": "{{ page_index }}",
+            { % else %}
+                "page_index": "1",
+            { % endif %}
+            { % if page_size is defined %}
+                "page_size": "{{ page_size }}"
+            { % else %}
+                "page_size": "1000"
+            { % endif %}
+        }
+    }
+}
+"""
+
+
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
