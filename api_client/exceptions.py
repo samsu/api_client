@@ -85,7 +85,7 @@ class InvalidSecurityCertificate(BadRequest):
 
 
 def fourZeroZero(response=None):
-    if response and "Invalid Certificate" in response.body:
+    if response and "Invalid Certificate" in response.body.decode('utf8'):
         raise InvalidSecurityCertificate()
     raise BadRequest()
 
@@ -107,7 +107,7 @@ def fiveZeroThree(response=None):
 
 
 def fourZeroThree(response=None):
-    if 'read-only' in response.body:
+    if 'read-only' in response.body.decode('utf8'):
         raise ReadOnlyMode()
     else:
         raise Forbidden()

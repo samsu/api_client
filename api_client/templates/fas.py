@@ -354,6 +354,9 @@ ADD_AUTH = """
         {% elif realm is defined %}
             "realm": "{{ realm }}",
         {% endif %}
+        {% if vdom is defined %}
+            "vdom": "{{ vdom }}",
+        {% endif %}
         {% if auth_method is defined %}
             "auth_method": "{{ auth_method }}",         
         {% endif %}   

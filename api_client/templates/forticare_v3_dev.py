@@ -23,30 +23,26 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
-
 # customer account
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetAccountDetails",
     "method": "POST",
     "body": {
         "d": {
-            "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
-            "__version" : "1",
-            "request_channel" : "FTC",
+            "__type": "FortinetOne.API.V3.Common.GetAccountDetailsPayload",
             {% set _options = {
                 "account_id": id,
                 "account_email": email,
                 "serial_number": sn,
-                "user_id": user_id
+                "user_id": user_id,
+                "iam_account_name": iam_account_name,
+                "iam_user_name": iam_user_name
             } %}
-            "search_filters" :
-            {
             {% for k, v in _options.items() if v is defined %}
-              "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+              "{{ k }}": "{{ v }}" {{ "," if not loop.last }}
             {% endfor %}
-            } 
         }
     }
 }
@@ -54,17 +50,11 @@ GET_ACCOUNT = """
 
 GET_APPLIST = """
 {
-    "path": "/FortiGlobalDev/FortinetOneCommonService.asmx/Process",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetPortalList",
     "method": "POST",
     "body": {
         "d": {
-            "__type": "FortinetOneAPI.CommonService.GetPortalListRequest",
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            "request_channel": "CustomerManagement"
+            "__type": "FortinetOne.API.V3.Common.GetPortalListPayload"
         }
     }
 }
@@ -72,37 +62,26 @@ GET_APPLIST = """
 
 GET_ACCOUNTLIST = """
 {
-    "path": "/FortiGlobalDev/FortinetOneIdentityService.asmx/Process",
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetAccountsByEmail",
     "method": "POST",
     "body": {
         "d": {
-            "__type" : "FortinetOneAPI.IdentityService.GetLoginAccountsByEmailRequest",
-            {% if version is defined %}
-                "__version": "{{ version }}",
-            {% else %}
-                "__version": "1",
-            {% endif %}
-            "search_filters": {
-                "email": "{{ fortinet_id }}"
-            },
-            {% if service_type is defined %}
-                "request_channel": "{{ service_type }}"
-            {% else %}
-                "request_channel": "FTC"
-            {% endif %}
+            "__type": "FortinetOne.API.V3.Common.GetAccountsByEmailPayload",
+            "email": "{{ fortinet_id }}"
         }
     }
 }
 """
 
+
 # Get user balance
 GET_BALANCE = """
 {
-    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobal/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
-            "__type" : "FortiGlobal.FASInquiryRequest",
+            "__type": "FortiGlobal.FASInquiryRequest",
             {% if version is defined %}
                 "__version": "{{ version }}",
             {% else %}
@@ -123,6 +102,7 @@ GET_BALANCE = """
     }
 }
 """
+
 
 # Get all users' balance
 GET_BATCH_BALANCE = """
@@ -147,10 +127,11 @@ GET_BATCH_BALANCE = """
 }
 """
 
+
 # User balance update
 POST_USAGE = """
 {
-    "path": "/FortiGlobalDev/FortiAuthService.asmx/Process",
+    "path": "/FortiGlobal/FortiAuthService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
@@ -187,30 +168,69 @@ POST_USAGE = """
 }
 """
 
-# On-premises agent(OPA) license
-ADD_OPA_LICENSE = """
+
+# license status
+GET_LICENSE = """
 {
-    "path": "/CloudAPI_IAM/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetNewFACVMLicense",
+    "path": "/FortiGlobal/FortinetOneProductService.asmx/Process",
     "method": "POST",
-    "body": { 
+    "body": {
         "d": {
-            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetNewFACVMLicensePayload",
-            "license_version": "latest"
+            "__type": "FortinetOneAPI.ProductService.GetLicenseListRequest",
+            "__version": "2.0",
+            "request_channel": "FTC",
+            {% set _options = {
+                "account_id": id,
+                "user_id": user_id
+            } %}
+            "search_filters":
+            {
+            {% for k, v in _options.items() if v is defined %}
+              "{{ k }}": "{{ v }}",
+            {% endfor %}
+            "product_snmask": "FAS"
+            }
         }
     }
 }
 """
 
-# query OPA license
-GET_OPA_LICENSE = """
-{   
-    "path": "/CloudAPI_IAM/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetExistingFACVMLicense",
+# get premium logo
+GET_LOGO = """
+{
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudLogo",
     "method": "POST",
     "body": {
         "d": {
-            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetExistingFACVMLicensePayload",
-            "serial_number": "{{ sn }}",
-            "license_version": "latest"
+            "__type": "FortinetOne.API.V3.Common.GetFortiCloudLogoPayload",
+            "account_id": {{ id }}
+        }
+    }
+}
+"""
+
+# get premium status
+GET_PREMIUM_STATUS = """
+{
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetFortiCloudPremiumSubscription",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetFortiCloudPremiumSubscriptionPayload",
+            "accountId": "{{ id }}"
+        }
+    }
+}
+"""
+
+# get common data
+GET_COMMON_DATA = """
+{
+    "path": "/CloudAPI_IAM/V3/Common/FortinetOneCommonService.asmx/GetCommonData",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetCommonDataPayload"
         }
     }
 }
@@ -250,3 +270,7 @@ GET_BATCH_FTC_LICENSE = """
     }
 }
 """
+
+
+GET_PROD_APPLIST = GET_APPLIST
+GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
