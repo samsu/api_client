@@ -56,3 +56,32 @@ if __name__ == "__main__":
 
     print "----TESTING SYSTEMINFO------"
     cli.request("GET_SYSTEMINFO")
+
+    print "----TESTING FTPSERVERS------"
+    message = {
+        "name": "test_ftpserver",
+        "address": "127.0.0.1",
+        "conn_type": "ftp",
+        "port": 21
+    }
+    cli.request("CREATE_FTPSERVER", **message)
+    cli.request("GET_FTPSERVERS")
+    cli.request("GET_FTPSERVERS", id="1")
+    cli.request("DELETE_FTPSERVER", id="1")
+    cli.request("CREATE_FTPSERVER", **message)
+
+    print "----TEST SCHEDULED BACKUP SETTINGS----"
+    message = {
+        "ftp": "test_ftpserver",
+        "frequency": "monthly",
+        "time": "23:59:59",
+        "enabled": "true"
+    }
+    res = cli.request("GET_SCHEDULED_BACKUP_SETTING")
+    res = cli.request("CREATE_SCHEDULED_BACKUP_SETTING", **message)
+    cli.request("GET_SCHEDULED_BACKUP_SETTING")
+    message['enabled'] = "false"
+    cli.request("MODIFY_SCHEDULED_BACKUP_SETTING", **message)
+
+    print "----TEST BACKUP AND RECOVERY----"
+    res = cli.request("BACKUP_CONFIG")
