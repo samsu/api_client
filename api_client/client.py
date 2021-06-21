@@ -156,6 +156,8 @@ class ApiClient(eventlet_client.EventletApiClient):
     @staticmethod
     def request_response_body(response, **kwargs):
         if response and response.body:
+            if response.getheader('content-type') == 'application/octet-stream':
+                return response.body
             try:
                 result = jsonutils.loads(response.body)
                 LOG.debug("response.body = %(body)s", {'body': result})
