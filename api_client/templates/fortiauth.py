@@ -628,9 +628,6 @@ BACKUP_CONFIG = """
 RESTORE_CONFIG = """
 {
     "path": "/api/v1/recovery/",
-    "method": "POST",
-    "body": {
-        "file": "{{ file }}"
-    }
+    "method": "POST"
 }
 """
