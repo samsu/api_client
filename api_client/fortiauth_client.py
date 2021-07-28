@@ -87,11 +87,17 @@ class FortiAuthApiClient(client.ApiClient):
         """
         Issues request to controller.
         """
-        self.message = self.render(getattr(self._template, opt),
-                                   content_type=content_type, **message)
+        if opt=='RESTORE_CONFIG':
+            self.message = self.render(getattr(self._template, opt),
+                                    content_type=DEFAULT_CONTENT_TYPE, **{})
+            body = message['file']
+                              
+        else:
+            self.message = self.render(getattr(self._template, opt),
+                                    content_type=content_type, **message)
+            body = self.message['body'] if 'body' in self.message else None
         method = self.message['method']
         url = self.message['path']
-        body = self.message['body'] if 'body' in self.message else None
         g = generic_request.GenericRequest(
             self, method, url, body, content_type, self.user_agent,
             auto_login=self._auto_login,

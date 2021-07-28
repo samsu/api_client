@@ -341,14 +341,9 @@ ADD_AUTH = """
         {% if token is defined %}
             "token": "{{ token }}",
         {% endif %}
-<<<<<<< HEAD
-        "sn": "{{ sn }}",
-        "vdom": "{{ vdom }}",
-=======
         {% if sn is defined %}
             "sn": "{{ sn }}",
         {% endif %}
->>>>>>> Add the template for FTC commercial API
         {% if realm_id is defined %}
             "realm_id": "{{ realm_id }}",
         {% elif realm is defined %}

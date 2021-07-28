@@ -624,3 +624,10 @@ BACKUP_CONFIG = """
     "method": "GET"
 }
 """
+
+RESTORE_CONFIG = """
+{
+    "path": "/api/v1/recovery/",
+    "method": "POST"
+}
+"""
