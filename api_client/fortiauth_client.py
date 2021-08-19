@@ -31,6 +31,7 @@ DEFAULT_RETRIES = 0
 DEFAULT_REDIRECTS = 1
 DEFAULT_CONCURRENT_CONNECTIONS = base.DEFAULT_CONCURRENT_CONNECTIONS
 DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
+POST_FILE_OPT = ['RESTORE_CONFIG', 'UPLOAD_LICENSE']
 
 
 class FortiAuthApiClient(client.ApiClient):
@@ -87,10 +88,10 @@ class FortiAuthApiClient(client.ApiClient):
         """
         Issues request to controller.
         """
-        if opt=='RESTORE_CONFIG':
+        if opt in POST_FILE_OPT:
             self.message = self.render(getattr(self._template, opt),
                                     content_type=DEFAULT_CONTENT_TYPE, **{})
-            body = message['file']
+            body = message['body']
                               
         else:
             self.message = self.render(getattr(self._template, opt),

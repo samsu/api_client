@@ -631,3 +631,10 @@ RESTORE_CONFIG = """
     "method": "POST"
 }
 """
+
+UPLOAD_LICENSE = """
+{
+    "path": "/api/v1/licensing/",
+    "method": "POST"
+}
+"""
