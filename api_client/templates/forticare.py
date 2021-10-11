@@ -191,25 +191,25 @@ POST_USAGE = """
 
 
 # license status
-GET_LICENSE = """ 
+GET_LICENSE = """
 {
     "path": "/FortiGlobal/FortinetOneProductService.asmx/Process",
     "method": "POST",
     "body": {
         "d": {
-            "__type": "FortinetOneAPI.ProductService.GetLicenseListRequest",
+            "__type": "FortinetOneAPI.ProductService.GetLicenseDetailsRequest",
             "__version": "2.0",
             "request_channel": "FTC",
             {% set _options = {
                 "account_id": id,
-                "user_id": user_id
+                "license_number": license_number,
+                "serial_number": serial_number
             } %}
             "search_filters":
             {
             {% for k, v in _options.items() if v is defined %}
-              "{{ k }}": "{{ v }}",
+              "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
             {% endfor %}
-            "product_snmask": "FAS"
             }
         }
     }
@@ -277,6 +277,20 @@ GET_BATCH_FTC_LICENSE = """
             {% else %}
                 "page_size": "1000"
             {% endif %}
+        }
+    }
+}
+"""
+
+
+GET_MIGRATION_TAG = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetFTMMigrationTag",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetFTMMigrationTagPayload",
+            "accountId": "{{ id }}"
         }
     }
 }
