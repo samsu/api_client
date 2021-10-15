@@ -54,7 +54,7 @@ ADD_NOTIFICATION = """
         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
-        "message": "{{ message }}"
+        "message": {{ message }}
     }
 }
 """

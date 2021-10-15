@@ -41,6 +41,7 @@ class ApiClient(eventlet_client.EventletApiClient):
 
     def __init__(self, api_providers, user=None, password=None,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
+                 verify_peer=True,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -61,6 +62,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         super(ApiClient, self).__init__(
             api_providers, user, password, key_file=key_file,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
+            verify_peer=verify_peer,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, singlethread=singlethread)
@@ -96,8 +98,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         """
         Issues request to controller.
         """
-        self.message = self.render(getattr(self._template, opt),
-                                   content_type=content_type, **message)
+        self.message = self.render(getattr(self._template, opt), **message)
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None

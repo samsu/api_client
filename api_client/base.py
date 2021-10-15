@@ -41,7 +41,7 @@ LOG = logging.getLogger(__name__)
 GENERATION_ID_TIMEOUT = const.GENERATION_ID_TIMEOUT
 DEFAULT_CONCURRENT_CONNECTIONS = const.DEFAULT_CONCURRENT_CONNECTIONS
 DEFAULT_CONNECT_TIMEOUT = const.DEFAULT_CONNECT_TIMEOUT
-DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
+DEFAULT_FORMATTER = const.DEFAULT_FORMATTER
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -53,7 +53,7 @@ class ApiClientBase(object):
     def _create_connection(self, host, port, is_ssl):
         if is_ssl:
             try:
-                if hasattr(self, 'ca_file'):
+                if self.verify_peer:
                     return HTTPSClientAuthConnection(host, port,
                                                      ca_file=self.ca_file,
                                                      key_file=self.key_file,
@@ -61,8 +61,14 @@ class ApiClientBase(object):
                                                      timeout=self._connect_timeout,
                                                      ssl_sni=self.ssl_sni)
                 else:
+                    kwargs = {'cert_reqs': ssl.CERT_NONE}
+                    if self.ca_file:
+                        kwargs['cafile'] = self.ca_file
+                    if self.key_file and self.cert_file:
+                        kwargs['keyfile'] = self.key_file
+                        kwargs['certfile'] = self.cert_file
                     context = ssl._create_unverified_context(
-                        cert_reqs=ssl.CERT_NONE)
+                        **kwargs)
                     return httplib.HTTPSConnection(
                         host, port,
                         timeout=self._connect_timeout, context=context)
@@ -103,6 +109,10 @@ class ApiClientBase(object):
         return self._ssl_sni
 
     @property
+    def verify_peer(self):
+        return self._verify_peer
+
+    @property
     def config_gen(self):
         # If NSX_gen_timeout is not -1 then:
         # Maintain a timestamp along with the generation ID.  Hold onto the
@@ -132,7 +142,7 @@ class ApiClientBase(object):
         return env
 
     @staticmethod
-    def render(template, content_type=DEFAULT_CONTENT_TYPE, **message):
+    def render(template, formatter=DEFAULT_FORMATTER, **message):
         """ Render API message from it's template
 
         :param template: defined API message with essential params.
@@ -146,12 +156,11 @@ class ApiClientBase(object):
         _template = jinja2.Template(template)
         _template.environment.globals.update(env)
         msg = _template.render(**message)
-        if content_type in [DEFAULT_CONTENT_TYPE,
-                            const.FGD_CONTENT_TYPE]:
+        if formatter == DEFAULT_FORMATTER:
             return jsonutils.loads(msg)
         else:
             LOG.error("The content_type %(ct)s is not supported yet.",
-                      {'ct': content_type})
+                      {'ct': formatter})
             raise ValueError('The content_type is not supported yet')
 
     @staticmethod

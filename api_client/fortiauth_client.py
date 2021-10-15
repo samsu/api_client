@@ -39,6 +39,8 @@ class FortiAuthApiClient(client.ApiClient):
     user_agent = 'FortiAuth Python API Client'
 
     def __init__(self, api_providers, user=None, password=None,
+                 key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
+                 verify_peer=False,
                  concurrent_connections=DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -57,7 +59,9 @@ class FortiAuthApiClient(client.ApiClient):
         :param redirects: the number of concurrent connections.
         '''
         super(FortiAuthApiClient, self).__init__(
-            api_providers, user, password,
+            api_providers, user, password, key_file=key_file,
+            verify_peer=verify_peer,
+            cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
             concurrent_connections=concurrent_connections,
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
@@ -71,6 +75,11 @@ class FortiAuthApiClient(client.ApiClient):
         self.message = {}
         self._user = user
         self._password = password
+        self._key_file = key_file
+        self._cert_file = cert_file
+        self._ca_file = ca_file
+        # SSL server_name_indication
+        self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._template = templates
 
@@ -81,24 +90,8 @@ class FortiAuthApiClient(client.ApiClient):
         :param headers: Not use here
         :return: return authenticated Header
         """
-        return {'Authorization': self.format_auth_basic()}
-
-    def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
-        """
-        Issues request to controller.
-        """
-        self.message = self.render(getattr(self._template, opt),
-                                   content_type=content_type, **message)
-        method = self.message['method']
-        url = self.message['path']
-        body = self.message['body'] if 'body' in self.message else None
-        g = generic_request.GenericRequest(
-            self, method, url, body, content_type, self.user_agent,
-            auto_login=self._auto_login,
-            http_timeout=self._http_timeout,
-            retries=self._retries, redirects=self._redirects)
-        response = g.start()
-        return self.request_response(method, url, response)
+        if not self._key_file:
+            return {'Authorization': self.format_auth_basic()}
 
     def request_response(self, method, url, response, **kwargs):
         if response:
