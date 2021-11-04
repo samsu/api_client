@@ -9,4 +9,4 @@ eventlet # MIT
 iso8601>=0.1.11 # MIT
 Jinja2>=2.10.1 # BSD License (3 clause)
 oslo.log>=3.22.0 # Apache-2.0
-pycrypto
+PyCryptodome

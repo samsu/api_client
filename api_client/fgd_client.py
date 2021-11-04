@@ -198,6 +198,8 @@ class FortiGuardApiClient(client.ApiClient):
 
     @staticmethod
     def decrypt(string, key):
+        if hasattr(key, 'encode'):
+            key = key.encode('utf8')
         cipher = DES.new(key, DES.MODE_CBC, key)
         decrypted_string = ''
         for i in range(0, len(string), len(key)):
