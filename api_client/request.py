@@ -144,6 +144,7 @@ class ApiRequest(object):
 
                 response = conn.getresponse()
                 content_type = response.getheader('content-type') or ''
+                response.content_type = content_type
                 response.body = response.read()
                 response.headers = response.getheaders()
                 if DEFAULT_CONTENT_TYPE in content_type and response.body:

@@ -157,6 +157,9 @@ class ApiClient(eventlet_client.EventletApiClient):
     @staticmethod
     def request_response_body(response, **kwargs):
         if response and response.body:
+            if DEFAULT_CONTENT_TYPE not in response.content_type:
+                LOG.debug("response.body = %(body)s", {'body': response.body})
+                return response.body
             try:
                 result = jsonutils.loads(response.body)
                 LOG.debug("response.body = %(body)s", {'body': result})
@@ -167,7 +170,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                           {'body': response.body})
                 return jsonutils.loads(response.body, encoding='ISO-8859-1')
             except ValueError:
-                LOG.info("Cannot decode response body with json, "
+                LOG.debug("Cannot decode response body with json, "
                          "return body directly '%(body)s'",
                          {'body': response.body})
                 return response.body

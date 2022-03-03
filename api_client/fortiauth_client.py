@@ -17,12 +17,12 @@
 
 from oslo_log import log as logging
 
-from api_client import base
-from api_client import constants as const
-from api_client import client
-
-from api_client import generic_request
-from api_client.templates import fortiauth as templates
+from . import exceptions
+from . import base
+from . import constants as const
+from . import client
+from . import generic_request
+from .templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -94,6 +94,11 @@ class FortiAuthApiClient(client.ApiClient):
             return {'Authorization': self.format_auth_basic()}
 
     def request_response(self, method, url, response, **kwargs):
+        if response is None:
+            # Timeout.
+            LOG.error('Request timed out: %(method)s to %(url)s',
+                      {'method': method, 'url': url})
+            raise exceptions.RequestTimeout()
         if response:
             response.body = self.request_response_body(response)
         return response

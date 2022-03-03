@@ -640,3 +640,11 @@ UPLOAD_LICENSE = """
     "method": "POST"
 }
 """
+
+UPGRADE_FIRMWARE = """
+{
+    "path": "/api/v1/upgrade/",
+    "body": "{{ body }}",
+    "method": "POST"
+}
+"""
