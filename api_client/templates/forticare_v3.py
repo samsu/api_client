@@ -317,6 +317,58 @@ GET_MIGRATION_TAG = """
 }
 """
 
+GET_BATCH_FORTITRUST_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetProductEntitlementsForAllAccounts",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetProductEntitlementsForAllAccountsPayload"
+        }
+    }
+}
+"""
+
+GET_FORTITRUST_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetProductEntitlementsPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+GET_FAC_LICENSE_FILE = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetFACVMLicense",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetFACVMLicensePayload",
+            "account_id": "{{ id }}",
+            "serial_number": "{{ sn }}"
+        }
+    }
+}
+"""
+
+GET_FORTITRUST_IAM_ENTITLEMENT = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetProductEntitlementsForUser",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetProductEntitlementsForUserPayload",
+            "iam_account_name": "{{ iam_account_name }}",
+            "iam_user_name": "{{ iam_user_name }}"
+        }
+    }
+}
+"""
 
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
