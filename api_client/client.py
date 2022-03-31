@@ -94,7 +94,8 @@ class ApiClient(eventlet_client.EventletApiClient):
             return {'Host': self._ssl_sni}
         return {}
 
-    def request(self, opt, content_type=DEFAULT_CONTENT_TYPE, **message):
+    def request(self, opt, content_type=DEFAULT_CONTENT_TYPE,
+                http_timeout=None, **message):
         """
         Issues request to controller.
         """
@@ -102,10 +103,11 @@ class ApiClient(eventlet_client.EventletApiClient):
         method = self.message['method']
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
+        http_timeout = http_timeout or self._http_timeout
         g = eventlet_request.GenericRequestEventlet(
             self, method, url, body, content_type, self.user_agent,
             auto_login=self._auto_login,
-            http_timeout=self._http_timeout,
+            http_timeout=http_timeout,
             retries=self._retries, redirects=self._redirects,
             singlethread=self._singlethread)
         g.start()
