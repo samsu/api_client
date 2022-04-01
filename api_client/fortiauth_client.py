@@ -93,6 +93,13 @@ class FortiAuthApiClient(client.ApiClient):
         if not self._key_file:
             return {'Authorization': self.format_auth_basic()}
 
+    def render(self, opt, formatter=const.DEFAULT_FORMATTER, **message):
+        body = message.pop('body', None)
+        msg = super(FortiAuthApiClient,
+                    self).render(opt, formatter=formatter, **message)
+        msg.setdefault('body', body)
+        return msg
+
     def request_response(self, method, url, response, **kwargs):
         if response is None:
             # Timeout.

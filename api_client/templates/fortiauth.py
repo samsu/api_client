@@ -628,7 +628,6 @@ BACKUP_CONFIG = """
 RESTORE_CONFIG = """
 {
     "path": "/api/v1/recovery/",
-    "body": "{{ body }}",
     "method": "POST"
 }
 """
@@ -636,7 +635,6 @@ RESTORE_CONFIG = """
 UPLOAD_LICENSE = """
 {
     "path": "/api/v1/licensing/",
-    "body": "{{ body }}",
     "method": "POST"
 }
 """
@@ -644,7 +642,6 @@ UPLOAD_LICENSE = """
 UPGRADE_FIRMWARE = """
 {
     "path": "/api/v1/upgrade/",
-    "body": "{{ body }}",
     "method": "POST"
 }
 """
