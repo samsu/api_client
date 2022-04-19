@@ -39,6 +39,7 @@ class EventletApiClient(base.ApiClientBase):
 
     def __init__(self, api_providers, user, password,
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
+                 verify_peer=True,
                  concurrent_connections=base.DEFAULT_CONCURRENT_CONNECTIONS,
                  gen_timeout=base.GENERATION_ID_TIMEOUT,
                  use_https=True,
@@ -68,6 +69,7 @@ class EventletApiClient(base.ApiClientBase):
         self._key_file = key_file
         self._cert_file = cert_file
         self._ca_file = ca_file
+        self._verify_peer = verify_peer
         # SSL server_name_indication
         self._ssl_sni = ssl_sni
         self._concurrent_connections = concurrent_connections

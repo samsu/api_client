@@ -499,3 +499,149 @@ GET_SYSTEMINFO = """
     "method": "GET"
 }
 """
+
+GET_FTPSERVERS = """
+{
+    {% if id is defined %}
+        "path": "/api/v1/ftpservers/{{ translate_uri_chars(id) }}/",
+    {% else %}
+        "path": "/api/v1/ftpservers/",
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+CREATE_FTPSERVER = """
+{
+    "path": "/api/v1/ftpservers/",
+    "method": "POST",
+    "body": {
+        {%
+            set _options = {
+                "username": username,
+                "password": password,
+                "anonymous": anonymous
+            }
+        %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "name": "{{ name }}",
+        "address": "{{ address  }}",
+        "port": {{ port }},
+        "conn_type": "{{ conn_type }}"
+    }
+}
+"""
+
+MODIFY_FTPSERVER = """
+{
+    "path": "/api/v1/ftpservers/{{ id }}/",
+    "method": "PATCH",
+    "body": {
+        {%
+            set _options = {
+                "username": username,
+                "password": password,
+                "anonymous": anonymous,
+                "name": name,
+                "address": address,
+                "conn_type": conn_type
+            }
+        %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        {% if port is defined %}
+            "port": {{ port }},
+        {% endif %}
+    }
+}
+"""
+
+DELETE_FTPSERVER = """
+{
+    "path": "/api/v1/ftpservers/{{ id }}/",
+    "method": "DELETE"
+}
+"""
+
+GET_SCHEDULED_BACKUP_SETTING = """
+{
+    "path": "/api/v1/scheduledbackupsettings/",
+    "method": "GET"
+}
+"""
+
+CREATE_SCHEDULED_BACKUP_SETTING = """
+{
+    "path": "/api/v1/scheduledbackupsettings/",
+    "method": "POST",
+    "body": {
+        {%
+            set _options = {
+                "directory": directory,
+                "ftp": ftp,
+                "ftp_2": ftp_2,
+                "frequency": frequency,
+                "time": time
+            }
+        %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "enabled": "{{ enabled }}"
+    }
+}
+"""
+
+MODIFY_SCHEDULED_BACKUP_SETTING = """
+{
+    "path": "/api/v1/scheduledbackupsettings/",
+    "method": "PATCH",
+    "body": {
+        {%
+            set _options = {
+                "directory": directory,
+                "ftp": ftp,
+                "ftp_2": ftp_2,
+                "frequency": frequency,
+                "time": time,
+            }
+        %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "enabled": "{{ enabled }}"
+    }
+}
+"""
+
+#  v6.3.0
+BACKUP_CONFIG = """
+{
+    "path": "/api/v1/recovery/",
+    "method": "GET"
+}
+"""
+
+RESTORE_CONFIG = """
+{
+    "path": "/api/v1/recovery/",
+    "method": "POST"
+}
+"""
+
+UPLOAD_LICENSE = """
+{
+    "path": "/api/v1/licensing/",
+    "method": "POST"
+}
+"""
+
+UPGRADE_FIRMWARE = """
+{
+    "path": "/api/v1/upgrade/",
+    "method": "POST"
+}
+"""

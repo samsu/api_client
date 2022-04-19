@@ -183,11 +183,11 @@ class FortiGuardApiClient(client.ApiClient):
             return obj
         return None
 
-    def render(self, opt, content_type=const.FGD_CONTENT_TYPE, **message):
+    def render(self, opt, formatter=const.DEFAULT_FORMATTER, **message):
         if 'fw_version' not in message:
             message['fw_version'] = const.FTC_FW_VERSION
         msg = super(FortiGuardApiClient,
-                    self).render(opt, content_type, **message)
+                    self).render(opt, formatter=formatter, **message)
         body = bytearray(self._pack_req(msg['body'],
                                         message.get('fw_version')))
         msg['body'] = body
