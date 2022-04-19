@@ -289,3 +289,81 @@ GET_MIGRATION_TAG = """
 
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
+
+
+GET_SMS_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetSMSBalance",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetSMSBalancePayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_BATCH_SMS_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetSMSBalanceForAllAccounts",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetSMSBalanceForAllAccountsPayload"
+        }
+    }
+}
+"""
+
+
+POST_SMS_USAGE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/UpdateSMSUsage",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.UpdateSMSUsagePayload",
+            {% if name_space is defined %}
+                "name_space": "{{ name_space }}",
+            {% else %}
+                "name_space": "",
+            {% endif %}
+            "account_id": "{{ account_id }}",
+            "serial_number": "{{ serial_number }}",
+            "unique_id": "{{ unique_id }}",
+            "start_date": "{{ start_date }}",
+            "end_date": "{{ end_date }}",
+            "used_points": "{{ used_points }}"
+        }
+    }
+}
+"""
+
+
+GET_FORTITRUST_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetProductEntitlementsPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_BATCH_FORTITRUST_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiTrust/FortiTrustService.asmx/GetProductEntitlementsForAllAccounts",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTrust.GetProductEntitlementsForAllAccountsPayload"
+        }
+    }
+}
+"""
