@@ -68,7 +68,7 @@ class EventletApiRequest(request.ApiRequest):
         self._api_client = client_obj
         self._url = url
         self._method = method
-        self._body = body if body else None
+        self._body = body
         self._headers = headers or {}
         self._request_timeout = http_timeout * retries
         self._retries = retries

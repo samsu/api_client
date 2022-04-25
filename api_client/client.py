@@ -160,7 +160,8 @@ class ApiClient(eventlet_client.EventletApiClient):
     def request_response_body(response, **kwargs):
         if response and response.body:
             if DEFAULT_CONTENT_TYPE not in response.content_type:
-                LOG.debug("response.body = %(body)s", {'body': response.body})
+                if response.content_type != const.FGD_CONTENT_TYPE:
+                    LOG.debug("response.body = %(body)s", {'body': response.body})
                 return response.body
             try:
                 result = jsonutils.loads(response.body)

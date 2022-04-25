@@ -100,7 +100,8 @@ class FortiAuthApiClient(client.ApiClient):
         body = message.pop('body', None)
         msg = super(FortiAuthApiClient,
                     self).render(opt, formatter=formatter, **message)
-        msg.setdefault('body', body)
+        if body is not None:
+            msg.setdefault('body', body)
         return msg
 
     def request_response(self, method, url, response, **kwargs):
