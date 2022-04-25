@@ -184,8 +184,9 @@ class ApiClientBase(object):
         return auth_data
 
     def format_auth_basic(self):
-        auth = '{}:{}'.format(self._user, self._password)
-        return "Basic {}".format(base64.encodestring(auth).replace('\n', ''))
+        auth = '{}:{}'.format(self._user, self._password).encode()
+        auth = base64.encodestring(auth).decode().replace('\n', '')
+        return "Basic {}".format(auth)
 
     def set_auth_basic(self, conn, auth_basic=None):
         """ keep required http headers for authentication
