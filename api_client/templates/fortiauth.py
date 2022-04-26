@@ -378,7 +378,7 @@ CREATE_SMTPSERVER = """
         "authentication_password": "{{ authentication_password }}",
         {% endif %}
         {% if default is defined %}
-        "default": {{ default }},
+        "default": "{{ default }}",
         {% endif %}
         "name": "{{ name }}"
     }
@@ -393,6 +393,7 @@ MODIFY_SMTPSERVER = """
         {%
             set _options = {
                 "name": name,
+                "default": default,
                 "sender_email": sender_email,
                 "sender_name": sender_name,
                 "address": address,
@@ -407,7 +408,6 @@ MODIFY_SMTPSERVER = """
         {%
             set _non_str_options = {
                 "port": port,
-                "default": default,
                 "authentication": authentication
             }
         %}
@@ -627,12 +627,13 @@ MODIFY_SCHEDULED_BACKUP_SETTING = """
 #  v6.3.0
 BACKUP_CONFIG = """
 {
-  {% if key is defined %}
-    "path": "/api/v1/recovery/?key={{ key }}",
-  {% else %}
     "path": "/api/v1/recovery/",
-  {% endif %}
-    "method": "GET"
+    "method": "GET",
+    "body": {
+        {% if key is defined %}
+            "key": "{{ key }}"
+        {% endif %}
+    }
 }
 """
 
