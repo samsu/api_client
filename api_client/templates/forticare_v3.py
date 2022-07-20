@@ -370,5 +370,84 @@ GET_FORTITRUST_IAM_ENTITLEMENT = """
 }
 """
 
+GET_ORG_DETAILS = """
+{
+    "path": "/CloudAPI/V3/Common/FortinetOneCommonService.asmx/GetOrgDetails",
+    "method": "POST",
+    "body": {
+        "d": {
+            {% set _options = {
+                "account_email": account_email,
+                "account_id": customer_id,
+                "user_id": user_id,
+                "iam_account_name": iam_account_name,
+                "iam_user_name": iam_user_name
+            } %}
+            {% for k, v in _options.items() if v is defined %}
+                "{{ k }}": "{{ v }}",
+            {% endfor %}
+            "__type": "FortinetOne.API.V3.Common.GetOrgDetailsPayload"
+        }
+    }
+}
+"""
+
+# get org/ou structure
+GET_USER_ORGNODES = """
+{
+    "path": "/CloudAPI/V3/Common/FortinetOneAuthService.asmx/GetUserOrgNodes",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetUserOrgNodesPayload",
+            "auth_attributes": [
+            {% set _options = {
+                "Authentication_status": auth_status
+            } %}
+            {% for k, v in _options.items() if v is defined %}
+                {
+                    "name": "{{ k }}",
+                    "value": "{{ v }}"
+                },
+            {% endfor %}
+                {
+                    "name": "NameID",
+                    "value": "{{ name_id }}"
+                }
+            ]
+        }
+    }
+}
+"""
+
+# get user permission for org/ou node
+GET_USER_NODEPERMISSION = """
+{
+    "path": "/CloudAPI/V3/Common/FortinetOneAuthService.asmx/GetUserPermissionsForOrgNode",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetUserPermissionsForOrgNodePayload",
+            "node_id": {{ node_id }},
+            "auth_attributes": [
+            {% set _options = {
+                "Authentication_status": auth_status
+            } %}
+            {% for k, v in _options.items() if v is defined %}
+                {
+                    "name": "{{ k }}",
+                    "value": "{{ v }}"
+                },
+            {% endfor %}
+                {
+                    "name": "NameID",
+                    "value": "{{ name_id }}"
+                }
+            ]
+        }
+    }
+}
+"""
+
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
