@@ -74,19 +74,19 @@ MODIFY_USERGROUP = """
         {% if users is defined %}
             "users": ["{{ users }}"]
         {% endif %}
-     }    
+     }
 }
 """
 
 # delete an usergroup
 DELETE_USERGROUP = """
-{    
+{
     {% if id is defined %}
         "path": "/api/v1/usergroups/{{ id }}/",
     {% elif resource_uri is defined %}
         "path": "{{ resource_uri }}",
-    {% endif %}        
-    "method": "DELETE" 
+    {% endif %}
+    "method": "DELETE"
 }
 """
 
@@ -174,7 +174,7 @@ CREATE_USER = """
         {% endif %}
         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
-        {% endfor %}        
+        {% endfor %}
         "username": "{{ username }}"
     }
 }
@@ -309,7 +309,7 @@ CREATE_PUSHAUTHRESP = """
     "method": "POST",
     "body": {
         {%
-            set _options = {                
+            set _options = {
                 "token_code": token_code,
                 "session_id": session_id,
                 "message": message,
@@ -359,27 +359,21 @@ CREATE_SMTPSERVER = """
     "body": {
         "sender_email": "{{ sender_email }}",
         "address": "{{ address }}",
-        {% if port is defined %}
-        "port": "{{ port }}",
-        {% endif %}
-        {% if sender_name is defined %}
-        "sender_name": "{{ sender_name }}",
-        {% endif %}
-        {% if secure is defined %}
-        "secure": "{{ secure }}",
-        {% endif %}
-        {% if authentication is defined %}
-        "authentication": "{{ authentication }}",
-        {% endif %}
-        {% if authentication_name is defined %}
-        "authentication_name": "{{ authentication_name }}",
-        {% endif %}
-        {% if authentication_password is defined %}
-        "authentication_password": "{{ authentication_password }}",
-        {% endif %}
-        {% if default is defined %}
-        "default": "{{ default }}",
-        {% endif %}
+        {%
+            set _options = {
+                "default": default,
+                "sender_name": sender_name,
+                "secure": secure,
+                "authentication_name": authentication_name,
+                "authentication_password": authentication_password,
+                "port": port,
+                "authentication": authentication
+            }
+        %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+
         "name": "{{ name }}"
     }
 }
@@ -399,22 +393,15 @@ MODIFY_SMTPSERVER = """
                 "address": address,
                 "secure": secure,
                 "authentication_name": authentication_name,
-                "authentication_password": authentication_password
-            }
-        %}
-        {% for k, v in _options.items() if v is defined %}
-            "{{ k }}": "{{ v }}",
-        {% endfor %}
-        {%
-            set _non_str_options = {
+                "authentication_password": authentication_password,
                 "port": port,
                 "authentication": authentication
             }
         %}
-        {% for k, v in _non_str_options.items() if v is defined %}
-            "{{ k }}": {{ v }},
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}"
+            {{ "," if not loop.last }}
         {% endfor %}
-        "id": {{ id }}
     }
 }
 
@@ -743,7 +730,6 @@ MODIFY_SNMP_COMMUNITY = """
     "body": {
         {%
             set _options = {
-                "name": name,
                 "cpu": cpu,
                 "memory": memory,
                 "disk": disk,
