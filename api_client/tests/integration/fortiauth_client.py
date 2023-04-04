@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import time
 import os
@@ -14,17 +14,17 @@ if __name__ == "__main__":
     user = "admin"
     password = "slRFUJKlKYTOM17fK6UYP8lxVS84bEj3N1gkUvUZ"
     cli = ApiClient(api, user, password)
-    #print "----TESTING USER_GROUPS------"
+    # print("----TESTING USER_GROUPS------")
     message = {
         "name": "test123"
     }
-    print "----TESTING USERGROUPS------"
+    print("----TESTING USERGROUPS------")
     cli.request('GET_USERGROUPS')
     cli.request("CREATE_USERGROUP", **message)
     cli.request('GET_USERGROUPS', **message)
     cli.request("DELETE_USERGROUP", **message)
 
-    print "----TESTING USERS------"
+    print("----TESTING USERS------")
     message = {
         "username": "test_1"
     }
@@ -50,9 +50,9 @@ if __name__ == "__main__":
     message = {
         "status": "available"
     }
-    print "----TESTING FORTITOKENS------"
+    print("----TESTING FORTITOKENS------")
     cli.request("GET_FORTITOKENS", **message)
     cli.request("GET_FORTITOKENS")
 
-    print "----TESTING SYSTEMINFO------"
+    print("----TESTING SYSTEMINFO------")
     cli.request("GET_SYSTEMINFO")
