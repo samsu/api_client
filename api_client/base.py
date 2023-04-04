@@ -146,7 +146,7 @@ class ApiClientBase(object):
         """ Render API message from it's template
 
         :param template: defined API message with essential params.
-        :param content_type: http content type
+        :param formatter: http content type
         :param message: It is a dictionary, included values of the params
                         for the template
         """
@@ -234,8 +234,8 @@ class ApiClientBase(object):
         '''Check out an available HTTPConnection instance.
 
         Blocks until a connection is available.
-        :auto_login: automatically logins before returning conn
-        :headers: header to pass on to login attempt
+        :param auto_login: automatically logins before returning conn
+        :param headers: header to pass on to login attempt
         :param rid: request id passed in from request eventlet.
         :returns: An available HTTPConnection instance or None if no
                  api_providers are configured.
@@ -271,7 +271,7 @@ class ApiClientBase(object):
             instance.
         :param bad_state: True if http_conn is known to be in a bad state
                 (e.g. connection fault.)
-        :service_unavail: True if http_conn returned 503 response.
+        :param service_unavail: True if http_conn returned 503 response.
         :param rid: request id passed in from request eventlet.
         '''
         conn_params = self._conn_params(http_conn)
@@ -481,9 +481,19 @@ def wrap_socket(sock, keyfile=None, certfile=None,
                 suppress_ragged_eofs=True,
                 ciphers=None,
                 server_hostname=None):
-    return ssl.SSLSocket(sock=sock, keyfile=keyfile, certfile=certfile,
-                         server_side=server_side, cert_reqs=cert_reqs,
-                         ssl_version=ssl_version, ca_certs=ca_certs,
-                         do_handshake_on_connect=do_handshake_on_connect,
-                         suppress_ragged_eofs=suppress_ragged_eofs,
-                         ciphers=ciphers, server_hostname=server_hostname)
+    sock = ssl.wrap_socket(sock=sock, keyfile=keyfile, certfile=certfile,
+                           server_side=server_side, cert_reqs=cert_reqs,
+                           ssl_version=ssl_version, ca_certs=ca_certs,
+                           do_handshake_on_connect=do_handshake_on_connect,
+                           suppress_ragged_eofs=suppress_ragged_eofs,
+                           ciphers=ciphers)
+    # Set SNI headers if supported
+    if (server_hostname is not None) and (
+            hasattr(ssl, 'HAS_SNI') and ssl.HAS_SNI) and (
+            hasattr(ssl, 'SSLContext')):
+        context = ssl.SSLContext(opts['ssl_version'])
+        context.verify_mode = cert_reqs
+        context.check_hostname = True
+        context.load_cert_chain(certfile, keyfile)
+        sock = context.wrap_socket(sock, server_hostname=server_hostname)
+    return sock
