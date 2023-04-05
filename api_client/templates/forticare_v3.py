@@ -462,7 +462,7 @@ GET_ORG_DETAILS = """
                 "org_id": org_id,
                 "ou_id": ou_id,
                 "iam_account_name": iam_account_name,
-                "iam_user_name": iam_user_name
+                "iam_user_name": iam_username
             } %}
             {% for k, v in _options.items() if v is defined %}
                 "{{ k }}": "{{ v }}",
