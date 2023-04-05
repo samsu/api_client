@@ -477,10 +477,12 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
 def wrap_socket(sock, keyfile=None, certfile=None,
                 server_side=False, cert_reqs=ssl.CERT_NONE,
                 ssl_version=ssl.PROTOCOL_TLSv1_2, ca_certs=None,
-                do_handshake_on_connect=True,
+                do_handshake_on_connect=False,
                 suppress_ragged_eofs=True,
                 ciphers=None,
                 server_hostname=None):
+    if server_hostname is None:
+        do_handshake_on_connect = True
     sock = ssl.wrap_socket(sock=sock, keyfile=keyfile, certfile=certfile,
                            server_side=server_side, cert_reqs=cert_reqs,
                            ssl_version=ssl_version, ca_certs=ca_certs,
@@ -491,9 +493,12 @@ def wrap_socket(sock, keyfile=None, certfile=None,
     if (server_hostname is not None) and (
             hasattr(ssl, 'HAS_SNI') and ssl.HAS_SNI) and (
             hasattr(ssl, 'SSLContext')):
-        context = ssl.SSLContext(opts['ssl_version'])
+        context = ssl.SSLContext(ssl_version)
         context.verify_mode = cert_reqs
-        context.check_hostname = True
-        context.load_cert_chain(certfile, keyfile)
+        context.check_hostname = False
+        if (certfile is not None) and (keyfile is not None):
+            context.load_cert_chain(certfile, keyfile)
+        if ca_certs:
+            context.load_verify_locations(ca_certs)
         sock = context.wrap_socket(sock, server_hostname=server_hostname)
     return sock
