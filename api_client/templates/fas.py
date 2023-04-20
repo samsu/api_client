@@ -472,3 +472,9 @@ GET_COUNT_AUTH = """
 }
 """
 
+GET_OPENID_CONFIGURATION = """
+{
+    "path": "/api/v1/.well-known/openid-configuration",
+    "method": "GET"
+}
+"""
