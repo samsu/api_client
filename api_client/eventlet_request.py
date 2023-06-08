@@ -158,7 +158,8 @@ class EventletApiRequest(request.ApiRequest):
                     # the bug to handle return 400 situation.
                     # when fortios fix the bug, here should use
                     # 'req.status in (401, 403)' instead
-                    if req.status in (400, 401, 403):
+                    # 303 for fortipam cookie expiration code
+                    if req.status in (400, 401, 403, 303):
                         continue
                     elif req.status == 503:
                         timeout = 0.5

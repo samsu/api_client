@@ -172,7 +172,7 @@ class ApiRequest(object):
                            'response.headers': response.headers,
                            'response.body': response_body})
 
-                if response.status in (401, 302):
+                if response.status in (401, 302, 303):
                     # if response.headers:
                     login_msg = self._api_client.login_msg()
                     if auth is None and login_msg:
