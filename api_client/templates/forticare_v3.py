@@ -590,3 +590,16 @@ POST_SMS_USAGE = """
 }
 """
 
+
+GET_DEVICE_LIST = """
+{
+    "path": "/CloudAPI/V3/Common/FortinetOneProductService.asmx/GetProductList",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.Common.GetProductListPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
