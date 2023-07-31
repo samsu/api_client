@@ -30,6 +30,7 @@ LOG = logging.getLogger(__name__)
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
+SESSION_EXPIRE_CODE = -11
 
 
 class FortiAnalyzerApiClient(client.ApiClient):
@@ -120,20 +121,27 @@ class FortiAnalyzerApiClient(client.ApiClient):
                 response = self.request_response_body(ret)
                 self._session = response["session"]
 
-    def request(self, opt, http_timeout=None, **message):
+    def request(self, opt, **message):
         """
         Issues request to controller.
         """
+        response = self._request(opt, **message)
+        if response and (response['result'][0]['status']['code'] ==
+                         SESSION_EXPIRE_CODE):
+            # could be session expired, try again
+            self._session = None
+            response = self._request(opt, **message)
+        return response
+
+    def _request(self, opt, **message):
         self._login()
         message.update({'session': self._session})
         body = self.render(getattr(self._template, opt), **message)
-        http_timeout = http_timeout or self._http_timeout
         g = eventlet_request.GenericRequestEventlet(
             self, self._method, self._url, body, const.DEFAULT_CONTENT_TYPE,
             self.user_agent, auto_login=self._auto_login,
-            http_timeout=http_timeout,
+            http_timeout=self._http_timeout,
             retries=self._retries, redirects=self._redirects,
             singlethread=self._singlethread)
         g.start()
-        response = self.request_response(self._method, self._url, g.join())
-        return response
+        return self.request_response(self._method, self._url, g.join())

@@ -1,5 +1,6 @@
 import sys
 import logging
+import time
 logger = logging.getLogger('test')
 formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=formatter)
