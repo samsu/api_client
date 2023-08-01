@@ -31,6 +31,8 @@ DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 SESSION_EXPIRE_CODE = -11
+FAZ_URL = "/jsonrpc"
+FAZ_METHOD = "POST"
 
 
 class FortiAnalyzerApiClient(client.ApiClient):
@@ -90,9 +92,9 @@ class FortiAnalyzerApiClient(client.ApiClient):
         else:
             self._template = default_template
 
-        self._url = "/jsonrpc"
-        self._session=session
-        self._method = "POST"
+        self._url = FAZ_URL
+        self._method = FAZ_METHOD
+        self._session = session
     
     def _login(self, conn=None, headers=None):
         """ FAZ login method.
@@ -101,25 +103,23 @@ class FortiAnalyzerApiClient(client.ApiClient):
         :param headers: Not use here
         :return: void
         """
-        if not self._session:
-            body = self.render(
-                getattr(self._template, 'LOGIN'), user=self._user,
-                password=self._password
-            )
-            login_headers = {'Content-Type': 'application/json'}
-            g = eventlet_request.EventletApiRequest(
-                self, self._url, method='POST', body=body,
-                headers=login_headers, auto_login=self._auto_login,
-                client_conn=conn
-            )
-            g.start()
-            ret = g.join()
-            if ret:
-                if isinstance(ret, Exception):
-                    LOG.error('Login error "%s"', ret)
-                    raise ret
-                response = self.request_response_body(ret)
-                self._session = response["session"]
+        body = self.render(
+            getattr(self._template, 'LOGIN'), user=self._user,
+            password=self._password
+        )
+        g = eventlet_request.EventletApiRequest(
+            self, self._url, method='POST', body=body,
+            headers=const.DEFAULT_HTTP_HEADERS,
+            auto_login=self._auto_login, client_conn=conn
+        )
+        g.start()
+        ret = g.join()
+        if ret:
+            if isinstance(ret, Exception):
+                LOG.error('Login error "%s"', ret)
+                raise ret
+            response = self.request_response_body(ret)
+            self._session = response["session"]
 
     def request(self, opt, **message):
         """
@@ -134,7 +134,8 @@ class FortiAnalyzerApiClient(client.ApiClient):
         return response
 
     def _request(self, opt, **message):
-        self._login()
+        if self._session is None:
+            self._login()
         message.update({'session': self._session})
         body = self.render(getattr(self._template, opt), **message)
         g = eventlet_request.GenericRequestEventlet(

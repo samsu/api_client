@@ -61,7 +61,6 @@ ADD_DEVICE = """
 }
 """
 
-
 DEL_DEVICE = """
 {
   "method": "exec",
@@ -148,7 +147,6 @@ ADD_FORWARDER = """
   "session": "{{ session }}"
 }
 """
-
 
 EDIT_FORWARDER = """
 {
