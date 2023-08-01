@@ -18,6 +18,11 @@
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
+
 from . import base
 from . import client
 from . import constants as const
@@ -97,7 +102,6 @@ class FortiAnalyzerApiClient(client.ApiClient):
         :return:
         """
         data = self._get_provider_data(conn)
-        print("## set_auth_data() data = ", data)
         if data:
             self._set_provider_data(conn, (data[0], session))
 
@@ -110,13 +114,13 @@ class FortiAnalyzerApiClient(client.ApiClient):
     @staticmethod
     def auth_required(response):
         body = None
+        if not isinstance(response, httplib.HTTPResponse):
+            return False
         content_type = response.content_type or ''
         if const.DEFAULT_CONTENT_TYPE in content_type and response.body:
             body = jsonutils.loads(response.body)
-
-        if not response or not isinstance(body, dict):
+        if not isinstance(body, dict):
             return True
-
         if body['result'][0]['status']['code'] == SESSION_EXPIRE_CODE:
             return True
         return False

@@ -156,7 +156,6 @@ class EventletApiRequest(request.ApiRequest):
                     # 'req.status in (401, 403)' instead
                     # 303 for fortipam cookie expiration code
                     if self._api_client.auth_required(req):
-                    # if req.status in (400, 401, 403, 303):
                         continue
                     elif req.status == 503:
                         timeout = 0.5

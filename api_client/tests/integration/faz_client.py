@@ -13,10 +13,11 @@ ApiClient = client.FortiAnalyzerApiClient
 
 
 if __name__ == "__main__":
-    faz_ip = "10.160.37.137"
-    rmt_faz_ip = "10.160.37.138"
-    user = "admin"
-    password = "fortinet"
+    # replace the following ip and credential before run
+    faz_ip = "192.168.0.1"
+    rmt_faz_ip = "192.168.0.2"
+    user = "xxx"
+    password = "xxx"
     api = [(faz_ip, 443, True)]
     cli = ApiClient(api, user=user, password=password)
 
