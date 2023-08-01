@@ -64,7 +64,7 @@ class GenericApiRequest(request.ApiRequest):
                  auto_login=True,
                  redirects=DEFAULT_REDIRECTS,
                  http_timeout=DEFAULT_HTTP_TIMEOUT, client_conn=None):
-        '''Constructor.'''
+        """Constructor."""
         self._api_client = client_obj
         self._url = url
         self._method = method
@@ -142,7 +142,7 @@ class GenericApiRequest(request.ApiRequest):
 
 
 class LoginRequestEventlet(GenericApiRequest):
-    '''Process a login request.'''
+    """Process a login request."""
 
     def __init__(self, client_obj, user, password, client_conn=None,
                  headers=None):

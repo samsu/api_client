@@ -32,11 +32,11 @@ from oslo_serialization import jsonutils
 from oslo_utils import excutils
 import six
 import six.moves.urllib.parse as urlparse
-import traceback
 
 from ._i18n import _, _LI, _LW
 from .common import utils
 from . import constants as const
+from . import exceptions as ex
 
 LOG = logging.getLogger(__name__)
 
@@ -51,11 +51,11 @@ DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 @six.add_metaclass(abc.ABCMeta)
 class ApiRequest(object):
-    '''An abstract baseclass for all ApiRequest implementations.
+    """An abstract baseclass for all ApiRequest implementations.
 
     This defines the interface and property structure for both eventlet and
     gevent-based ApiRequest classes.
-    '''
+    """
 
     # List of allowed status codes.
     ALLOWED_STATUS_CODES = [
@@ -90,7 +90,7 @@ class ApiRequest(object):
         return conn
 
     def _issue_request(self):
-        '''Issue a request to a provider.'''
+        """Issue a request to a provider."""
         conn = self.get_conn()
         if conn is None:
             error = Exception(_("No API connections available"))
@@ -118,10 +118,12 @@ class ApiRequest(object):
                     conn.sock.settimeout(self._http_timeout)
 
                 headers = copy.copy(self._headers)
-                auth = self._api_client.auth_data(conn)
-                if auth:
-                    headers.update(auth)
                 body = self._body
+                auth = self._api_client.auth_data(conn)
+
+                if auth:
+                    headers, body = self._api_client.apply_auth_data(
+                        conn, headers, body)
                 log_body = None
                 try:
                     content_type = self._headers.get('Content-Type', None)
@@ -171,8 +173,7 @@ class ApiRequest(object):
                            'headers': headers, 'body': log_body,
                            'response.headers': response.headers,
                            'response.body': response_body})
-
-                if response.status in (401, 302, 303):
+                if self._api_client.auth_required(response):
                     # if response.headers:
                     login_msg = self._api_client.login_msg()
                     if auth is None and login_msg:
@@ -188,6 +189,8 @@ class ApiRequest(object):
                     # for the current provider so that subsequent requests
                     # to the same provider triggers re-authentication.
                     self._api_client.set_auth_data(conn, None)
+                    if self._api_client._auto_login:
+                        self._api_client._wait_for_login(conn, headers)
 
                 elif 503 == response.status:
                     is_conn_service_unavail = True
@@ -224,6 +227,7 @@ class ApiRequest(object):
             return response
 
         except Exception as e:
+            ex.Exinfo(e)
             elapsed_time = time.time() - issued_time
             if isinstance(e, httpclient.BadStatusLine):
                 msg = "Invalid server response"
@@ -233,8 +237,8 @@ class ApiRequest(object):
                 log_func = LOG.warning
             log_func(("[{rid}] Failed request '{conn}': '{msg}' "
                       "({elapsed} seconds), error type '{err}'.").format(
-                      rid=self._rid(), conn=self._request_str(conn, url),
-                      msg=msg, elapsed=elapsed_time, err=type(e)))
+                rid=self._rid(), conn=self._request_str(conn, url),
+                msg=msg, elapsed=elapsed_time, err=type(e)))
             self._request_error = e
             is_conn_error = True
             if isinstance(e, (httpclient.BadStatusLine, socket.error)):
@@ -272,7 +276,7 @@ class ApiRequest(object):
         if not url:
             LOG.warning(_LW("[%d] Received redirect status without location "
                             "header field"), self._rid())
-            return (conn, None)
+            return conn, None
         # Accept location with the following format:
         # 1. /path, redirect to same node
         # 2. scheme://hostname:[port]/path where scheme is https or http
@@ -285,16 +289,16 @@ class ApiRequest(object):
                     url = "%s?%s" % (result.path, result.query)
                 else:
                     url = result.path
-                return (conn, url)      # case 1
+                return conn, url  # case 1
             else:
                 LOG.warning(_LW("[%(rid)d] Received invalid redirect location:"
                                 "'%(url)s'"), {'rid': self._rid(), 'url': url})
-                return (conn, None)     # case 3
+                return conn, None  # case 3
         elif result.scheme not in ["http", "https"] or not result.hostname:
             LOG.warning(_LW("[%(rid)d] Received malformed redirect "
                             "location: %(url)s"),
                         {'rid': self._rid(), 'url': url})
-            return (conn, None)  # case 3
+            return conn, None  # case 3
         # case 2, redirect location includes a scheme
         # so setup a new connection and authenticate
         if allow_release_conn:
@@ -306,18 +310,18 @@ class ApiRequest(object):
             url = "%s?%s" % (result.path, result.query)
         else:
             url = result.path
-        return (conn, url)
+        return conn, url
 
     def _rid(self):
-        '''Return current request id.'''
+        """Return current request id."""
         return self._request_id
 
     @property
     def request_error(self):
-        '''Return any errors associated with this instance.'''
+        """Return any errors associated with this instance."""
         return self._request_error
 
     def _request_str(self, conn, url):
-        '''Return string representation of connection.'''
+        """Return string representation of connection."""
         return "%s %s%s" % (self._method, utils.ctrl_conn_to_str(conn),
                             url)

@@ -32,10 +32,9 @@ import time
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 
-from ._i18n import _LE, _LI, _LW
+from ._i18n import _LE, _LI
 from .common import utils
 from . import constants as const
-
 
 LOG = logging.getLogger(__name__)
 GENERATION_ID_TIMEOUT = const.GENERATION_ID_TIMEOUT
@@ -183,6 +182,12 @@ class ApiClientBase(object):
             auth_data = data[1]
         return auth_data
 
+    def apply_auth_data(self, conn, headers, body):
+        auth = self.auth_data(conn)
+        if auth:
+            headers.update(auth)
+        return headers, body
+
     def format_auth_basic(self):
         auth = '{}:{}'.format(self._user, self._password).encode()
         auth = base64.encodestring(auth).decode().replace('\n', '')
@@ -215,7 +220,7 @@ class ApiClientBase(object):
             cookies = Cookie.SimpleCookie(cookie)
             for key, morsel in six.iteritems(cookies):
                 if "ccsrftoken" in morsel.key:
-                    #morsel.coded_value = morsel.value
+                    # morsel.coded_value = morsel.value
                     fmt_headers["X-CSRFTOKEN"] = morsel.value
                     break
             fmt_headers["Cookie"] = cookies.output(header="").lstrip()
@@ -230,8 +235,14 @@ class ApiClientBase(object):
             cookie = self.format_cookie(cookie)
             self._set_provider_data(conn, (data[0], cookie))
 
+    @staticmethod
+    def auth_required(response):
+        if response and response.status in (401, 403, 302, 303):
+            return True
+        return False
+
     def acquire_connection(self, auto_login=True, headers=None, rid=-1):
-        '''Check out an available HTTPConnection instance.
+        """Check out an available HTTPConnection instance.
 
         Blocks until a connection is available.
         :param auto_login: automatically logins before returning conn
@@ -239,7 +250,7 @@ class ApiClientBase(object):
         :param rid: request id passed in from request eventlet.
         :returns: An available HTTPConnection instance or None if no
                  api_providers are configured.
-        '''
+        """
         if self._conn_pool.empty():
             LOG.debug("[%d] Waiting to acquire API client connection.", rid)
         priority, conn = self._conn_pool.get()
@@ -265,7 +276,7 @@ class ApiClientBase(object):
 
     def release_connection(self, http_conn, bad_state=False,
                            service_unavail=False, rid=-1):
-        '''Mark HTTPConnection instance as available for check-out.
+        """Mark HTTPConnection instance as available for check-out.
 
         :param http_conn: An HTTPConnection instance obtained from this
             instance.
@@ -273,7 +284,7 @@ class ApiClientBase(object):
                 (e.g. connection fault.)
         :param service_unavail: True if http_conn returned 503 response.
         :param rid: request id passed in from request eventlet.
-        '''
+        """
         conn_params = self._conn_params(http_conn)
         if self._conn_params(http_conn) not in self._api_providers:
             LOG.debug("[%(rid)d] Released connection %(conn)s is not an "
@@ -414,7 +425,7 @@ class ApiClientBase(object):
         Returns: Normalized conn_param tuple
         """
         if (not isinstance(conn_or_conn_params, tuple) and
-            not isinstance(conn_or_conn_params, httplib.HTTPConnection)):
+                not isinstance(conn_or_conn_params, httplib.HTTPConnection)):
             LOG.debug("Invalid conn_params value: '%s'",
                       str(conn_or_conn_params))
             return conn_or_conn_params
