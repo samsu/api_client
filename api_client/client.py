@@ -50,7 +50,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
                  auto_login=True, singlethread=False):
-        '''Constructor. Adds the following:
+        """Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
         :param http_timeout: how long to wait before aborting an
@@ -58,7 +58,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             controller in the cluster)
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
-        '''
+        """
         super(ApiClient, self).__init__(
             api_providers, user, password, key_file=key_file,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
@@ -84,7 +84,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         self._singlethread = singlethread
 
     def _login(self, conn=None, headers=None):
-        """ FortiAuthenticator use http basic auth, doesn't need to login,
+        """ default use http basic auth, doesn't need to login,
            here reuse the name login to unify the API client process.
         :param conn: Not use here
         :param headers: Not use here
@@ -132,7 +132,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             raise exceptions.RequestTimeout()
         response_body = self.request_response_body(response, **kwargs)
         status = response.status
-        LOG.debug("response.status = %(status)s", {'status': status})
+        LOG.debug("response.status = %(status)s" % {'status': status})
         if status == 401:
             raise exceptions.UnAuthorizedRequest()
         # Fail-fast: Check for exception conditions and raise the
@@ -174,8 +174,8 @@ class ApiClient(eventlet_client.EventletApiClient):
                 return jsonutils.loads(response.body, encoding='ISO-8859-1')
             except ValueError:
                 LOG.debug("Cannot decode response body with json, "
-                         "return body directly '%(body)s'",
-                         {'body': response.body})
+                          "return body directly '%(body)s'",
+                          {'body': response.body})
                 return response.body
             except Exception as e:
                 LOG.error("json decode error %(e)s, the response '%(body)s'",

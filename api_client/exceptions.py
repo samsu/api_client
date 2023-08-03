@@ -15,8 +15,28 @@
 #    under the License.
 #
 
+import os
+import sys
+import traceback
+
+from oslo_log import log as logging
 
 from ._i18n import _
+
+LOG = logging.getLogger(__name__)
+
+
+class Exinfo(object):
+    def __init__(self, exception):
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        trace = traceback.format_exc()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        LOG.error(("An exception of type %(exception)s occured with "
+                   "arguments %(args)s, line %(line)s, in %(file)s") %
+                  {'exception': type(exception).__name__,
+                   'args': exception.args,
+                   'line': exc_tb.tb_lineno, 'file': fname})
+        LOG.error("{t}".format(t=trace))
 
 
 class ApiException(Exception):
