@@ -45,7 +45,7 @@ class EventletApiClient(base.ApiClientBase):
                  use_https=True,
                  connect_timeout=base.DEFAULT_CONNECT_TIMEOUT,
                  singlethread=False):
-        '''Constructor
+        """Constructor
 
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl).
@@ -56,7 +56,7 @@ class EventletApiClient(base.ApiClientBase):
         :param connect_timeout: connection timeout in seconds.
         :param gen_timeout controls how long the generation id is kept
             if set to -1 the generation id is never timed out
-        '''
+        """
         if not api_providers:
             api_providers = []
         self._singlethread = singlethread
@@ -162,7 +162,7 @@ class EventletApiClient(base.ApiClientBase):
         return result_conn
 
     def _login(self, conn=None, headers=None):
-        '''Issue login request and update authentication cookie.'''
+        """Issue login request and update authentication cookie."""
         cookie = None
         g = eventlet_request.LoginRequestEventlet(
             self, self._user, self._password, conn, headers)

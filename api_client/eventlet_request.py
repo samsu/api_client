@@ -1,7 +1,3 @@
-# Copyright 2015 Fortinet, Inc.
-#
-# All Rights Reserved
-#
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
@@ -38,10 +34,10 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
 class EventletApiRequest(request.ApiRequest):
-    '''Eventlet-based ApiRequest class.
+    """Eventlet-based ApiRequest class.
 
     This class will form the basis for eventlet-based ApiRequest classes
-    '''
+    """
 
     # Maximum number of green threads present in the system at one time.
     API_REQUEST_POOL_SIZE = request.DEFAULT_API_REQUEST_POOL_SIZE
@@ -64,7 +60,7 @@ class EventletApiRequest(request.ApiRequest):
                  redirects=DEFAULT_REDIRECTS,
                  http_timeout=DEFAULT_HTTP_TIMEOUT, client_conn=None,
                  singlethread=False):
-        '''Constructor.'''
+        """Constructor."""
         self._api_client = client_obj
         self._url = url
         self._method = method
@@ -94,15 +90,15 @@ class EventletApiRequest(request.ApiRequest):
 
     @classmethod
     def _spawn(cls, func, *args, **kwargs):
-        '''Allocate a green thread from the class pool.'''
+        """Allocate a green thread from the class pool."""
         return cls.API_REQUEST_POOL.spawn(func, *args, **kwargs)
 
     def spawn(self, func, *args, **kwargs):
-        '''Spawn a new green thread with the supplied function and args.'''
+        """Spawn a new green thread with the supplied function and args."""
         return self.__class__._spawn(func, *args, **kwargs)
 
     def join(self):
-        '''Wait for instance green thread to complete.'''
+        """Wait for instance green thread to complete."""
         if self._singlethread:
             return self._run()
 
@@ -111,12 +107,12 @@ class EventletApiRequest(request.ApiRequest):
         return Exception(_('Joining an invalid green thread'))
 
     def start(self):
-        '''Start request processing.'''
+        """Start request processing."""
         if not self._singlethread:
             self._green_thread = self.spawn(self._run)
 
     def _run(self):
-        '''Method executed within green thread.'''
+        """Method executed within green thread."""
         if self._request_timeout:
             # No timeout exception escapes the with block.
             with eventlet.timeout.Timeout(self._request_timeout, False):
@@ -129,7 +125,7 @@ class EventletApiRequest(request.ApiRequest):
             return self._handle_request()
 
     def _handle_request(self):
-        '''First level request handling.'''
+        """First level request handling."""
         attempt = 0
         timeout = 0
         badstatus = 0
@@ -159,7 +155,7 @@ class EventletApiRequest(request.ApiRequest):
                     # when fortios fix the bug, here should use
                     # 'req.status in (401, 403)' instead
                     # 303 for fortipam cookie expiration code
-                    if req.status in (400, 401, 403, 303):
+                    if self._api_client.auth_required(req):
                         continue
                     elif req.status == 503:
                         timeout = 0.5
@@ -182,7 +178,7 @@ class EventletApiRequest(request.ApiRequest):
 
 
 class LoginRequestEventlet(EventletApiRequest):
-    '''Process a login request.'''
+    """Process a login request."""
 
     def __init__(self, client_obj, user, password, client_conn=None,
                  headers=None):
@@ -191,8 +187,8 @@ class LoginRequestEventlet(EventletApiRequest):
         message = client_obj.render(client_obj.login_msg())
         body = message.get('body', None)
         # base64 encode the username and password for http basic
-        auth = base64.encodestring('%s:%s' % (user, password)).\
-            replace('\n', '')
+        credential = '%s:%s' % (user, password)
+        auth = base64.encodestring(credential).replace('\n', '')
         headers.update({'Authorization': "Basic %s" % auth})
         super(LoginRequestEventlet, self).__init__(
             client_obj, message['path'], message['method'], body, headers,
@@ -205,7 +201,7 @@ class LoginRequestEventlet(EventletApiRequest):
 
 
 class GetApiProvidersRequestEventlet(EventletApiRequest):
-    '''Get a list of API providers.'''
+    """Get a list of API providers."""
 
     def __init__(self, client_obj):
         url = "/"
@@ -220,7 +216,7 @@ class GetApiProvidersRequestEventlet(EventletApiRequest):
         def _provider_from_listen_addr(addr):
             # (pssl|ptcp):<ip>:<port> => (host, port, is_ssl)
             parts = addr.split(':')
-            return (parts[1], int(parts[2]), parts[0] == 'pssl')
+            return parts[1], int(parts[2]), parts[0] == 'pssl'
 
         try:
             if self.successful():
@@ -241,7 +237,7 @@ class GetApiProvidersRequestEventlet(EventletApiRequest):
 
 
 class GenericRequestEventlet(EventletApiRequest):
-    '''Handle a generic request.'''
+    """Handle a generic request."""
 
     def __init__(self, client_obj, method, url, body, content_type, user_agent,
                  auto_login=False,
