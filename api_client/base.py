@@ -133,7 +133,8 @@ class ApiClientBase(object):
     @staticmethod
     def extend_template_env():
         env = {
-            'translate_uri_chars': utils.translate_uri_chars
+            'translate_uri_chars': utils.translate_uri_chars,
+            'uuid': utils.uuid
         }
         return env
 
@@ -186,8 +187,8 @@ class ApiClientBase(object):
         return headers, body
 
     def format_auth_basic(self):
-        auth = '{}:{}'.format(self._user, self._password).encode()
-        auth = base64.encodestring(auth).decode().replace('\n', '')
+        credential = '%s:%s' % (self._user, self._password)
+        auth = base64.b64encode(credential.encode("utf-8")).decode()
         return "Basic {}".format(auth)
 
     def set_auth_basic(self, conn, auth_basic=None):

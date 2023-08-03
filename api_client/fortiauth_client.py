@@ -21,7 +21,6 @@ from . import exceptions
 from . import base
 from . import constants as const
 from . import client
-from . import generic_request
 from .templates import fortiauth as templates
 
 LOG = logging.getLogger(__name__)
@@ -50,7 +49,7 @@ class FortiAuthApiClient(client.ApiClient):
                  redirects=DEFAULT_REDIRECTS,
                  auto_login=True,
                  singlethread=False):
-        '''Constructor. Adds the following:
+        """Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
         :param http_timeout: how long to wait before aborting an
@@ -58,7 +57,7 @@ class FortiAuthApiClient(client.ApiClient):
             controller in the cluster)
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
-        '''
+        """
         super(FortiAuthApiClient, self).__init__(
             api_providers, user, password, key_file=key_file,
             verify_peer=verify_peer,
@@ -95,14 +94,6 @@ class FortiAuthApiClient(client.ApiClient):
         if not self._key_file:
             return {'Authorization': self.format_auth_basic()}
         return {}
-
-    def render(self, opt, formatter=const.DEFAULT_FORMATTER, **message):
-        body = message.pop('body', None)
-        msg = super(FortiAuthApiClient,
-                    self).render(opt, formatter=formatter, **message)
-        if body is not None:
-            msg.setdefault('body', body)
-        return msg
 
     def request_response(self, method, url, response, **kwargs):
         if response is None:

@@ -40,7 +40,8 @@ LOGIN = """
                 }
             }
         ],
-        "id": 1
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -64,7 +65,8 @@ ADD_DEVICE = """
             }
         ],
         "session": "{{ session }}",
-        "id": 1
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -85,7 +87,8 @@ DELETE_DEVICE = """
             }
         ],
         "session": "{{ session }}",
-        "id": 1
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -102,8 +105,10 @@ GET_SYNTAX = """
                 "option": "syntax"
             }
         ],
-        "id": "1",
-        "session": "{{ session }}"
+        "session": "{{ session }}",
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
+
     }
 }
 """
@@ -119,8 +124,9 @@ GET_FORWARDERS = """
                 "url": "/cli/global/system/log-forward"
             }
         ],
-        "id": 1,
-        "session": "{{ session }}"
+        "session": "{{ session }}",
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -133,11 +139,29 @@ GET_FORWARDER = """
         "method": "get",
         "params": [
             {
-                "url": "/cli/global/system/log-forward/{{ id }}"
+                {% if fields is defined and fields %}
+                    "fields": ["id", "server-name"],
+                {% endif %}
+                {% if name is defined %}
+                    "filter": [
+                        "server-name", "==", "{{ name }}"
+                    ],
+                {% endif %}
+                {% if loadsub is defined %}
+                    "loadsub": "{{ loadsub }}",
+                {% else %}
+                    "loadsub": 1,
+                {% endif %}
+                {% if id is defined %}
+                    "url": "/cli/global/system/log-forward/{{ id }}"
+                {% else %}
+                    "url": "/cli/global/system/log-forward"
+                {% endif %}
             }
         ],
-        "id": 1,
-        "session": "{{ session }}"
+        "session": "{{ session }}",
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -154,30 +178,30 @@ ADD_FORWARDER = """
                     {
                         "server-addr": "{{ address }}",
                         "server-name": "{{ name }}",
-                        "id": {{id}},
+                        "id": -1,
                         "device-filter": [
                             {
                                 "action": "include",
                                 "adom": "{{ adom }}",
                                 "device": "{{ sn }}",
-                                "id": 1
+                                "id": -1
                             }
                         ],
-                        "mode": "forwarding",
                         "fwd-max-delay": "{{ delay }}",
                         "fwd-server-type": "fortianalyzer",
                         "fwd-reliable": "{{ reliable }}",
                         {% if peercn is defined %}
                             "peer-cert-cn": "{{ peercn }}",
                         {% endif %}
-                        "fwd-secure": "{{ secure }}"
+                        "mode": "forwarding"
                     }
                 ],
                 "url": "/cli/global/system/log-forward"
             }
         ],
-        "id": 1,
-        "session": "{{ session }}"
+        "session": "{{ session }}",
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -194,28 +218,30 @@ MODIFY_FORWARDER = """
                     "server-addr": "{{ address }}",
                     "server-name": "{{ name }}",
                     "id": {{id}},
+                    {% if filter_id is defined %}
                     "device-filter": [
                         {
-                            "action": "include",
                             "adom": "{{ adom }}",
                             "device": "{{ sn }}",
-                            "id": 1
+                            "id": "{{ filter_id }}",
+                            "action": "include"
                         }
                     ],
-                    "mode": "forwarding",
+                    {% endif %}
                     "fwd-max-delay": "{{ delay }}",
                     "fwd-server-type": "fortianalyzer",
                     "fwd-reliable": "{{ reliable }}",
                     {% if peercn is defined %}
                         "peer-cert-cn": "{{ peercn }}",
                     {% endif %}
-                    "fwd-secure": "{{ secure }}"
+                    "mode": "forwarding"
                 },
                 "url": "/cli/global/system/log-forward"
             }
         ],
         "session": "{{ session }}",
-        "id": 1
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """
@@ -232,7 +258,8 @@ DELETE_FORWARDER = """
             }
         ],
         "session": "{{ session }}",
-        "id": 1
+        {% set _id = uuid() %}
+        "id": "{{ _id }}"
     }
 }
 """

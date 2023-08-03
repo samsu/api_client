@@ -51,7 +51,7 @@ class FortiPAMApiClient(client.ApiClient):
                  redirects=10,
                  auto_login=True,
                  singlethread=False):
-        '''Constructor. Adds the following:
+        """Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
         :param http_timeout: how long to wait before aborting an
@@ -59,7 +59,7 @@ class FortiPAMApiClient(client.ApiClient):
             controller in the cluster)
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
-        '''
+        """
         super(FortiPAMApiClient, self).__init__(
             api_providers, user, password, key_file=key_file,
             verify_peer=verify_peer,
@@ -113,10 +113,9 @@ class FortiPAMApiClient(client.ApiClient):
         :return: return authenticated Header
         """
         cookies = ''
-        message = self.render(
-            getattr(self._template, 'LOGIN'), username=self._user,
-            password=self._password
-        )
+        message = self.render(getattr(self._template, 'LOGIN'),
+                              username=self._user,
+                              password=self._password)
         login_headers = {'Content-Type': 'text/plain'}
         g = eventlet_request.EventletApiRequest(
             self, message['path'], message['method'], message['body'],
@@ -124,15 +123,18 @@ class FortiPAMApiClient(client.ApiClient):
         )
         g.start()
         ret = g.join()
-        if ret:
-            if isinstance(ret, Exception):
-                LOG.error('Login error "%s"', ret)
-                raise ret
-            res_headers = ret.headers
-            cookie, path = self.parse_headers_cookie(res_headers)
-            cookies += cookie
-            if not path:
-                raise exceptions.UnAuthorizedRequest()
+        if not ret:
+            return None
+
+        if isinstance(ret, Exception):
+            LOG.error('Login error "%s"', ret)
+            raise ret
+        res_headers = ret.headers
+        cookie, path = self.parse_headers_cookie(res_headers)
+        cookies += cookie
+        if not path:
+            raise exceptions.UnAuthorizedRequest()
+
         redirect_message = self.render(
             getattr(self._template, 'REDIRECT'), path=path)
         g = eventlet_request.EventletApiRequest(
