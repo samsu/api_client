@@ -151,8 +151,8 @@ class LoginRequestEventlet(GenericApiRequest):
         message = client_obj.render(client_obj.login_msg())
         body = message.get('body', None)
         # base64 encode the username and password for http basic
-        auth = base64.encodestring('%s:%s' % (user, password)).\
-            replace('\n', '')
+        credential = '%s:%s' % (user, password)
+        auth = base64.b64encode(credential.encode("utf-8")).decode()
         headers.update({'Authorization': "Basic %s" % auth})
         super(LoginRequestEventlet, self).__init__(
             client_obj, message['path'], message['method'], body, headers,

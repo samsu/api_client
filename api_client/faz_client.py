@@ -115,7 +115,7 @@ class FortiAnalyzerApiClient(client.ApiClient):
     def auth_required(response):
         body = None
         if not isinstance(response, httplib.HTTPResponse):
-            return False
+            return True
         content_type = response.content_type or ''
         if const.DEFAULT_CONTENT_TYPE in content_type and response.body:
             body = jsonutils.loads(response.body)
@@ -141,9 +141,11 @@ class FortiAnalyzerApiClient(client.ApiClient):
             auto_login=self._auto_login, client_conn=conn)
         g.start()
         ret = g.join()
-        if ret:
-            if isinstance(ret, Exception):
-                LOG.error('Login error "%s"', ret)
-                raise ret
-            response = self.request_response_body(ret)
-            return response["session"]
+
+        if not ret:
+            return None
+        if isinstance(ret, Exception):
+            LOG.error('Login error "%s"', ret)
+            raise ret
+        response = self.request_response_body(ret)
+        return response["session"]

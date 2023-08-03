@@ -23,6 +23,18 @@
 # GET_XXX      -->    GET
 # MODIFY_XXX   -->    PATCH
 
+# Login
+LOGIN = """
+{
+    "path": "/api/v1/login/",
+    "method": "POST",
+    "body": {
+        "client_id": "{{ client_id }}",
+        "client_secret": "{{ client_secret }}"
+    }
+}
+"""
+
 # Version
 GET_VERSION = """
 {
@@ -34,7 +46,6 @@ GET_VERSION = """
     "method": "GET"
 }
 """
-
 
 # Namespace
 # query
@@ -63,7 +74,7 @@ GET_REALM = """
             {% set _query = '&'.join(_query) %}
             "path": "/api/v1/realm?{{ _query }}",
         {% else %}
-            "path": "/api/v1/realm/",
+            "path": "/api/v1/realm",
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -99,7 +110,6 @@ DELETE_REALM = """
 }
 """
 
-
 # authenticated api client
 # query
 GET_CLIENT = """
@@ -134,7 +144,6 @@ GET_CLIENT = """
 }
 """
 
-
 # delete
 DELETE_CLIENT = """
 {
@@ -146,7 +155,6 @@ DELETE_CLIENT = """
     "method": "DELETE"
 }
 """
-
 
 # User
 # query
@@ -296,7 +304,6 @@ SYNC_USER = """
 }
 """
 
-
 # count
 GET_COUNT = """
 {
@@ -324,7 +331,6 @@ GET_COUNT = """
 }
 """
 
-
 # authentication
 ADD_AUTH = """
 {
@@ -351,7 +357,6 @@ ADD_AUTH = """
     }
 }
 """
-
 
 # statement
 GET_STATEMENT = """
@@ -471,4 +476,3 @@ GET_COUNT_AUTH = """
     }
 }
 """
-

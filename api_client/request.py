@@ -189,8 +189,6 @@ class ApiRequest(object):
                     # for the current provider so that subsequent requests
                     # to the same provider triggers re-authentication.
                     self._api_client.set_auth_data(conn, None)
-                    if self._api_client._auto_login:
-                        self._api_client._wait_for_login(conn, headers)
 
                 elif 503 == response.status:
                     is_conn_service_unavail = True

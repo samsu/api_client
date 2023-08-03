@@ -29,6 +29,7 @@ import json
 from os import listdir
 from os.path import dirname
 from oslo_utils import importutils
+from oslo_utils import uuidutils
 import six
 
 try:
@@ -90,3 +91,7 @@ def translate_uri_chars(var):
 
     var = quote(var, safe='')
     return var
+
+
+def uuid(dashed=True):
+    return uuidutils.generate_uuid(dashed=dashed)
