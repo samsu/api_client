@@ -1,4 +1,3 @@
-# Copyright (c) 2018 Fortinet, Inc.
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -42,7 +41,7 @@ GET_VERSION = """
         "path": "/version?sn={{ sn }}",
     {% else %}
         "path": "/version/",
-    {% endif %}    
+    {% endif %}
     "method": "GET"
 }
 """
@@ -84,7 +83,7 @@ GET_REALM = """
 # add
 ADD_REALM = """
 {
-    "path": "/api/v1/realm",   
+    "path": "/api/v1/realm",
     "method": "POST",
     "body": {
         {% if description is defined %}
@@ -105,7 +104,7 @@ DELETE_REALM = """
         "path": "/api/v1/realm/{{ id }}?sn={{ sn }}",
     {% else %}
         "path": "/api/v1/realm/{{ id }}/,
-    {% endif %}    
+    {% endif %}
     "method": "DELETE"
 }
 """
@@ -119,7 +118,7 @@ GET_CLIENT = """
             "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
         {% else %}
             "path": "/api/v1/client/{{ id }}/,
-        {% endif %}        
+        {% endif %}
     {% else %}
         {% set _options = {
             "sn": sn,
@@ -151,7 +150,7 @@ DELETE_CLIENT = """
         "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
     {% else %}
         "path": "/api/v1/client/{{ id }}/,
-    {% endif %}    
+    {% endif %}
     "method": "DELETE"
 }
 """
@@ -165,7 +164,7 @@ GET_USER = """
             "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
         {% else %}
             "path": "/api/v1/user/{{ id }}/,
-        {% endif %}        
+        {% endif %}
     {% else %}
         {% set _options = {
             "sn": sn,
@@ -179,13 +178,13 @@ GET_USER = """
             "auth_method": auth_method,
             "notification_method": notification_method,
             "customer_id": customer_id,
-            "cluster_members": cluster_members            
+            "cluster_members": cluster_members
         } %}
         {% set _query = [] %}
         {% for k, v in _options.items() if v is defined %}
             {% if _query.append(k+'='+translate_uri_chars(v)) %}
             {% endif %}
-        {% endfor %}        
+        {% endfor %}
         {% if _query %}
             {% set _query = '&'.join(_query) %}
             "path": "/api/v1/user?{{ _query }}",
@@ -204,7 +203,7 @@ ADD_USER = """
     "method": "POST",
     "body": {
         "sn": "{{ sn }}",
-        "vdom": "{{ vdom }}",    
+        "vdom": "{{ vdom }}",
         "email": "{{ email }}",
         {% if realm_id is defined %}
             "realm_id": "{{ realm_id }}",
@@ -212,20 +211,20 @@ ADD_USER = """
             "realm": "{{ realm }}",
         {% endif %}
         {% if mobile_number is defined %}
-            "mobile_number": "{{ mobile_number }}",         
+            "mobile_number": "{{ mobile_number }}",
         {% endif %}
         {% if auth_method is defined %}
-            "auth_method": "{{ auth_method }}",         
+            "auth_method": "{{ auth_method }}",
         {% endif %}
         {% if notification_method is defined %}
-            "notification_method": "{{ notification_method }}",         
-        {% endif %}        
-        {% if cluster_members is defined %}        
+            "notification_method": "{{ notification_method }}",
+        {% endif %}
+        {% if cluster_members is defined %}
             "cluster_members": [
-            {% for member in cluster_members %} 
+            {% for member in cluster_members %}
                 "{{ member }}"{{ "," if not loop.last }}
             {% endfor %}
-            ],         
+            ],
         {% endif %}
         "username": "{{ username }}"
     }
@@ -261,11 +260,11 @@ MODIFY_USER = """
     "method": "PUT",
     "body": {
         {% set _options = {
-        "sn": sn,        
+        "sn": sn,
         "email": email,
-        "mobile_number": mobile_number,        
+        "mobile_number": mobile_number,
         "active": active,
-        "change_token": change_token        
+        "change_token": change_token
         } %}
         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
@@ -279,7 +278,7 @@ SYNC_USER = """
 {
     "path": "/api/v1/user_sync/",
     "method": "POST",
-    "body": {        
+    "body": {
         {% if vdom is defined %}
             "vdom": "{{ vdom }}",
         {% endif %}
@@ -288,17 +287,17 @@ SYNC_USER = """
         {% endif %}
         {% if users is defined %}
             "users": [
-            {% for user in users %} 
+            {% for user in users %}
                 {{ user }}{{ "," if not loop.last }}
             {% endfor %}
-            ],         
+            ],
         {% endif %}
-        {% if cluster_members is defined %}        
+        {% if cluster_members is defined %}
             "cluster_members": [
-            {% for member in cluster_members %} 
+            {% for member in cluster_members %}
                 "{{ member }}"{{ "," if not loop.last }}
             {% endfor %}
-            ],         
+            ],
         {% endif %}
         "sn": "{{ sn }}"
 }
@@ -336,7 +335,7 @@ ADD_AUTH = """
 {
     "path": "/api/v1/auth/",
     "method": "POST",
-    "body": {        
+    "body": {
         {% if token is defined %}
             "token": "{{ token }}",
         {% endif %}
@@ -351,8 +350,8 @@ ADD_AUTH = """
             "vdom": "{{ vdom }}",
         {% endif %}
         {% if auth_method is defined %}
-            "auth_method": "{{ auth_method }}",         
-        {% endif %}   
+            "auth_method": "{{ auth_method }}",
+        {% endif %}
         "username": "{{ username }}"
     }
 }
@@ -390,10 +389,10 @@ ADD_TOKEN_ACTIVATION = """
 {
     "path": "/api/v1/token/activation",
     "method": "POST",
-    "body": {        
+    "body": {
         {% if token is defined %}
             "token": "{{ token }}",
-        {% endif %}    
+        {% endif %}
     }
 }
 """
@@ -403,7 +402,7 @@ TOKEN_TRANSFER_START = """
     "path": "/api/v1/token/transfer/start",
     "method": "POST",
     "body": {
-        "sn": "{{ sn }}",      
+        "sn": "{{ sn }}",
         "tokens": "{{ tokens }}",
         "reg_id": "{{ reg_id }}",
         "hmac": "{{ hmac }}",
@@ -428,7 +427,7 @@ ADD_TRIAL = """
 # query
 GET_TASK = """
 {
-    {% if id is defined %}        
+    {% if id is defined %}
         {% set _options = {
             "sn": sn,
             "vdom": vdom,

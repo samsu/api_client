@@ -817,4 +817,3 @@ DELETE_SNMP_COMMUNITY_HOST = """
     "method": "DELETE"
 }
 """
-

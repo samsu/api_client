@@ -31,7 +31,7 @@ GET_ACCOUNT = """
     "method": "POST",
     "body": {
         "d": {
-            "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest", 
+            "__type" : "FortinetOneAPI.IdentityService.GetAccountDetailsRequest",
             "__version" : "1",
             "request_channel" : "FTC",
             {% set _options = {
@@ -47,7 +47,7 @@ GET_ACCOUNT = """
             {% endfor %}
             }
         }
-    }    
+    }
 }
 """
 
@@ -142,7 +142,7 @@ GET_BATCH_BALANCE = """
                 "page_size": "{{ page_size }}"
             {% else %}
                 "page_size": "1000"
-            {% endif %}            
+            {% endif %}
         }
     }
 }
@@ -222,7 +222,7 @@ ADD_OPA_LICENSE = """
 {
     "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetNewFACVMLicense",
     "method": "POST",
-    "body": { 
+    "body": {
         "d": {
             "__type": "FortinetOne.API.V3.FortiTokenCloud.GetNewFACVMLicensePayload",
             "license_version": "latest"
@@ -234,7 +234,7 @@ ADD_OPA_LICENSE = """
 
 # query OPA license
 GET_OPA_LICENSE = """
-{   
+{
     "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetExistingFACVMLicense",
     "method": "POST",
     "body": {

@@ -169,4 +169,3 @@ DELETE_FOLDER = """
     "method": "DELETE"
 }
 """
-

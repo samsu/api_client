@@ -30,7 +30,7 @@ GET_VERSION = """
         "path": "/version?sender={{ sender }}",
     {% else %}
         "path": "/version/",
-    {% endif %}    
+    {% endif %}
     "method": "GET"
 }
 """
@@ -50,7 +50,7 @@ ADD_NOTIFICATION = """
             "email": email,
             "mobile_number": mobile_number
         } %}
-        
+
         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}",
         {% endfor %}
