@@ -1,4 +1,3 @@
-# Copyright (c) 2017 Fortinet, Inc.
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -176,8 +175,16 @@ ADD_FORWARDER = """
             {
                 "data": [
                     {
-                        "server-addr": "{{ address }}",
-                        "server-name": "{{ name }}",
+                        {% set _options = {
+                            "server-addr": address,
+                            "server-name": name,
+                            "fwd-max-delay": delay,
+                            "fwd-reliable": reliable,
+                            "peer-cert-cn": peercn
+                        } %}
+                        {% for k, v in _options.items() if v is defined %}
+                            "{{ k }}": "{{ v }}",
+                        {% endfor %}
                         "id": -1,
                         "device-filter": [
                             {
@@ -187,12 +194,7 @@ ADD_FORWARDER = """
                                 "id": -1
                             }
                         ],
-                        "fwd-max-delay": "{{ delay }}",
                         "fwd-server-type": "fortianalyzer",
-                        "fwd-reliable": "{{ reliable }}",
-                        {% if peercn is defined %}
-                            "peer-cert-cn": "{{ peercn }}",
-                        {% endif %}
                         "mode": "forwarding"
                     }
                 ],
@@ -215,25 +217,32 @@ MODIFY_FORWARDER = """
         "params": [
             {
                 "data": {
-                    "server-addr": "{{ address }}",
-                    "server-name": "{{ name }}",
+                    {% set _options = {
+                        "server-addr": address,
+                        "server-name": name,
+                        "fwd-max-delay": delay,
+                        "fwd-reliable": reliable,
+                        "peer-cert-cn": peercn
+                    } %}
+                    {% for k, v in _options.items() if v is defined %}
+                        "{{ k }}": "{{ v }}",
+                    {% endfor %}
                     "id": {{id}},
                     {% if filter_id is defined %}
-                    "device-filter": [
-                        {
-                            "adom": "{{ adom }}",
-                            "device": "{{ sn }}",
-                            "id": "{{ filter_id }}",
-                            "action": "include"
-                        }
-                    ],
+                        "device-filter": [
+                            {
+                                {% if adom is defined %}
+                                    "adom": "{{ adom }}",
+                                {% endif %}
+                                {% if sn is defined %}
+                                    "device": "{{ sn }}",
+                                {% endif %}
+                                "id": "{{ filter_id }}",
+                                "action": "include"
+                            }
+                        ],
                     {% endif %}
-                    "fwd-max-delay": "{{ delay }}",
                     "fwd-server-type": "fortianalyzer",
-                    "fwd-reliable": "{{ reliable }}",
-                    {% if peercn is defined %}
-                        "peer-cert-cn": "{{ peercn }}",
-                    {% endif %}
                     "mode": "forwarding"
                 },
                 "url": "/cli/global/system/log-forward"

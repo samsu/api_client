@@ -27,9 +27,9 @@
 # query customer account
 GET_ACCOUNT = """
 {
-    "path": "/FortiGlobal/FortiAuthService.asmx/Process",    
+    "path": "/FortiGlobal/FortiAuthService.asmx/Process",
     "method": "POST",
-    "body": {    
+    "body": {
         "d": {
             "__type": "FortiGlobal.FASAccountInfoRequest",
             {% if id is defined %}
@@ -60,7 +60,7 @@ GET_ACCOUNT = """
                 "__SW_build": "yyyyy"
             {% endif %}
         }
-    }    
+    }
 }
 """
 

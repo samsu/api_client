@@ -121,7 +121,7 @@ GET_BATCH_BALANCE = """
                 "page_size": "{{ page_size }}"
             {% else %}
                 "page_size": "1000"
-            {% endif %}            
+            {% endif %}
         }
     }
 }
