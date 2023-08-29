@@ -47,6 +47,7 @@ class FASApiClient(client.ApiClient):
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
                  auto_login=True,
+                 headers=None,
                  singlethread=False):
         """
         Constructor. Adds the following:
@@ -65,7 +66,7 @@ class FASApiClient(client.ApiClient):
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
             retries=retries, redirects=redirects, auto_login=auto_login,
-            singlethread=singlethread)
+            headers=headers, singlethread=singlethread)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout
@@ -107,6 +108,7 @@ class FASGenericApiClient(client.ApiClient):
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
                  auto_login=True,
+                 headers=None,
                  singlethread=False):
         """
         Constructor. Adds the following:
@@ -125,7 +127,7 @@ class FASGenericApiClient(client.ApiClient):
             gen_timeout=gen_timeout, use_https=use_https,
             connect_timeout=connect_timeout, http_timeout=http_timeout,
             retries=retries, redirects=redirects, auto_login=auto_login,
-            singlethread=singlethread)
+            headers=headers, singlethread=singlethread)
 
         self._request_timeout = http_timeout * retries
         self._http_timeout = http_timeout

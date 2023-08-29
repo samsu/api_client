@@ -49,7 +49,7 @@ class ApiClient(eventlet_client.EventletApiClient):
                  http_timeout=DEFAULT_HTTP_TIMEOUT,
                  retries=DEFAULT_RETRIES,
                  redirects=DEFAULT_REDIRECTS,
-                 auto_login=True, singlethread=False):
+                 auto_login=True, headers=None, singlethread=False):
         """Constructor. Adds the following:
         :param api_providers: a list of tuples of the form: (host, port,
             is_ssl)
@@ -82,6 +82,9 @@ class ApiClient(eventlet_client.EventletApiClient):
         self._ssl_sni = ssl_sni
         self._auto_login = auto_login
         self._singlethread = singlethread
+        if not headers:
+            headers = []
+        self._headers = headers
 
     def _login(self, conn=None, headers=None):
         """ default use http basic auth, doesn't need to login,
@@ -111,8 +114,8 @@ class ApiClient(eventlet_client.EventletApiClient):
             retries=self._retries, redirects=self._redirects,
             singlethread=self._singlethread)
         g.start()
-        return self.request_response(method, url, g.join(),
-                                     resp_type=self.message.get('obj_type', None))
+        resp_tp = self.message.get('obj_type', None)
+        return self.request_response(method, url, g.join(), resp_type=resp_tp)
 
     def request_response(self, method, url, response, **kwargs):
         """
@@ -131,6 +134,12 @@ class ApiClient(eventlet_client.EventletApiClient):
                       {'method': method, 'url': url})
             raise exceptions.RequestTimeout()
         response_body = self.request_response_body(response, **kwargs)
+        response_headers = self.request_response_headers(response)
+        if response_headers and isinstance(response_body, list):
+            response_body = {
+                'body': response_body,
+                'headers': response_headers
+            }
         status = response.status
         LOG.debug("response.status = %(status)s" % {'status': status})
         if status == 401:
@@ -156,12 +165,26 @@ class ApiClient(eventlet_client.EventletApiClient):
             return None
         return response_body
 
+    def request_response_headers(self, response):
+        if not self._headers or DEFAULT_CONTENT_TYPE != response.content_type:
+            return None
+
+        response_headers = {}
+        headers = dict(response.headers)
+        for header in self._headers:
+            if header in headers:
+                parser = getattr(base.HeadersParser,
+                                 header.lower(), lambda x: x)
+                response_headers[header] = parser(headers[header])
+        return response_headers
+
     @staticmethod
     def request_response_body(response, **kwargs):
         if response and response.body:
             if DEFAULT_CONTENT_TYPE not in response.content_type:
                 if response.content_type != const.FGD_CONTENT_TYPE:
-                    LOG.debug("response.body = %(body)s", {'body': response.body})
+                    LOG.debug("response.body = %(body)s" %
+                              {'body': response.body})
                 return response.body
             try:
                 result = jsonutils.loads(response.body)

@@ -2,7 +2,10 @@
 
 import os
 import sys
+
 import logging
+import json
+from urllib.parse import urlsplit
 
 import api_client.fas_client as client
 
@@ -30,9 +33,15 @@ if __name__ == "__main__":
     api = [(host, port_int, True)]
     # CA
     cli = ApiClient(api, key_file=key_file,
-                    cert_file=cert_file, ca_file=ca_file)
+                    cert_file=cert_file, ca_file=ca_file, headers=['Link'])
     print("----TESTING API client with CA certificate ------")
-    res = cli.request('GET_USER', sn=sn, vdom='root')
+    res = cli.request('GET_USER', ver='v2', sn=sn, vdom='root', limit=20)
+    print(json.dumps(res, indent=4))
+    if isinstance(res, dict) and 'headers' in res:
+        parsed = urlsplit(res['headers']['Link']['next'])
+        path = '?'.join([parsed.path, parsed.query])
+        res = cli.request('GET_USER', path=path)
+        print(json.dumps(res, indent=4))
 
     # GenericApiClient
     api = [(host, port, True)]
@@ -40,3 +49,4 @@ if __name__ == "__main__":
                            client_secret=client_secret)
     print("----TESTING Generic API client ------")
     res = cli.request('GET_REALM')
+    print(json.dumps(res, indent=4))

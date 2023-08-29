@@ -22,6 +22,7 @@ except ImportError:
     import http.client as httplib
     from http import cookies as Cookie
 import jinja2
+import re
 import six
 import socket
 import ssl
@@ -509,3 +510,75 @@ def wrap_socket(sock, keyfile=None, certfile=None,
             context.load_verify_locations(ca_certs)
         sock = context.wrap_socket(sock, server_hostname=server_hostname)
     return sock
+
+
+class HeadersParser(object):
+    @staticmethod
+    def link(value):
+        """
+        :param value:
+        :return: return a dict
+        {
+            "prev": "https://127.0.0.1/api/v1/user?sn=FAC-0451&vdom=root&limit=20&next=WycyMVd",
+            "next": "https://127.0.0.1/api/v1/user?sn=FAC-0451&vdom=root&limit=20&next=WycyM=",
+        }
+        """
+        links = dict()
+        replace_chars = " '\""
+        value = value.strip(replace_chars)
+        if not value:
+            return links
+        for val in re.split(", *<", value):
+            try:
+                url, params = val.split(";", 1)
+            except ValueError:
+                url, params = val, ""
+
+            link = {"url": url.strip("<> '\"")}
+            for param in params.split(";"):
+                try:
+                    key, value = param.split("=")
+                except ValueError:
+                    break
+                if key.strip(replace_chars) == 'rel':
+                    link[value.strip(replace_chars)] = link.pop('url')
+            links.update(link)
+        return links
+
+    @staticmethod
+    def link_list(value):
+        """
+        :param value:
+        :return: return a list
+        [
+            {
+                "url": "https://127.0.0.1/api/v1/user?sn=FAC-0451&vdom=root&limit=20&next=WycyMVd",
+                "rel": "prev"
+            },
+            {
+                "url": "https://127.0.0.1/api/v1/user?sn=FAC-0451&vdom=root&limit=20&next=WycyM=",
+                "rel": "next"
+            }
+        ]
+        """
+        links = []
+        replace_chars = " '\""
+        value = value.strip(replace_chars)
+        if not value:
+            return links
+        for val in re.split(", *<", value):
+            try:
+                url, params = val.split(";", 1)
+            except ValueError:
+                url, params = val, ""
+
+            link = {"url": url.strip("<> '\"")}
+            import pdb;pdb.set_trace()
+            for param in params.split(";"):
+                try:
+                    key, value = param.split("=")
+                except ValueError:
+                    break
+                link[key.strip(replace_chars)] = value.strip(replace_chars)
+            links.append(link)
+        return links
