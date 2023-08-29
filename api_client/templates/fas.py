@@ -46,34 +46,118 @@ GET_VERSION = """
 }
 """
 
-# Namespace
+# Customer
+# query
+GET_CUSTOMER = """
+{
+    {% if path is defined %}
+        "path": "{{ path }}",
+    {% else %}
+        {% if ver is defined %}
+            {% set _ver = ver %}
+        {% else %}
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if sn is defined %}
+                "path": "/api/{{ _ver }}/customer/{{ id }}?sn={{ sn }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/customer/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "resource": resource,
+                "start": start,
+                "end": end,
+                "expired": expired,
+                "customer_id": customer_id,
+                "user_email": user_email,
+                "trial_status": trial_status,
+                "disabled": disabled,
+                "bypass": bypass,
+                "license_type": license_type,
+                "sn": sn,
+                "expire_date": expire_date,
+                "min_balance": min_balance,
+                "max_balance": max_balance,
+                "limit": limit,
+                "next": next
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/customer?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/customer",
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# put
+MODIFY_CUSTOMER = """
+{
+    "path": "/api/v1/customer/{{ id }}/",
+    "method": "PUT",
+    "body": {
+        {% set _options = {
+        "status": status,
+        "license_type": license_type,
+        "bypass": bypass
+        } %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "id": "{{ id }}"
+    }
+}
+"""
+
+# Realm
 # query
 GET_REALM = """
 {
-    {% if id is defined %}
-        {% if sn is defined %}
-            "path": "/api/v1/realm/{{ id }}?sn={{ sn }}",
-        {% else %}
-            "path": "/api/v1/realm/{{ id }}/,
-        {% endif %}
+    {% if path is defined %}
+        "path": "{{ path }}",
     {% else %}
-        {% set _options = {
-            "sn": sn,
-            "is_default": is_default,
-            "name": name,
-            "customer_id": customer_id,
-            "cluster_members": cluster_members
-        } %}
-        {% set _query = [] %}
-        {% for k, v in _options.items() if v is defined %}
-            {% if _query.append(k+'='+translate_uri_chars(v)) %}
-            {% endif %}
-        {% endfor %}
-        {% if _query %}
-            {% set _query = '&'.join(_query) %}
-            "path": "/api/v1/realm?{{ _query }}",
+        {% if ver is defined %}
+            {% set _ver = ver %}
         {% else %}
-            "path": "/api/v1/realm",
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if sn is defined %}
+                "path": "/api/{{ _ver }}/realm/{{ id }}?sn={{ sn }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/realm/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "sn": sn,
+                "is_default": is_default,
+                "name": name,
+                "customer_id": customer_id,
+                "cluster_members": cluster_members,
+                "limit": limit,
+                "next": next
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/realm?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/realm",
+            {% endif %}
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -113,30 +197,41 @@ DELETE_REALM = """
 # query
 GET_CLIENT = """
 {
-    {% if id is defined %}
-        {% if sn is defined %}
-            "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
-        {% else %}
-            "path": "/api/v1/client/{{ id }}/,
-        {% endif %}
+    {% if path is defined %}
+        "path": "{{ path }}",
     {% else %}
-        {% set _options = {
-            "sn": sn,
-            "vdom": vdom,
-            "realm_id": realm_id,
-            "customer_id": customer_id,
-            "cluster_members": cluster_members
-        } %}
-        {% set _query = [] %}
-        {% for k, v in _options.items() if v is defined %}
-            {% if _query.append(k+'='+translate_uri_chars(v)) %}
-            {% endif %}
-        {% endfor %}
-        {% if _query %}
-            {% set _query = '&'.join(_query) %}
-            "path": "/api/v1/client?{{ _query }}",
+        {% if ver is defined %}
+            {% set _ver = ver %}
         {% else %}
-            "path": "/api/v1/client/",
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if sn is defined %}
+                "path": "/api/{{ _ver }}/client/{{ id }}?sn={{ sn }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/client/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "sn": sn,
+                "vdom": vdom,
+                "realm_id": realm_id,
+                "customer_id": customer_id,
+                "cluster_members": cluster_members,
+                "limit": limit,
+                "next": next
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/client?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/client/",
+            {% endif %}
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -149,7 +244,7 @@ DELETE_CLIENT = """
     {% if sn is defined %}
         "path": "/api/v1/client/{{ id }}?sn={{ sn }}",
     {% else %}
-        "path": "/api/v1/client/{{ id }}/,
+        "path": "/api/v1/client/{{ id }}/",
     {% endif %}
     "method": "DELETE"
 }
@@ -159,37 +254,48 @@ DELETE_CLIENT = """
 # query
 GET_USER = """
 {
-    {% if id is defined %}
-        {% if sn is defined %}
-            "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
-        {% else %}
-            "path": "/api/v1/user/{{ id }}/,
-        {% endif %}
+    {% if path is defined %}
+        "path": "{{ path }}",
     {% else %}
-        {% set _options = {
-            "sn": sn,
-            "username": username,
-            "email": email,
-            "mobile_number": mobile_number,
-            "realm_id": realm_id,
-            "realm": realm,
-            "vdom": vdom,
-            "active": active,
-            "auth_method": auth_method,
-            "notification_method": notification_method,
-            "customer_id": customer_id,
-            "cluster_members": cluster_members
-        } %}
-        {% set _query = [] %}
-        {% for k, v in _options.items() if v is defined %}
-            {% if _query.append(k+'='+translate_uri_chars(v)) %}
-            {% endif %}
-        {% endfor %}
-        {% if _query %}
-            {% set _query = '&'.join(_query) %}
-            "path": "/api/v1/user?{{ _query }}",
+        {% if ver is defined %}
+            {% set _ver = ver %}
         {% else %}
-            "path": "/api/v1/user/",
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if sn is defined %}
+                "path": "/api/{{ _ver }}/user/{{ id }}?sn={{ sn }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/user/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "sn": sn,
+                "username": username,
+                "email": email,
+                "mobile_number": mobile_number,
+                "realm_id": realm_id,
+                "realm": realm,
+                "vdom": vdom,
+                "active": active,
+                "auth_method": auth_method,
+                "notification_method": notification_method,
+                "customer_id": customer_id,
+                "cluster_members": cluster_members,
+                "limit": limit,
+                "next": next
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/user?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/user/",
+            {% endif %}
         {% endif %}
     {% endif %}
     "method": "GET"
@@ -246,7 +352,7 @@ DELETE_USER = """
         {% if sn is defined %}
             "path": "/api/v1/user/{{ id }}?sn={{ sn }}",
         {% else %}
-            "path": "/api/v1/user/{{ id }}/,
+            "path": "/api/v1/user/{{ id }}/",
         {% endif %}
     {% endif %}
     "method": "DELETE"

@@ -87,7 +87,7 @@ def translate_uri_chars(var):
     if isinstance(var, (list, dict)):
         var = json.dumps(var)
     elif not isinstance(var, six.string_types):
-        return var
+        return str(var)
 
     var = quote(var, safe='')
     return var
