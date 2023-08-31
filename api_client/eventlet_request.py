@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+#
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+#
 
 import base64
 import eventlet
@@ -17,7 +20,6 @@ try:
     import httplib
 except ImportError:
     import http.client as httplib
-import socket
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
@@ -124,7 +126,7 @@ class EventletApiRequest(request.ApiRequest):
         else:
             return self._handle_request()
 
-    def _handle_request(self):
+    def _handle_request_bak(self):
         """First level request handling."""
         attempt = 0
         timeout = 0
@@ -136,7 +138,7 @@ class EventletApiRequest(request.ApiRequest):
             req = None
             try:
                 req = self._issue_request()
-            except (httplib.BadStatusLine, socket.error) as e:
+            except const.CONNECTION_EXCEPTIONS as e:
                 if badstatus <= DEFAULT_RETRIES:
                     badstatus += 1
                     attempt -= 1
