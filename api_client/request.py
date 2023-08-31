@@ -1,12 +1,10 @@
-# Copyright 2015 Fortinet, Inc.
-#
-# All Rights Reserved
+# -*- coding: utf-8 -*-
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -24,7 +22,6 @@ try:
     import httplib as httpclient
 except ImportError:
     from http import client as httpclient
-import socket
 import time
 
 from oslo_log import log as logging
@@ -225,7 +222,6 @@ class ApiRequest(object):
             return response
 
         except Exception as e:
-            ex.Exinfo(e)
             elapsed_time = time.time() - issued_time
             if isinstance(e, httpclient.BadStatusLine):
                 msg = "Invalid server response"
@@ -239,11 +235,12 @@ class ApiRequest(object):
                 msg=msg, elapsed=elapsed_time, err=type(e)))
             self._request_error = e
             is_conn_error = True
-            if isinstance(e, (httpclient.BadStatusLine, socket.error)):
+            if isinstance(e, const.CONNECTION_EXCEPTIONS):
                 self._api_client.release_connection(conn, is_conn_error,
                                                     is_conn_service_unavail,
                                                     rid=self._rid())
                 raise e
+            ex.Exinfo(e)
             return e
 
         finally:
@@ -253,6 +250,58 @@ class ApiRequest(object):
                 self._api_client.release_connection(conn, is_conn_error,
                                                     is_conn_service_unavail,
                                                     rid=self._rid())
+
+    def _handle_request(self):
+        """First level request handling."""
+        attempt = 0
+        timeout = 0
+        badstatus = 0
+        response = None
+        while response is None and attempt <= self._retries:
+            eventlet.greenthread.sleep(timeout)
+            attempt += 1
+            req = None
+            try:
+                req = self._issue_request()
+            except const.CONNECTION_EXCEPTIONS as e:
+                if badstatus <= DEFAULT_RETRIES:
+                    badstatus += 1
+                    attempt -= 1
+                    msg = ("# request {method} {url} {body} error {e}"
+                           ).format(method=self._method, url=self._url,
+                                    body=self._body, e=e)
+                    LOG.debug(msg)
+                    continue
+            # automatically raises any exceptions returned.
+            if isinstance(req, httpclient.HTTPResponse):
+                timeout = 0
+                if attempt <= self._retries and not self._abort:
+                    # currently there is a bug in fortios, it return 401 and
+                    # 400 when a cookie is invalid, the change is to tolerant
+                    # the bug to handle return 400 situation.
+                    # when fortios fix the bug, here should use
+                    # 'req.status in (401, 403)' instead
+                    # 303 for fortipam cookie expiration code
+                    if self._api_client.auth_required(req):
+                        continue
+                    elif req.status == 503:
+                        timeout = 0.5
+                        continue
+                    # else fall through to return the error code
+
+                LOG.debug("[%(rid)d] Completed request '%(method)s %(url)s'"
+                          ": %(status)s",
+                          {'rid': self._rid(), 'method': self._method,
+                           'url': self._url, 'status': req.status})
+                self._request_error = None
+                response = req
+            else:
+                LOG.info(_LI('[%(rid)d] Error while handling request: '
+                             '%(req)s'),
+                         {'rid': self._rid(), 'req': req})
+                self._request_error = req
+                response = None
+        return response
 
     def _redirect_params(self, conn, headers, allow_release_conn=False):
         """Process redirect response, create new connection if necessary.

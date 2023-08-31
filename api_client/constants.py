@@ -1,18 +1,23 @@
-# Copyright 2015 Fortinet, Inc.
-# All rights reserved.
+# -*- coding: utf-8 -*-
 #
-#    Licensed under the Apache License, Version 2.0 (the "License"); you may
-#    not use this file except in compliance with the License. You may obtain
-#    a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
 #
 #         http://www.apache.org/licenses/LICENSE-2.0
 #
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-#    License for the specific language governing permissions and limitations
-#    under the License.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 #
+
+try:
+    import httplib as httpclient
+except ImportError:
+    from http import client as httpclient
+import socket
 
 GENERATION_ID_TIMEOUT = -1
 DEFAULT_CONCURRENT_CONNECTIONS = 1
@@ -32,6 +37,11 @@ DEFAULT_HTTP_HEADERS = {
     'User-Agent': 'Fortinet Python API Client',
     'Content-Type': DEFAULT_CONTENT_TYPE
 }
+
+CONNECTION_EXCEPTIONS = (
+    httpclient.BadStatusLine,
+    httpclient.RemoteDisconnected,
+    socket.error)
 
 FGD_REQ_FLAGS = 0x00000000
 FGD_CONTENT_TYPE = 'application/octet-stream'

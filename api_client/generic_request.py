@@ -1,18 +1,17 @@
-# Copyright 2015 Fortinet, Inc.
-#
-# All Rights Reserved
+# -*- coding: utf-8 -*-
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#         http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+#
 
 import base64
 import eventlet
@@ -39,10 +38,10 @@ DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
 class GenericApiRequest(request.ApiRequest):
-    '''A non Eventlet-based ApiRequest class.
+    """A non Eventlet-based ApiRequest class.
 
     This class will form the basis for eventlet-based ApiRequest classes
-    '''
+    """
 
     # Maximum number of green threads present in the system at one time.
     API_REQUEST_POOL_SIZE = request.DEFAULT_API_REQUEST_POOL_SIZE
@@ -86,15 +85,15 @@ class GenericApiRequest(request.ApiRequest):
         self._request_id = request_id
 
     def join(self):
-        '''Wait for instance green thread to complete.'''
+        """Wait for instance green thread to complete."""
         pass
 
     def start(self):
-        '''Start request processing.'''
+        """Start request processing."""
         return self._handle_request()
 
-    def _handle_request(self):
-        '''First level request handling.'''
+    def _handle_request_bak(self):
+        """First level request handling."""
         attempt = 0
         timeout = 0
         badstatus = 0
@@ -103,7 +102,7 @@ class GenericApiRequest(request.ApiRequest):
             attempt += 1
             try:
                 req = self._issue_request()
-            except (httplib.BadStatusLine, socket.error):
+            except const.CONNECTION_EXCEPTIONS:
                 if badstatus <= DEFAULT_RETRIES:
                     badstatus += 1
                     attempt -= 1
@@ -165,7 +164,7 @@ class LoginRequestEventlet(GenericApiRequest):
 
 
 class GetApiProvidersRequestEventlet(GenericApiRequest):
-    '''Get a list of API providers.'''
+    """Get a list of API providers."""
 
     def __init__(self, client_obj):
         url = "/"
@@ -201,7 +200,7 @@ class GetApiProvidersRequestEventlet(GenericApiRequest):
 
 
 class GenericRequest(GenericApiRequest):
-    '''Handle a generic request.'''
+    """Handle a generic request."""
 
     def __init__(self, client_obj, method, url, body, content_type, user_agent,
                  auto_login=False,

@@ -1,4 +1,4 @@
-# Copyright 2015 Fortinet, Inc.
+# -*- coding: utf-8 -*-
 #
 # All Rights Reserved
 #
