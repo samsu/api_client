@@ -146,11 +146,8 @@ class FASGenericApiClient(client.ApiClient):
     def auth_data(self, conn):
         # auth_data could be cookie or other fields with authentication
         # info in http headers.
-        auth_data = None
-        data = self._get_provider_data(conn)
-        if len(data) > 1 and data[1]:
-            auth_data = {'Authorization': 'Bearer %s' % data[1]}
-        return auth_data
+        data = super().auth_data(conn)
+        return {'Authorization': 'Bearer %s' % data} if data else data
 
     def _login(self, conn=None, headers=None):
         """ FAZ login method.

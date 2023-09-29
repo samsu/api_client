@@ -283,6 +283,7 @@ GET_USER = """
                 "notification_method": notification_method,
                 "customer_id": customer_id,
                 "cluster_members": cluster_members,
+                "user_data": user_data,
                 "limit": limit,
                 "next": next
             } %}
@@ -377,6 +378,68 @@ MODIFY_USER = """
             "{{ k }}": "{{ v }}",
         {% endfor %}
         "id": "{{ id }}"
+    }
+}
+"""
+
+MODIFY_USERS = """
+{
+{% if path is defined %}
+        "path": "{{ path }}",
+    {% else %}
+        {% if ver is defined %}
+            {% set _ver = ver %}
+        {% else %}
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            "path": "/api/{{ _ver }}/user/{{ id }}",
+        {% else %}
+            {% set _options = {
+                "sn": filter_sn,
+                "vdom": filter_vdom,
+                "client_id": filter_client_id,
+                "username": filter_username,
+                "email": filter_email,
+                "mobile_number": filter_mobile_number,
+                "realm_id": filter_realm_id,
+                "realm": filter_realm,
+                "active": filter_active,
+                "user_data": filter_user_data,
+                "auth_method": filter_auth_method,
+                "notification_method": filter_notification_method,
+                "customer_id": filter_customer_id,
+                "cluster_members": filter_cluster_members
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/user?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/user/",
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    "method": "PUT",
+    "body": {
+        {% set _options = {
+        "id": id,
+        "sn": sn,
+        "vdom": vdom,
+        "client_id": client_id,
+        "email": email,
+        "mobile_number": mobile_number,
+        "active": active,
+        "user_data": user_data,
+        "change_token": change_token
+        } %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+        {% endfor %}
     }
 }
 """

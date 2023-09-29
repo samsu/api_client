@@ -39,6 +39,7 @@ LOG = logging.getLogger(__name__)
 
 DEFAULT_HTTP_TIMEOUT = const.DEFAULT_HTTP_TIMEOUT
 DEFAULT_RETRIES = const.DEFAULT_RETRIES
+DEFAULT_AUTH_RETRIES = const.DEFAULT_AUTH_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 DEFAULT_API_REQUEST_POOL_SIZE = const.DEFAULT_API_REQUEST_POOL_SIZE
 DEFAULT_MAXIMUM_REQUEST_ID = const.DEFAULT_MAXIMUM_REQUEST_ID
@@ -121,6 +122,7 @@ class ApiRequest(object):
                 if auth:
                     headers, body = self._api_client.apply_auth_data(
                         conn, headers, body)
+
                 log_body = None
                 try:
                     content_type = self._headers.get('Content-Type', None)
@@ -182,7 +184,7 @@ class ApiRequest(object):
                         if self._url != jsonutils.loads(login_msg)['path']:
                             self._abort = True
 
-                    # If request is unauthorized, clear the session cookie
+                    # If request is unauthorized, clear related auth data
                     # for the current provider so that subsequent requests
                     # to the same provider triggers re-authentication.
                     self._api_client.set_auth_data(conn, None)
@@ -256,7 +258,9 @@ class ApiRequest(object):
         attempt = 0
         timeout = 0
         badstatus = 0
+        auth_attempt = 0
         response = None
+
         while response is None and attempt <= self._retries:
             eventlet.greenthread.sleep(timeout)
             attempt += 1
@@ -267,7 +271,7 @@ class ApiRequest(object):
                 if badstatus <= DEFAULT_RETRIES:
                     badstatus += 1
                     attempt -= 1
-                    msg = ("# request {method} {url} {body} error {e}"
+                    msg = ("request {method} {url} {body} error {e}"
                            ).format(method=self._method, url=self._url,
                                     body=self._body, e=e)
                     LOG.debug(msg)
@@ -275,6 +279,11 @@ class ApiRequest(object):
             # automatically raises any exceptions returned.
             if isinstance(req, httpclient.HTTPResponse):
                 timeout = 0
+                if (auth_attempt < DEFAULT_AUTH_RETRIES and
+                        self._api_client.auth_required(req)):
+                    # if not auth, try one more time
+                    attempt -= 1
+                    auth_attempt += 1
                 if attempt <= self._retries and not self._abort:
                     # currently there is a bug in fortios, it return 401 and
                     # 400 when a cookie is invalid, the change is to tolerant

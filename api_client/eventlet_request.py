@@ -119,64 +119,7 @@ class EventletApiRequest(request.ApiRequest):
             # No timeout exception escapes the with block.
             with eventlet.timeout.Timeout(self._request_timeout, False):
                 return self._handle_request()
-
-            LOG.info(_LI('[%d] Request timeout.'), self._rid())
-            self._request_error = Exception(_('Request timeout'))
-            return None
-        else:
-            return self._handle_request()
-
-    def _handle_request_bak(self):
-        """First level request handling."""
-        attempt = 0
-        timeout = 0
-        badstatus = 0
-        response = None
-        while response is None and attempt <= self._retries:
-            eventlet.greenthread.sleep(timeout)
-            attempt += 1
-            req = None
-            try:
-                req = self._issue_request()
-            except const.CONNECTION_EXCEPTIONS as e:
-                if badstatus <= DEFAULT_RETRIES:
-                    badstatus += 1
-                    attempt -= 1
-                    msg = ("# request {method} {url} {body} error {e}"
-                           ).format(method=self._method, url=self._url,
-                                    body=self._body, e=e)
-                    LOG.debug(msg)
-                    continue
-            # automatically raises any exceptions returned.
-            if isinstance(req, httplib.HTTPResponse):
-                timeout = 0
-                if attempt <= self._retries and not self._abort:
-                    # currently there is a bug in fortios, it return 401 and
-                    # 400 when a cookie is invalid, the change is to tolerant
-                    # the bug to handle return 400 situation.
-                    # when fortios fix the bug, here should use
-                    # 'req.status in (401, 403)' instead
-                    # 303 for fortipam cookie expiration code
-                    if self._api_client.auth_required(req):
-                        continue
-                    elif req.status == 503:
-                        timeout = 0.5
-                        continue
-                    # else fall through to return the error code
-
-                LOG.debug("[%(rid)d] Completed request '%(method)s %(url)s'"
-                          ": %(status)s",
-                          {'rid': self._rid(), 'method': self._method,
-                           'url': self._url, 'status': req.status})
-                self._request_error = None
-                response = req
-            else:
-                LOG.info(_LI('[%(rid)d] Error while handling request: '
-                             '%(req)s'),
-                         {'rid': self._rid(), 'req': req})
-                self._request_error = req
-                response = None
-        return response
+        return self._handle_request()
 
 
 class LoginRequestEventlet(EventletApiRequest):
