@@ -33,7 +33,7 @@ DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
 class ApiClient(eventlet_client.EventletApiClient):
-    """The FortiOS API Client."""
+    """The API Client."""
 
     user_agent = DEFAULT_USER_AGENT
 
@@ -155,7 +155,7 @@ class ApiClient(eventlet_client.EventletApiClient):
             exceptions.ERROR_MAPPINGS[status](response)
 
         # Continue processing for non-error condition.
-        if status != 200 and status != 201 and status != 204:
+        if status not in [200, 201, 202, 204]:
             LOG.error(_LE("%(method)s to %(url)s, unexpected response code: "
                           "%(status)d (content = '%(body)s')"),
                       {'method': method, 'url': url,

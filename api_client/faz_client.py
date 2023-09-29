@@ -93,16 +93,6 @@ class FortiAnalyzerApiClient(client.ApiClient):
         else:
             self._template = default_template
 
-    def set_auth_data(self, conn, session=None):
-        """ Set authenticate data
-        :param conn: conn parameters
-        :param session:
-        :return:
-        """
-        data = self._get_provider_data(conn)
-        if data:
-            self._set_provider_data(conn, (data[0], session))
-
     def apply_auth_data(self, conn, headers, body):
         session = self.auth_data(conn)
         if session:
