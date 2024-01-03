@@ -12,14 +12,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
+import base64
 
 from oslo_log import log as logging
+from oslo_serialization import jsonutils
 
 from . import exceptions
 from . import base
 from . import constants as const
 from . import client
-from .templates import fortiauth as templates
+from .templates import fortiweb as templates
 
 LOG = logging.getLogger(__name__)
 
@@ -30,12 +32,12 @@ DEFAULT_CONCURRENT_CONNECTIONS = base.DEFAULT_CONCURRENT_CONNECTIONS
 DEFAULT_CONTENT_TYPE = const.DEFAULT_HTTP_HEADERS['Content-Type']
 
 
-class FortiAuthApiClient(client.ApiClient):
+class FortiWebApiClient(client.ApiClient):
     """The FortiOS API Client."""
 
-    user_agent = 'FortiAuth Python API Client'
+    user_agent = 'FortiWeb Python API Client'
 
-    def __init__(self, api_providers, user=None, password=None,
+    def __init__(self, api_providers, user=None, password=None, vdom='root',
                  key_file=None, cert_file=None, ca_file=None, ssl_sni=None,
                  verify_peer=False,
                  concurrent_connections=DEFAULT_CONCURRENT_CONNECTIONS,
@@ -56,7 +58,7 @@ class FortiAuthApiClient(client.ApiClient):
         :param retries: the number of http/https request to retry.
         :param redirects: the number of concurrent connections.
         """
-        super(FortiAuthApiClient, self).__init__(
+        super(FortiWebApiClient, self).__init__(
             api_providers, user, password, key_file=key_file,
             verify_peer=verify_peer,
             cert_file=cert_file, ca_file=ca_file, ssl_sni=ssl_sni,
@@ -74,6 +76,7 @@ class FortiAuthApiClient(client.ApiClient):
         self.message = {}
         self._user = user
         self._password = password
+        self._vdom = vdom
         self._key_file = key_file
         self._cert_file = cert_file
         self._ca_file = ca_file
@@ -82,6 +85,13 @@ class FortiAuthApiClient(client.ApiClient):
         self._auto_login = auto_login
         self._template = templates
 
+    def format_auth_basic(self):
+        credential = {'username': self._user, 'password': self._password,
+                      'vdom': self._vdom}
+        credential = jsonutils.dumps(credential)
+        auth = base64.b64encode(credential.encode("utf-8")).decode()
+        return auth
+
     def _login(self, conn=None, headers=None):
         """ FortiAuthenticator use http basic auth, doesn't need to login,
            here reuse the name login to unify the API client process.
@@ -89,17 +99,7 @@ class FortiAuthApiClient(client.ApiClient):
         :param headers: Not use here
         :return: return authenticated Header
         """
-        if not self._key_file:
-            return {'Authorization': self.format_auth_basic()}
-        return {}
-
-    def render(self, opt, formatter=const.DEFAULT_FORMATTER, **message):
-        body = message.pop('body', None)
-        msg = super(FortiAuthApiClient,
-                    self).render(opt, formatter=formatter, **message)
-        if body is not None:
-            msg.setdefault('body', body)
-        return msg
+        return {'Authorization': self.format_auth_basic()}
 
     def request_response(self, method, url, response, **kwargs):
         if response is None:
