@@ -96,7 +96,7 @@ class ApiClient(eventlet_client.EventletApiClient):
         return {}
 
     def request(self, opt, content_type=DEFAULT_CONTENT_TYPE,
-                http_timeout=None, **message):
+                http_timeout=None, handle_errors=True, **message):
         """
         Issues request to controller.
         """
@@ -113,7 +113,9 @@ class ApiClient(eventlet_client.EventletApiClient):
             singlethread=self._singlethread)
         g.start()
         resp_tp = self.message.get('obj_type', None)
-        return self.request_response(method, url, g.join(), resp_type=resp_tp)
+        return self.request_response(method, url, g.join(),
+                                     resp_type=resp_tp,
+                                     handle_errors=handle_errors)
 
     def request_response(self, method, url, response, **kwargs):
         """
@@ -126,6 +128,7 @@ class ApiClient(eventlet_client.EventletApiClient):
           the response object's .body and .headers data members for future
           access.
         """
+        handle_errors = kwargs.pop('handle_errors', True)
         if response is None:
             # Timeout.
             LOG.error(_LE('Request timed out: %(method)s to %(url)s'),
@@ -138,6 +141,9 @@ class ApiClient(eventlet_client.EventletApiClient):
                 'body': response_body,
                 'headers': response_headers
             }
+        if not handle_errors:
+            return response_body
+
         status = response.status
         LOG.debug("response.status = %(status)s" % {'status': status})
         if status == 401:
