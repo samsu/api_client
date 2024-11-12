@@ -194,7 +194,7 @@ DELETE_REALM = """
 }
 """
 
-# authenticated api client
+# auth api client
 # query
 GET_CLIENT = """
 {
@@ -236,6 +236,58 @@ GET_CLIENT = """
         {% endif %}
     {% endif %}
     "method": "GET"
+}
+"""
+
+# add
+ADD_CLIENT = """
+{
+    "path": "/api/v1/client/",
+    "method": "POST",
+    "body": {
+        {% set _options = {
+        "sn": sn,
+        "vdom": vdom,
+        "vdoms": vdoms,
+        "name": name,
+        "realm_id": realm_id,
+        "profile_id": profile_id,
+        "permission": permission,
+        "scope": scope,
+        "realms": realms
+        } %}
+        {% set _int = ("permission", ) %}
+        {% for k, v in _options.items() if v is defined %}
+            {% if k not in _int %}
+                "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+            {% else %}
+                "{{ k }}": {{ v }}{{ "," if not loop.last }}
+            {% endif %}
+        {% endfor %}
+    }
+}
+"""
+
+# modify
+MODIFY_CLIENT = """
+{
+    "path": "/api/v1/client/{{ id }}/",
+    "method": "PUT",
+    "body": {
+        {% set _options = {
+        "sn": sn,
+        "vdom": vdom,
+        "name": name,
+        "realm_id": realm_id,
+        "profile_id": profile_id,
+        "permission": permission,
+        "scope": scope,
+        "realms": realms
+        } %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+        {% endfor %}
+    }
 }
 """
 
@@ -579,6 +631,29 @@ TOKEN_TRANSFER_START = """
         "transfer_code": "{{ transfer_code }}",
         "msg_sn": "FortiToken Cloud"
     }
+}
+"""
+
+# token
+GET_TOKEN = """
+{
+    "path":  "/api/v1/token/",
+    {% set _options = {
+        "token_sn": token_sn,
+        "soft_token": soft_token
+    } %}
+    {% set _query = [] %}
+    {% for k, v in _options.items() if v is defined %}
+        {% if _query.append(k+'='+translate_uri_chars(v)) %}
+        {% endif %}
+    {% endfor %}
+    {% if _query %}
+        {% set _query = '&'.join(_query) %}
+        "path": "/api/v1/token?{{ _query }}",
+    {% else %}
+        "path": "/api/v1/token/",
+    {% endif %}
+    "method": "GET"
 }
 """
 
