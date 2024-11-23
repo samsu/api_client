@@ -19,7 +19,6 @@ from . import base
 from . import client
 from . import constants as const
 from . import eventlet_request
-from .common import singleton
 from .templates import fas as templates
 
 LOG = logging.getLogger(__name__)
@@ -29,7 +28,6 @@ DEFAULT_RETRIES = const.DEFAULT_RETRIES
 DEFAULT_REDIRECTS = const.DEFAULT_REDIRECTS
 
 
-@singleton.singleton
 class FASApiClient(client.ApiClient):
     """The FAS API Client."""
 
