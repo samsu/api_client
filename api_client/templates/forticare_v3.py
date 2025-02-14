@@ -402,18 +402,21 @@ GET_USER_ORGNODES = """
             "__type": "FortinetOne.API.V3.Common.GetUserOrgNodesPayload",
             "auth_attributes": [
             {% set _options = {
-                "Authentication_status": auth_status
+                "IAM_account_name": iam_account_name,
+                "IAM_account_alias": iam_account_alias,
+                "IAM_username": iam_username,
+                "Authentication_status": auth_status,
+                "idp_name": idp_name,
+                "idp_user_id": idp_user_id,
+                "idp_user_roles": idp_user_roles,
+                "NameID": name_id
             } %}
             {% for k, v in _options.items() if v is defined %}
                 {
                     "name": "{{ k }}",
                     "value": "{{ v }}"
-                },
+                } {{ "," if not loop.last }}
             {% endfor %}
-                {
-                    "name": "NameID",
-                    "value": "{{ name_id }}"
-                }
             ]
         }
     }
@@ -431,18 +434,21 @@ GET_USER_NODEPERMISSION = """
             "node_id": {{ node_id }},
             "auth_attributes": [
             {% set _options = {
-                "Authentication_status": auth_status
+                "IAM_account_name": iam_account_name,
+                "IAM_account_alias": iam_account_alias,
+                "IAM_username": iam_username,
+                "Authentication_status": auth_status,
+                "idp_name": idp_name,
+                "idp_user_id": idp_user_id,
+                "idp_user_roles": idp_user_roles,
+                "NameID": name_id
             } %}
             {% for k, v in _options.items() if v is defined %}
                 {
                     "name": "{{ k }}",
                     "value": "{{ v }}"
-                },
+                } {{ "," if not loop.last }}
             {% endfor %}
-                {
-                    "name": "NameID",
-                    "value": "{{ name_id }}"
-                }
             ]
         }
     }
@@ -473,68 +479,6 @@ GET_ORG_DETAILS = """
 }
 """
 
-# get org/ou structure
-GET_USER_ORGNODES = """
-{
-    "path": "/CloudAPI/V3/Common/FortinetOneAuthService.asmx/GetUserOrgNodes",
-    "method": "POST",
-    "body": {
-        "d": {
-            "__type": "FortinetOne.API.V3.Common.GetUserOrgNodesPayload",
-            "auth_attributes": [
-            {% set _options = {
-                "IAM_account_name": iam_account_name,
-                "IAM_account_alias": iam_account_alias,
-                "IAM_username": iam_username,
-                "Authentication_status": auth_status
-            } %}
-            {% for k, v in _options.items() if v is defined %}
-                {
-                    "name": "{{ k }}",
-                    "value": "{{ v }}"
-                },
-            {% endfor %}
-                {
-                    "name": "NameID",
-                    "value": "{{ name_id }}"
-                }
-            ]
-        }
-    }
-}
-"""
-
-# get user permission for org/ou node
-GET_USER_NODEPERMISSION = """
-{
-    "path": "/CloudAPI/V3/Common/FortinetOneAuthService.asmx/GetUserPermissionsForOrgNode",
-    "method": "POST",
-    "body": {
-        "d": {
-            "__type": "FortinetOne.API.V3.Common.GetUserPermissionsForOrgNodePayload",
-            "node_id": {{ node_id }},
-            "auth_attributes": [
-            {% set _options = {
-                "IAM_account_name": iam_account_name,
-                "IAM_account_alias": iam_account_alias,
-                "IAM_username": iam_username,
-                "Authentication_status": auth_status
-            } %}
-            {% for k, v in _options.items() if v is defined %}
-                {
-                    "name": "{{ k }}",
-                    "value": "{{ v }}"
-                },
-            {% endfor %}
-                {
-                    "name": "NameID",
-                    "value": "{{ name_id }}"
-                }
-            ]
-        }
-    }
-}
-"""
 
 GET_PROD_APPLIST = GET_APPLIST
 GET_PROD_ACCOUNTLIST = GET_ACCOUNTLIST
