@@ -720,3 +720,409 @@ GET_COUNT_AUTH = """
     }
 }
 """
+
+# User source
+# query
+GET_USERSOURCE = """
+{
+    {% if path is defined %}
+        "path": "{{ path }}",
+    {% else %}
+        {% if ver is defined %}
+            {% set _ver = ver %}
+        {% else %}
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if customer_id is defined %}
+                "path": "/api/{{ _ver }}/usersource/{{ id }}?customer_id={{ customer_id }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/usersource/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "customer_id": customer_id,
+                "app_id": app_id,
+                "realm_id": realm_id,
+                "name": name
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/usersource?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/usersource/",
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_USERSOURCE = """
+{
+    "path": "/api/v1/usersource/",
+    "method": "POST",
+    "body": {
+        "customer_id": "{{ customer_id }}",
+        "realm_id": "{{ realm_id }}",
+        "type": {{ type }},
+        {% set _usersource_params = {
+            "prefix": prefix,
+            "username_assertion": username_assertion,
+            "favicon_url": favicon_url,
+            "login_hint": login_hint,
+        } %}
+        {% for k, v in _usersource_params.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        {% if attr_mapping is defined and attr_mapping %}
+            "attr_mapping": "{{ attr_mapping }}",
+        {% endif %}
+        {% if saml_params is defined %}
+            {% set _saml_params = {
+                "entity_id": entity_id,
+                "login_url": login_url,
+                "logout_url": logout_url,
+                "cert_content": cert_content,
+                "post_binding": post_binding,
+                "include_subject": include_subject
+            } %}
+            "saml_params": {
+                {% for k, v in _saml_params.items() if k in saml_params.keys() %}
+                    "{{ k }}": "{{ saml_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% if oidc_params is defined %}
+            {% set _oidc_params = {
+                "issuer": issuer,
+                "auth_uri": auth_uri,
+                "token_uri": token_uri,
+                "userinfo_uri": userinfo_uri,
+                "logout_uri": logout_uri,
+                "client_id": client_id,
+                "client_secret": client_secret
+            } %}
+            "oidc_params": {
+                {% for k, v in _oidc_params.items() if k in oidc_params.keys() %}
+                    "{{ k }}": "{{ oidc_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        "name": "{{ name }}"
+    }
+}
+"""
+
+# delete
+DELETE_USERSOURCE = """
+{
+    {% if customer_id is defined %}
+        "path": "/api/v1/usersource/{{ id }}?customer_id={{ customer_id }}",
+    {% else %}
+        "path": "/api/v1/usersource/{{ id }}/",
+    {% endif %}
+    "method": "DELETE"
+}
+"""
+
+# put
+MODIFY_USERSOURCE = """
+{
+    "path": "/api/v1/usersource/{{ id }}/",
+    "method": "PUT",
+    "body": {
+        {% if attr_mapping is defined and attr_mapping %}
+            "attr_mapping": "{{ attr_mapping }}",
+        {% endif %}
+        {% if saml_params is defined %}
+            {% set _saml_params = {
+                "entity_id": entity_id,
+                "login_url": login_url,
+                "logout_url": logout_url,
+                "cert_content": cert_content,
+                "post_binding": post_binding,
+                "include_subject": include_subject
+            } %}
+            "saml_params": {
+                {% for k, v in _saml_params.items() if k in saml_params.keys() %}
+                    "{{ k }}": "{{ saml_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% if oidc_params is defined %}
+            {% set _oidc_params = {
+                "issuer": issuer,
+                "auth_uri": auth_uri,
+                "token_uri": token_uri,
+                "userinfo_uri": userinfo_uri,
+                "logout_uri": logout_uri,
+                "client_id": client_id,
+                "client_secret": client_secret
+            } %}
+            "oidc_params": {
+                {% for k, v in _oidc_params.items() if k in oidc_params.keys() %}
+                    "{{ k }}": "{{ oidc_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% set _usersource_params = {
+            "name": name,
+            "username_assertion": username_assertion,
+            "favicon_url": favicon_url,
+            "login_hint": login_hint,
+        } %}
+        {% for k, v in _usersource_params.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "customer_id": "{{ customer_id }}"
+    }
+}
+"""
+
+
+# application
+# query
+GET_APPLICATION = """
+{
+    {% if path is defined %}
+        "path": "{{ path }}",
+    {% else %}
+        {% if ver is defined %}
+            {% set _ver = ver %}
+        {% else %}
+            {% set _ver = 'v1' %}
+        {% endif %}
+        {% if id is defined %}
+            {% if customer_id is defined %}
+                "path": "/api/{{ _ver }}/application/{{ id }}?customer_id={{ customer_id }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/application/{{ id }}/",
+            {% endif %}
+        {% else %}
+            {% set _options = {
+                "customer_id": customer_id,
+                "realm_id": realm_id,
+                "name": name,
+                "type": type,
+                "prefix": prefix
+            } %}
+            {% set _query = [] %}
+            {% for k, v in _options.items() if v is defined %}
+                {% if _query.append(k+'='+translate_uri_chars(v)) %}
+                {% endif %}
+            {% endfor %}
+            {% if _query %}
+                {% set _query = '&'.join(_query) %}
+                "path": "/api/{{ _ver }}/application?{{ _query }}",
+            {% else %}
+                "path": "/api/{{ _ver }}/application/",
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_APPLICATION = """
+{
+    "path": "/api/v1/application/",
+    "method": "POST",
+    "body": {
+        "customer_id": "{{ customer_id }}",
+        "realm_id": "{{ realm_id }}",
+        "type": {{ type }},
+        {% set _application_params = {
+            "prefix": prefix,
+            "branding_id": branding_id,
+            "profile_id": profile_id,
+            "ttl": ttl,
+            "access": access,
+            "login_url": login_url,
+            "logo_url": logo_url,
+            "reverse_proxy_url": reverse_proxy_url
+        } %}
+        {% for k, v in _application_params.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        {% if attr_mapping is defined and attr_mapping %}
+            "attr_mapping": "{{ attr_mapping }}",
+        {% endif %}
+        {% if saml_params is defined %}
+            {% set _saml_params = {
+                "entity_id": entity_id,
+                "acs_url": acs_url,
+                "slo_url": slo_url,
+                "subject_nameid": subject_nameid,
+                "signing_alg": signing_alg,
+                "signing_cert_id": signing_cert_id,
+                "sp_cert_content": sp_cert_content
+            } %}
+            "saml_params": {
+                {% for k, v in _saml_params.items() if k in saml_params.keys() %}
+                    "{{ k }}": "{{ saml_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% if oidc_params is defined %}
+            {% set _oidc_params = {
+                "audience_id": audience_id,
+                "redirect_uris": redirect_uris,
+                "signing_alg": signing_alg,
+                "signing_cert_id": signing_cert_id
+            } %}
+            "oidc_params": {
+                {% for k, v in _oidc_params.items() if k in oidc_params.keys() %}
+                    "{{ k }}": "{{ oidc_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        "name": "{{ name }}"
+    }
+}
+"""
+
+# delete
+DELETE_APPLICATION = """
+{
+    {% if customer_id is defined %}
+        "path": "/api/v1/application/{{ id }}?customer_id={{ customer_id }}",
+    {% else %}
+        "path": "/api/v1/application/{{ id }}/",
+    {% endif %}
+    "method": "DELETE"
+}
+"""
+
+# put
+MODIFY_APPLICATION = """
+{
+    "path": "/api/v1/application/{{ id }}/",
+    "method": "PUT",
+    "body": {
+        {% if attr_mapping is defined and attr_mapping %}
+            "attr_mapping": "{{ attr_mapping }}",
+        {% endif %}
+        {% if saml_params is defined %}
+            {% set _saml_params = {
+                "entity_id": entity_id,
+                "acs_url": acs_url,
+                "slo_url": slo_url,
+                "subject_nameid": subject_nameid,
+                "signing_alg": signing_alg,
+                "signing_cert_id": signing_cert_id,
+                "sp_cert_content": sp_cert_content
+            } %}
+            "saml_params": {
+                {% for k, v in _saml_params.items() if k in saml_params.keys() %}
+                    "{{ k }}": "{{ saml_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% if oidc_params is defined %}
+            {% set _oidc_params = {
+                "audience_id": audience_id,
+                "redirect_uris": redirect_uris,
+                "signing_alg": signing_alg,
+                "signing_cert_id": signing_cert_id
+            } %}
+            "oidc_params": {
+                {% for k, v in _oidc_params.items() if k in oidc_params.keys() %}
+                    "{{ k }}": "{{ oidc_params[k] }}"{{ "," if not loop.last }}
+                {% endfor %}
+            },
+        {% endif %}
+        {% set _application_params = {
+            "name": name,
+            "branding_id": branding_id,
+            "profile_id": profile_id,
+            "ttl": ttl,
+            "access": access,
+            "login_url": login_url,
+            "logo_url": logo_url,
+            "reverse_proxy_url": reverse_proxy_url
+        } %}
+        {% for k, v in _application_params.items() if v is defined %}
+            "{{ k }}": "{{ v }}",
+        {% endfor %}
+        "customer_id": "{{ customer_id }}"
+    }
+}
+"""
+
+# assoicate an application with user sources
+# query
+GET_APPLICATION_USERSOURCE = """
+{
+    {% set _options = {
+        "customer_id": customer_id,
+        "user_source_id": user_source_id
+    } %}
+    {% set _query = [] %}
+    {% for k, v in _options.items() if v is defined %}
+        {% if _query.append(k+'='+translate_uri_chars(v)) %}
+        {% endif %}
+    {% endfor %}
+    {% if _query %}
+        {% set _query = '&'.join(_query) %}
+        "path": "/api/v1/application/{{ app_id }}/user_source/?{{ _query }}",
+    {% else %}
+        "path": "/api/{{ _ver }}/application/{{ app_id }}/user_source",
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_APPLICATION_USERSOURCE = """
+{
+    "path": "/api/v1/application/{{ app_id }}/user_source",
+    "method": "POST",
+    "body": {
+        {% set _params = {
+            "customer_id": customer_id,
+            "user_source_id": user_source_id
+        } %}
+        {% for k, v in _params.items() if v is defined %}
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+        {% endfor %}
+    }
+}
+"""
+
+# delete
+DELETE_APPLICATION_USERSOURCE = """
+{
+    {% if customer_id is defined %}
+        "path": "/api/v1/application/{{ app_id }}/user_source/{{ user_source_id }}?customer_id={{ customer_id }}",
+    {% else %}
+        "path": "/api/v1/application/{{ app_id }}/user_source/{{ user_source_id }}",
+    {% endif %}
+    "method": "DELETE"
+}
+"""
+
+# put
+MODIFY_APPLICATION_USERSOURCE = """
+{
+    "path": "/api/v1/application/{{ app_id }}/user_source",
+    "method": "PUT",
+    "body": {
+        {% set _params = {
+            "customer_id": customer_id,
+            "user_source_ids": user_source_ids,
+            "default_usersource_id": default_usersource_id
+        } %}
+        {% for k, v in _params.items() if v is defined %}
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+        {% endfor %}
+    }
+}
+"""
