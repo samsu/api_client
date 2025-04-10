@@ -145,7 +145,15 @@ class FASGenericApiClient(client.ApiClient):
         # auth_data could be cookie or other fields with authentication
         # info in http headers.
         data = super().auth_data(conn)
-        return {'Authorization': 'Bearer %s' % data} if data else data
+        if not data:
+            return data
+        auth_data = {}
+        if self._ssl_sni:
+            auth_data = {'Host': self._ssl_sni}
+        if self._headers:
+            auth_data = {**auth_data, **self._headers}
+        auth_data = {**auth_data, 'Authorization': 'Bearer %s' % data}
+        return auth_data
 
     def _login(self, conn=None, headers=None):
         """ FAZ login method.
@@ -157,9 +165,15 @@ class FASGenericApiClient(client.ApiClient):
         kwargs = {'client_id': self._client_id,
                   'client_secret': self._client_secret}
         message = self.render(getattr(self._template, 'LOGIN'), **kwargs)
+        headers = const.DEFAULT_HTTP_HEADERS
+        if self._ssl_sni:
+            headers = {**headers, 'Host': self._ssl_sni}
+        if self._headers:
+            headers = {**headers, **self._headers}
         g = eventlet_request.EventletApiRequest(
             self, message['path'], method=message['method'],
-            body=message['body'], headers=const.DEFAULT_HTTP_HEADERS,
+            body=message['body'],
+            headers=headers,
             auto_login=self._auto_login, client_conn=conn)
         g.start()
         ret = g.join()
