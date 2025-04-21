@@ -789,7 +789,7 @@ ADD_USERSOURCE = """
                 "entity_id": entity_id,
                 "login_url": login_url,
                 "logout_url": logout_url,
-                "cert_content": cert_content,
+                "signing_cert": signing_cert,
                 "post_binding": post_binding,
                 "include_subject": include_subject
             } %}
@@ -838,15 +838,12 @@ MODIFY_USERSOURCE = """
     "path": "/api/v1/usersource/{{ id }}/",
     "method": "PUT",
     "body": {
-        {% if attr_mapping is defined and attr_mapping %}
-            "attr_mapping": "{{ attr_mapping }}",
-        {% endif %}
         {% if saml_params is defined %}
             {% set _saml_params = {
                 "entity_id": entity_id,
                 "login_url": login_url,
                 "logout_url": logout_url,
-                "cert_content": cert_content,
+                "signing_cert": signing_cert,
                 "post_binding": post_binding,
                 "include_subject": include_subject
             } %}
@@ -873,15 +870,16 @@ MODIFY_USERSOURCE = """
             },
         {% endif %}
         {% set _usersource_params = {
+            "customer_id": customer_id,
             "name": name,
+            "attr_mapping": attr_mapping,
             "username_assertion": username_assertion,
             "favicon_url": favicon_url,
-            "login_hint": login_hint,
+            "login_hint": login_hint
         } %}
         {% for k, v in _usersource_params.items() if v is defined %}
-            "{{ k }}": "{{ v }}",
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
         {% endfor %}
-        "customer_id": "{{ customer_id }}"
     }
 }
 """
@@ -963,7 +961,7 @@ ADD_APPLICATION = """
                 "subject_nameid": subject_nameid,
                 "signing_alg": signing_alg,
                 "signing_cert_id": signing_cert_id,
-                "sp_cert_content": sp_cert_content
+                "sp_signing_cert": sp_signing_cert
             } %}
             "saml_params": {
                 {% for k, v in _saml_params.items() if k in saml_params.keys() %}
@@ -1007,9 +1005,6 @@ MODIFY_APPLICATION = """
     "path": "/api/v1/application/{{ id }}/",
     "method": "PUT",
     "body": {
-        {% if attr_mapping is defined and attr_mapping %}
-            "attr_mapping": "{{ attr_mapping }}",
-        {% endif %}
         {% if saml_params is defined %}
             {% set _saml_params = {
                 "entity_id": entity_id,
@@ -1018,7 +1013,7 @@ MODIFY_APPLICATION = """
                 "subject_nameid": subject_nameid,
                 "signing_alg": signing_alg,
                 "signing_cert_id": signing_cert_id,
-                "sp_cert_content": sp_cert_content
+                "sp_signing_cert": sp_signing_cert
             } %}
             "saml_params": {
                 {% for k, v in _saml_params.items() if k in saml_params.keys() %}
@@ -1041,6 +1036,8 @@ MODIFY_APPLICATION = """
         {% endif %}
         {% set _application_params = {
             "name": name,
+            "customer_id": customer_id,
+            "attr_mapping": attr_mapping,
             "branding_id": branding_id,
             "profile_id": profile_id,
             "ttl": ttl,
@@ -1050,14 +1047,13 @@ MODIFY_APPLICATION = """
             "reverse_proxy_url": reverse_proxy_url
         } %}
         {% for k, v in _application_params.items() if v is defined %}
-            "{{ k }}": "{{ v }}",
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
         {% endfor %}
-        "customer_id": "{{ customer_id }}"
     }
 }
 """
 
-# assoicate an application with user sources
+# associate an application with user sources
 # query
 GET_APPLICATION_USERSOURCE = """
 {
@@ -1074,7 +1070,7 @@ GET_APPLICATION_USERSOURCE = """
         {% set _query = '&'.join(_query) %}
         "path": "/api/v1/application/{{ app_id }}/user_source/?{{ _query }}",
     {% else %}
-        "path": "/api/{{ _ver }}/application/{{ app_id }}/user_source",
+        "path": "/api/v1/application/{{ app_id }}/user_source",
     {% endif %}
     "method": "GET"
 }
@@ -1121,6 +1117,84 @@ MODIFY_APPLICATION_USERSOURCE = """
             "default_usersource_id": default_usersource_id
         } %}
         {% for k, v in _params.items() if v is defined %}
+            "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
+        {% endfor %}
+    }
+}
+"""
+
+# signing cert
+# query
+GET_CERTIFICATE = """
+{
+    {% if id is defined %}
+        {% if customer_id is defined %}
+            "path": "/api/v1/certificate/{{ id }}?customer_id={{ customer_id }}",
+        {% else %}
+            "path": "/api/v1/certificate/{{ id }}/",
+        {% endif %}
+    {% else %}
+        {% set _options = {
+            "customer_id": customer_id,
+            "name": name,
+            "app_id": app_id,
+        } %}
+        {% set _query = [] %}
+        {% for k, v in _options.items() if v is defined %}
+            {% if _query.append(k+'='+translate_uri_chars(v)) %}
+            {% endif %}
+        {% endfor %}
+        {% if _query %}
+            {% set _query = '&'.join(_query) %}
+            "path": "/api/v1/certificate?{{ _query }}",
+        {% endif %}
+    {% endif %}
+    "method": "GET"
+}
+"""
+
+# add
+ADD_CERTIFICATE = """
+{
+    "path": "/api/v1/certificate/",
+    "method": "POST",
+    "body": {
+        {% set _options = {
+            "customer_id": customer_id,
+            "certificate": certificate,
+            "private_key": private_key
+        } %}
+        {% for k, v in _options.items() if v is defined %}
+            "{{ k }}": {{ v }},
+        {% endfor %}
+        "name": "{{ name }}"
+    }
+}
+"""
+
+# delete
+DELETE_CERTIFICATE = """
+{
+    {% if customer_id is defined %}
+        "path": "/api/v1/certificate/{{ id }}/?customer_id={{ customer_id }}",
+    {% else %}
+        "path": "/api/v1/certificate/{{ id }}/",
+    {% endif %}
+    "method": "DELETE"
+}
+"""
+
+# put
+MODIFY_CERTIFICATE = """
+{
+    "path": "/api/v1/certificate/{{ id }}/",
+    "method": "PUT",
+    "body": {
+        {% set _options = {
+            "customer_id": customer_id,
+            "name": name
+        } %}
+        {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
         {% endfor %}
     }
