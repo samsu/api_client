@@ -382,3 +382,25 @@ GET_DEVICE_LIST = """
     }
 }
 """
+
+
+GET_SUPPORT_CONTRACT = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetProductEntitlementsBySN",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetProductEntitlementsBySNPayload",
+            {% if sn is string %}
+                "serialNumbers": ["{{ sn }}"]
+            {% elif sn is sequence %}
+                "serialNumbers": [
+                    {% for member in sn %}
+                        "{{ member }}"{{ "," if not loop.last }}
+                    {% endfor %}
+                ]
+            {% endif %}
+        }
+    }
+}
+"""
