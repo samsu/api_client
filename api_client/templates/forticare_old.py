@@ -278,3 +278,17 @@ GET_SUPPORT_CONTRACT = """
     }
 }
 """
+
+
+GET_ACTIVE_CONTRACT = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetActiveSupportContract",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetActiveSupportContractPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
