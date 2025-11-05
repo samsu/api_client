@@ -502,3 +502,18 @@ GET_TRANSACTION_STATUS = """
     }
 }
 """
+
+
+GET_FORTISASE_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiSASE/FortiSASEService.asmx/GetProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiSASE.GetProductEntitlementsPayload",
+            "accountId": "{{ id }}",
+            "includeDecommissioned": false
+        }
+    }
+}
+"""
