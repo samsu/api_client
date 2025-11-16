@@ -440,7 +440,7 @@ GET_TRANSACTION_PREVIEW = """
     "body": {
         "d": {
             "__type": "FortinetOne.API.V3.FortiTokenCloud.GetTransactionPreviewPayload",
-            "account_id": "{{ id }}"
+            "account_id": "{{ id }}",
             {% if serial_number is defined %}
                 "serial_number": "{{ serial_number }}",
             {% endif %}
@@ -460,13 +460,13 @@ POST_CHARGE_TRANSACTION = """
     "body": {
         "d": {
             "__type": "FortinetOne.API.V3.FortiTokenCloud.ChargeTransactionPayload",
-            "account_id": "{{ id }}"
+            "account_id": "{{ id }}",
             {% if serial_number is defined %}
                 "serial_number": "{{ serial_number }}",
             {% endif %}
             "start_date": "{{ start_date }}",
             "end_date": "{{ end_date }}",
-            "seats": "{{ seats }}"
+            "seats": "{{ seats }}",
             "description": "{{ description }}",
             "is_government": "{{ is_government }}"
         }
