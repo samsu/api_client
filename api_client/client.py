@@ -96,7 +96,8 @@ class ApiClient(eventlet_client.EventletApiClient):
         return {}
 
     def request(self, opt, content_type=DEFAULT_CONTENT_TYPE,
-                http_timeout=None, handle_errors=True, **message):
+                http_timeout=None, retries=None,
+                handle_errors=True, **message):
         """
         Issues request to controller.
         """
@@ -105,11 +106,12 @@ class ApiClient(eventlet_client.EventletApiClient):
         url = self.message['path']
         body = self.message['body'] if 'body' in self.message else None
         http_timeout = http_timeout or self._http_timeout
+        retries = retries or self._retries
         g = eventlet_request.GenericRequestEventlet(
             self, method, url, body, content_type, self.user_agent,
             auto_login=self._auto_login,
             http_timeout=http_timeout,
-            retries=self._retries, redirects=self._redirects,
+            retries=retries, redirects=self._redirects,
             singlethread=self._singlethread)
         g.start()
         resp_tp = self.message.get('obj_type', None)
