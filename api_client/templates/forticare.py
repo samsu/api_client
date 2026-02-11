@@ -391,3 +391,138 @@ GET_DEVICE_LIST = """
     }
 }
 """
+
+
+GET_SUPPORT_CONTRACT = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetProductEntitlementsBySN",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetProductEntitlementsBySNPayload",
+            {% if sn is string %}
+                "serialNumbers": ["{{ sn }}"]
+            {% elif sn is sequence %}
+                "serialNumbers": [
+                    {% for member in sn %}
+                        "{{ member }}"{{ "," if not loop.last }}
+                    {% endfor %}
+                ]
+            {% endif %}
+        }
+    }
+}
+"""
+
+
+GET_ACTIVE_CONTRACT = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetActiveSupportContract",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetActiveSupportContractPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_FREE_CONTRACT = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetFreeEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetFreeEntitlementsPayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_FORTI_POINTS_BALANCE = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetFortiPointsBalance",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetFortiPointsBalancePayload",
+            "account_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_TRANSACTION_PREVIEW = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetTransactionPreview",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetTransactionPreviewPayload",
+            "account_id": "{{ id }}",
+            {% if serial_number is defined %}
+                "serial_number": "{{ serial_number }}",
+            {% endif %}
+            "start_date": "{{ start_date }}",
+            "end_date": "{{ end_date }}",
+            "seats": "{{ seats }}"
+        }
+    }
+}
+"""
+
+
+POST_CHARGE_TRANSACTION = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/ChargeTransaction",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.ChargeTransactionPayload",
+            "account_id": "{{ id }}",
+            {% if serial_number is defined %}
+                "serial_number": "{{ serial_number }}",
+            {% endif %}
+            "start_date": "{{ start_date }}",
+            "end_date": "{{ end_date }}",
+            "seats": "{{ seats }}",
+            "description": "{{ description }}",
+            "is_government": "{{ is_government }}"
+        }
+    }
+}
+"""
+
+
+GET_TRANSACTION_STATUS = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetTransactionStatus",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetTransactionStatusPayload",
+            "transaction_id": "{{ id }}"
+        }
+    }
+}
+"""
+
+
+GET_FORTISASE_LICENSE = """
+{
+    "path": "/CloudAPI/V3/FortiSASE/FortiSASEService.asmx/GetProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiSASE.GetProductEntitlementsPayload",
+            "accountId": "{{ id }}",
+            "includeDecommissioned": false
+        }
+    }
+}
+"""
