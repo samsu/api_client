@@ -682,3 +682,17 @@ GET_FORTISASE_LICENSE = """
     }
 }
 """
+
+
+GET_RELATED_PRODUCT_ENTITLEMENTS = """
+{
+    "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetRelatedProductEntitlements",
+    "method": "POST",
+    "body": {
+        "d": {
+            "__type": "FortinetOne.API.V3.FortiTokenCloud.GetRelatedProductEntitlementsPayload",
+            "accountIds": ["{{ id }}"]
+        }
+    }
+}
+"""
