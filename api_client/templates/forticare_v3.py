@@ -684,7 +684,7 @@ GET_FORTISASE_LICENSE = """
 """
 
 
-GET_RELATED_PRODUCT_ENTITLEMENTS = """
+GET_RELATED_PRODUCTS = """
 {
     "path": "/CloudAPI/V3/FortiTokenCloud/FortiTokenCloudService.asmx/GetRelatedProductEntitlements",
     "method": "POST",
