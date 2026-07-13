@@ -884,7 +884,6 @@ MODIFY_USERSOURCE = """
 }
 """
 
-
 # application
 # query
 GET_APPLICATION = """
@@ -1197,6 +1196,19 @@ MODIFY_CERTIFICATE = """
         {% for k, v in _options.items() if v is defined %}
             "{{ k }}": "{{ v }}"{{ "," if not loop.last }}
         {% endfor %}
+    }
+}
+"""
+
+# FIC -> CLOUDPAM
+ADD_JOB = """
+{
+    "path": "/api/v1/pam/job",
+    "method": "POST",
+    "body": {
+        "id": "{{ id }}",
+        "type": "{{ type }}"
+        "iv": "{{ iv }}"
     }
 }
 """
