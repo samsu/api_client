@@ -1200,3 +1200,16 @@ MODIFY_CERTIFICATE = """
     }
 }
 """
+
+# FIC -> CLOUDPAM
+ADD_JOB = """
+{
+    "path": "/api/v1/pam/job",
+    "method": "POST",
+    "body": {
+        "id": "{{ id }}",
+        "type": "{{ type }}",
+        "iv": "{{ iv }}"
+    }
+}
+"""
