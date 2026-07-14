@@ -1207,7 +1207,7 @@ ADD_JOB = """
     "method": "POST",
     "body": {
         "id": "{{ id }}",
-        "type": "{{ type }}"
+        "type": "{{ type }}",
         "iv": "{{ iv }}"
     }
 }
