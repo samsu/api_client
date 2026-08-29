@@ -474,7 +474,8 @@ class HTTPSClientAuthConnection(httplib.HTTPSConnection):
                                     server_hostname=self.ssl_sni)
         else:
             self.sock = wrap_socket(sock, self.key_file, self.cert_file,
-                                    cert_reqs=ssl.CERT_NONE)
+                                    cert_reqs=ssl.CERT_NONE,
+                                    server_hostname=self.ssl_sni)
 
 
 def wrap_socket(sock, keyfile=None, certfile=None,
